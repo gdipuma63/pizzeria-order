@@ -1,0 +1,89 @@
+Categoria;Nome;Ingredienti;Prezzo_Normale;Prezzo_Famiglia
+I Covaccini;COVACCINO;Panipizza Bufala Crudo Rucola Grana;7.50;14.00
+I Covaccini;ESTIVA;Bufala Ciliegino Rucola Bresaola Limone Scaglie di grana;8.00;15.00
+I Covaccini;LEGGERA;Bufala Funghi porcini Rucola Scaglie di grana;7.50;14.00
+I Covaccini;ORTOLANA;Bufala Funghi Emmenthal Ciliegino Rucola Scaglie di grana;7.50;14.00
+I Covaccini;PIPER’S;Bufala Funghi Emmenthal Ciliegino Scaglie di grana;7.50;14.00
+I Covaccini;SCAMORZA;Bufala Funghi Scamorza Speck Scaglie di grana;7.50;14.00
+I Covaccini;SMERALDA;Bufala Funghi porcini Rucola Ciliegino Scaglie di grana;7.50;14.00
+Le Novità;CHIARA (bordo ripieno);Ricotta Mozzarella Crema funghi tartufati Funghi porcini Speck Crema di formaggi Scaglie di grana Granella di pistacchi;9.00;17.00
+Le Novità;RICCARDO;Bufala Ciliegino Crudo Rucola Scaglie di grana Colata di astro caramellato;8.00;15.00
+Le Novità;DANILO;Pomodoro Mozzarella Salmone Panna Speck Granella di pistacchi;8.50;16.00
+Le Novità;EDOARDO;Pomodoro Mozzarella Pesto di pistacchio Crudo Emmenthal;8.00;15.00
+Le Novità;ZU’ TOTO;Pesto di pistacchi Mozzarella Prosciutto cotto o crudo Philadelphia Granella di pistacchi;8.00;14.00
+Le Novità;LUCA (cornice);Bufala Emmenthal Ciliegino Rucola Speck Scaglie di grana Astro balsamico caramellato;8.00;15.00
+Le Novità;NICOLA;Mozzarella Quattro formaggi Funghi porcini Salmone piccante Scaglie di grana;8.00;15.00
+Le Novità;ALESSIA;Mozzarella Pesto Tonno Ciliegino Scaglie di grana;8.00;15.00
+Pizza Fritta;PASTA CRESCIUTA;Acciughe Mozzarella (8 pezzi);1.50;
+Pizza Fritta;CIOPPINI SCHETTI;Pizza fritta a strisce Pomodoro o bruschetta;1.50;
+Pizza Fritta;CIOPPINI MARINATI;Pizza fritta Rucola Sale Pepe Formaggio Olio d’oliva;2.00;
+Pizza Fritta;CALZONE CLASSICO;Bufala Ciliegino;7.00;14.00
+Pizza Fritta;CALZONE NASCÉ;Bufala Ciliegino Crudo Rucola Scaglie di grana Astro caramellato;8.00;15.00
+Pizza Fritta;NAPOLETANA;Bufala Friarielli;7.00;14.00
+Ultimi Arrivi;CRICCU & CROCCU (2 mini calzoni);Prosciutto Mozzarella Rucola Crema ai formaggi Scaglie di grana;6.00;
+Ultimi Arrivi;PIRREDDU;Mozzarella Emmenthal Funghi porcini Porchetta Rosmarino;8.00;15.00
+Ultimi Arrivi;‘A NUCI’;Mozzarella Bacon Salsiccia Crema funghi tartufata Granella di noci;8.00;15.00
+Ultimi Arrivi;CARRUBBA;Mozzarella di bufala Crema funghi tartufata Funghi porcini Speck affumicato Rucola Scaglie di grana;9.00;17.00
+Ultimi Arrivi;CICCIZZU;Mozzarella Crema funghi tartufata Funghi porcini Funghi Pomodoro Prosciutto crudo Rucola Scaglie di grana;8.00;15.00
+Ultimi Arrivi;CONCETTA;Mozzarella Crema di tartufo Funghi porcini Rucola Olio d’aglio Scaglie di grana;8.00;15.00
+Ultimi Arrivi;NAPOLENO;Pomodoro Mozzarella Porchetta Salsiccia Cipolla;7.00;13.00
+Ultimi Arrivi;SAN LEOLUCA;Pomodoro Mozzarella 4 formaggi Salame Porchetta;8.50;16.00
+Ultimi Arrivi;RASIEDDU;Mozzarella Crema ai tartufi Scaglie di grana Granella di noci;8.00;15.00
+Ultimi Arrivi;CAMPAGNOLO;Mozzarella Speck Gorgonzola Granella di noci;8.00;15.00
+Ultimi Arrivi;CORLEONE;Mozzarella Salsiccia Ciliegino Gamberoni Olio d’aglio Pesto Basilico Pepe nero;8.00;15.00
+Specialità Pizze;AL CRUDO;Pomodoro Mozzarella Prosciutto crudo;7.00;13.00
+Specialità Pizze;APPETITOSA;Pomodoro; Mozzarella Funghi Wurstel Gorgonzola;7.00;13.00
+Specialità Pizze;ATOMICA;Pomodoro Mozzarella Prosciutto Funghi Uovo Wurstel Olive;7.50;13.00
+Specialità Pizze;AVVOCATO;Pomodoro Mozzarella Prosciutto Wurstel Cipolla Peperoni Salame piccante Olive Zucchine Salsiccia;8.00;14.00
+Specialità Pizze;BELLA NAPOLI;Pomodoro Mozzarella Acciughe Ciliegino;6.50;12.00
+Specialità Pizze;BENEDETTA;Mozzarella Crema al formaggio Bruscat Mortadella Ciliegino;8.50;14.00
+Specialità Pizze;BIANCA NEVE;Mozzarella;5.00;9.00
+Specialità Pizze;BRESAOLA;Pomodoro Mozzarella Bresaola;7.00;13.00
+Specialità Pizze;BUFALINA;Pomodoro Mozzarella di bufala;7.00;13.00
+Specialità Pizze;CAPRICCIOSA;Pomodoro Mozzarella Prosciutto Funghi Carciofi Wurstel Olive;7.00;13.00
+Specialità Pizze;CARBONARA;Pomodoro Bacon Panna Uovo;7.00;13.00
+Specialità Pizze;CHEF;Pomodoro Mozzarella Prosciutto Salsiccia Gorgonzola;7.00;13.00
+Pizze;COLORATA;Pomodoro Mozzarella Melanzane Ciliegino Pesto Grana;7.50;14.00
+Pizze;CONTADINA;Pomodoro Mozzarella Funghi Salsiccia Cipolla;7.00;13.00
+Pizze;DELICATA;Pomodoro Mozzarella Rucola Scaglie di grana Gamberetti;8.00;15.00
+Pizze;DIAVOLA;Pomodoro Mozzarella Salame piccante;6.00;12.00
+Pizze;FRAPPÉ;Pomodoro Mozzarella Prosciutto Salame piccante Wurstel Uovo;7.00;13.00
+Pizze;FRUTTI DI MARE;Pomodoro Mozzarella Frutti di mare;8.00;15.00
+Pizze;FUNGHI;Pomodoro Mozzarella Funghi;5.50;11.00
+Pizze;GORGONZOLA;Pomodoro Mozzarella Gorgonzola;5.50;11.00
+Pizze;GUSTOSA;Mozzarella Funghi porcini Salsiccia Crema ai formaggi;8.00;15.00
+Pizze;ITALIANA;Pomodoro; Mozzarella Prosciutto crudo Rucola Grana;7.50;14.00
+Pizze;LA PAZZA;Pomodoro Mozzarella Prosciutto Salame piccante Bacon Salsiccia;7.50;14.00
+Pizze;MAILIALINA;Mozzarella Patatine Prosciutto Salsiccia Pecorino Rosmarino;7.50;14.00
+Pizze;MARGHERITA;Pomodoro Mozzarella Origano;5.00;9.00
+Pizze;MARIO;Pomodoro Mozzarella Prosciutto Bacon Wurstel Pepe nero;7.00;13.00
+Pizze;PALERMITANA;Pomodoro Mozzarella Gorgonzola Melanzane Ricotta Grana;7.50;14.00
+Pizze;PAPERINA;Pomodoro Mozzarella Patatine Wurstel;6.50;12.00
+Pizze;PARMIGIANA;Pomodoro Mozzarella Melanzane Scaglie di grana;6.50;12.00
+Pizze;PRIMAVERA;Pomodoro Mozzarella Melanzane Ciliegino Funghi;7.00;13.00
+Pizze;PRINCIPESSA;Pomodoro Mozzarella Gorgonzola Salame piccante;7.00;13.00
+Pizze;PROSCIUTTO E FUNGHI;Pomodoro Mozzarella Prosciutto Funghi;6.00;12.00
+Pizze;4 GUSTI;Pomodoro Mozzarella Prosciutto Funghi Carciofi;6.50;12.00
+Pizze;4 FORMAGGI;Mozzarella Olandese Emmenthal Gorgonzola;7.00;13.00
+Pizze;ROMAGNOLA;Pomodoro Mozzarella Salsiccia Salame piccante Olive;6.50;12.00
+Pizze;ROMANA;Pomodoro Mozzarella Prosciutto;5.50;11.00
+Pizze;SALSICCIA;Pomodoro Mozzarella Salsiccia;5.50;11.00
+Pizze;SALSICCIA & FRIARIELLI;Mozzarella Salsiccia Friarielli Pecorino;6.50;12.00
+Pizze;SAPORITA;Pomodoro Mozzarella Rucola Grana;6.50;12.00
+Pizze;SICILIANA;Pomodoro Mozzarella Pecorino Cipolla Funghi Wurstel Prosciutto;7.00;13.00
+Pizze;SVIZZERA;Pomodoro Mozzarella Emmenthal Bacon Olive;7.00;13.00
+Pizze;SPECIAL;Pomodoro Mozzarella Prosciutto Funghi Tonno Olive Wurstel;7.00;13.00
+Pizze;SPECK;Pomodoro Mozzarella Speck Rucola;7.00;13.00
+Pizze;TANINO;Pomodoro Mozzarella Funghi Bacon Gorgonzola Olive;7.50;14.00
+Pizze;TONNARA;Pomodoro; Mozzarella; Tonno; Olive;6.50;12.00
+Pizze;VALDOSTANA;Pomodoro Mozzarella Ciliegino Scamorza Speck;7.50;14.00
+Pizze;VEGETARIANA;Pomodoro Mozzarella Verdura mista;7.00;13.00
+Calzoni e Cannoli;CALZONE CLASSICO;Pomodoro Mozzarella Prosciutto;6.00;
+Calzoni e Cannoli;CALZONE 4 GUSTI;Pomodoro Mozzarella Prosciutto Funghi Wurstel;6.50;
+Calzoni e Cannoli;CANNOLO NAPOLETANO;Pomodoro Mozzarella di bufala Scaglie di grana;8.00;
+Calzoni e Cannoli;CANNOLO LIPARI;Mozzarella Prosciutto Salame piccante Crema ai formaggi;8.00;
+Calzoni e Cannoli;CANNOLO SICILIANO;Prosciutto Funghi Cipolla Caciocavallo Mozzarella;7.00;
+Pizza Dolce;PIZZA DOLCE;Panepizza Nutella Granella di mandorle Pistacchio Zucchero a velo;6.00;
+Pizza Siciliana;CUDDURUNI;Acciughe Cipolla Ciliegino Pecorino Mollica bianca Sale Pepe Origano;7.00;
+Pizza Siciliana;SFINCIONE;Acciughe Cipolla Tumma locale Pomodoro Mollica bianca Caciocavallo stagionato Sale Pepe Origano;7.00;
+Pizza Siciliana;RIA NATA;Pesto di prezzemolo e mentuccia Acciughe Cipolla Ciliegino Tumma locale Cipolla bianca Caciocavallo stagionato Sale Pepe Origano;7.00;
