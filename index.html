@@ -6,16 +6,108 @@
 <title>Ordina la tua pizza</title>
 
 <style>
-body{font-family:Arial,sans-serif;background:#d2b48c;margin:0;padding:0;}
-.header{background:#4b3621;color:white;padding:20px;text-align:center;font-size:28px;font-weight:bold;}
-.container{max-width:800px;margin:auto;padding:20px;}
-.box{background:white;padding:20px;border-radius:12px;margin-bottom:20px;box-shadow:0 0 10px rgba(0,0,0,0.1);}
-input,select,button,textarea{width:100%;padding:12px;margin-top:10px;border-radius:8px;border:1px solid #ccc;font-size:16px;box-sizing:border-box;}
-.main-btn{background:#4b3621;color:white;border:none;font-weight:bold;cursor:pointer;}
-.main-btn:hover{background:#2f2215;}
-#ingredienti{margin-top:10px;padding:10px;background:#f2f2f2;border-radius:8px;}
-</style>
 
+body{
+font-family:Arial,sans-serif;
+background:#d2b48c;
+margin:0;
+padding:0;
+}
+
+.header{
+background:#4b3621;
+color:white;
+padding:20px;
+text-align:center;
+font-size:28px;
+font-weight:bold;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+padding:20px;
+}
+
+.box{
+background:white;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+input,select,button,textarea{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ccc;
+font-size:16px;
+box-sizing:border-box;
+}
+
+.main-btn{
+background:#4b3621;
+color:white;
+border:none;
+font-weight:bold;
+cursor:pointer;
+}
+
+.main-btn:hover{
+background:#2f2215;
+}
+
+#ingredienti{
+margin-top:10px;
+padding:10px;
+background:#f2f2f2;
+border-radius:8px;
+}
+
+/* ================= LISTA ORDINE ================= */
+
+.rimuovi-btn{
+background:#c0392b;
+color:white;
+border:none;
+padding:10px;
+border-radius:8px;
+cursor:pointer;
+margin-top:10px;
+}
+
+hr{
+margin:15px 0;
+}
+
+/* ================= MOBILE FIX ================= */
+
+@media (max-width:600px){
+
+.rimuovi-btn{
+width:100%;
+font-size:16px;
+}
+
+}
+
+/* ================= AGGIUNTE CHECKBOX ================= */
+
+.aggiunte-gruppo{
+margin-bottom:15px;
+padding:10px;
+background:#f7f7f7;
+border-radius:10px;
+}
+
+.aggiunte-gruppo label{
+display:block;
+margin:5px 0;
+}
+
+</style>
 </head>
 
 <body>
@@ -26,6 +118,7 @@ input,select,button,textarea{width:100%;padding:12px;margin-top:10px;border-radi
 
 <!-- CLIENTE -->
 <div class="box">
+
 <h3>Dati cliente</h3>
 
 <input type="text" id="nome" placeholder="Nome">
@@ -40,6 +133,7 @@ input,select,button,textarea{width:100%;padding:12px;margin-top:10px;border-radi
 <div id="indirizzoBox" style="display:none;">
 <input type="text" id="indirizzo" placeholder="Indirizzo">
 </div>
+
 </div>
 
 <!-- PIZZA -->
@@ -62,21 +156,38 @@ input,select,button,textarea{width:100%;padding:12px;margin-top:10px;border-radi
 <label>Quantità</label>
 <input type="number" id="quantita" value="1" min="1">
 
+<!-- AGGIUNTE -->
 <h4>Aggiunte</h4>
 <div id="aggiunteContainer"></div>
 
-<h5>Note</h5>
-<textarea id="noteAggiunte"></textarea>
+<h5>Note aggiuntive</h5>
+<textarea id="noteAggiunte" placeholder="Scrivi richieste extra..."></textarea>
 
-<button class="main-btn" onclick="aggiungiPizza()">Aggiungi all'ordine</button>
+<!-- ESCLUSIONI -->
+<h4>Esclusioni</h4>
+<div id="modifiche">
+<label><input type="checkbox" value="Senza mozzarella"> Senza mozzarella</label>
+<label><input type="checkbox" value="Senza cipolla"> Senza cipolla</label>
+<label><input type="checkbox" value="Senza pomodoro"> Senza pomodoro</label>
+</div>
+
+<button class="main-btn" onclick="aggiungiPizza()">
+Aggiungi all'ordine
+</button>
 
 </div>
 
 <!-- RIEPILOGO -->
 <div class="box">
+
 <h3>🧾 Riepilogo ordine</h3>
+
 <div id="listaOrdine"></div>
-<button class="main-btn" onclick="inviaOrdine()">Invia WhatsApp</button>
+
+<button class="main-btn" onclick="inviaOrdine()">
+Invia ordine su WhatsApp
+</button>
+
 </div>
 
 </div>
@@ -95,6 +206,7 @@ const formatoPizza=document.getElementById("formatoPizza");
 const optionFamiliare=formatoPizza.querySelector('option[value="Familiare"]');
 
 /* ================= MENU ================= */
+
 async function caricaMenu(){
 
 const res=await fetch(sheetUrl);
@@ -144,11 +256,9 @@ const aggiunte=[
 {nome:"Ciliegino",p:1,pf:2},
 {nome:"Verdure",p:1,pf:2},
 {nome:"Crema Formaggi",p:1,pf:2},
-
 {nome:"Salumi",p:1.5,pf:3},
 {nome:"Salsiccia",p:1.5,pf:3},
 {nome:"Funghi",p:1.5,pf:3},
-
 {nome:"Bufala",p:2,pf:3.5},
 {nome:"Porcini",p:2,pf:3.5},
 {nome:"Tartufo",p:2,pf:3.5}
@@ -160,31 +270,18 @@ const box=document.getElementById("aggiunteContainer");
 
 aggiunte.forEach(a=>{
 
-const btn=document.createElement("button");
-btn.textContent=a.nome;
+const div=document.createElement("div");
+div.className="aggiunte-gruppo";
 
-btn.onclick=()=>{
+div.innerHTML=`
+<label>
+<input type="checkbox" value="${a.nome}" data-p="${a.p}" data-pf="${a.pf}">
+${a.nome} (€${a.p} / €${a.pf})
+</label>
+`;
 
-let es=aggiunteSelezionate.find(x=>x.nome===a.nome);
+box.appendChild(div);
 
-if(es){
-aggiunteSelezionate=aggiunteSelezionate.filter(x=>x.nome!==a.nome);
-btn.style.background="#9370db";
-}else{
-aggiunteSelezionate.push(a);
-btn.style.background="#4b3621";
-}
-
-};
-
-btn.style.margin="5px";
-btn.style.padding="8px";
-btn.style.borderRadius="20px";
-btn.style.border="none";
-btn.style.color="white";
-btn.style.background="#9370db";
-
-box.appendChild(btn);
 });
 }
 
@@ -198,29 +295,37 @@ const formato=formatoPizza.value;
 
 let base=formato==="Familiare"?menu[p].pf:menu[p].pn;
 
-/* 🔥 CALCOLO AGGIUNTE */
 let extra=0;
+let selezionate=[];
 
-aggiunteSelezionate.forEach(a=>{
-extra += (formato==="Familiare"?a.pf:a.p);
+document.querySelectorAll("#aggiunteContainer input:checked").forEach(cb=>{
+extra += formato==="Familiare"
+? parseFloat(cb.dataset.pf)
+: parseFloat(cb.dataset.p);
+
+selezionate.push(cb.value);
 });
 
-const totale=base+extra;
+document.querySelectorAll("#modifiche input:checked").forEach(cb=>{
+selezionate.push(cb.value);
+});
+
+const totale=(base+extra)*q;
 
 ordine.push({
 pizza:p,
 formato,
 quantita:q,
-base,
-extra,
-totale:totale*q,
-aggiunte:[...aggiunteSelezionate],
+totale,
+aggiunte:selezionate,
 note:document.getElementById("noteAggiunte").value||""
 });
 
 aggiorna();
-aggiunteSelezionate=[];
+
 document.getElementById("noteAggiunte").value="";
+document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=false);
+
 }
 
 /* ================= RIEPILOGO ================= */
@@ -242,15 +347,24 @@ div.innerHTML+=`
 `;
 
 o.aggiunte.forEach(a=>{
-div.innerHTML+=`+ ${a.nome}<br>`;
+div.innerHTML+=`+ ${a}<br>`;
 });
 
 if(o.note)div.innerHTML+=`Note: ${o.note}<br>`;
 
-div.innerHTML+="<hr></div>";
+div.innerHTML+=`
+<button class="rimuovi-btn" onclick="rimuovi(${i})">❌ Rimuovi</button>
+<hr>
+</div>
+`;
 });
 
 div.innerHTML+=`<h3>Totale: €${tot.toFixed(2)}</h3>`;
+}
+
+function rimuovi(i){
+ordine.splice(i,1);
+aggiorna();
 }
 
 /* ================= WHATSAPP ================= */
@@ -263,7 +377,7 @@ ordine.forEach(o=>{
 msg+=`${o.pizza} (${o.formato}) x${o.quantita} - €${o.totale}\n`;
 
 o.aggiunte.forEach(a=>{
-msg+=`+ ${a.nome}\n`;
+msg+=`+ ${a}\n`;
 });
 
 if(o.note)msg+=`Note: ${o.note}\n`;
