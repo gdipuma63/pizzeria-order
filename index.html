@@ -128,15 +128,16 @@ border-radius:10px;
 <h4>Seleziona aggiunte</h4>
 
 <select id="aggiunteSelect"></select>
-<button class="main-btn" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
+
+<button class="main-btn" type="button" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
 
 <div id="listaAggiunte"></div>
 
-<!-- 🔥 FIX SOLO QUI -->
+<!-- NOTE SOLO PER VERDURE / SALUMI -->
 <div id="noteBox" style="display:none;">
-<h5>Dettaglio aggiunta (solo per Verdure / Salumi)</h5>
-<textarea id="noteAggiunte" placeholder="es. rucola, prosciutto crudo..."></textarea>
-<button class="main-btn" onclick="salvaNota()">Salva dettaglio</button>
+<h5>Dettaglio aggiunta (Verdure / Salumi)</h5>
+<textarea id="noteAggiunte"></textarea>
+<button class="main-btn" type="button" onclick="salvaNota()">Salva dettaglio</button>
 </div>
 
 <h4>Esclusioni</h4>
@@ -161,8 +162,6 @@ border-radius:10px;
 
 <script>
 
-/* ===== MENU ===== */
-
 const sheetUrl="https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/heads/main/menu.csv";
 
 let menu={};
@@ -173,7 +172,7 @@ let noteAgg={};
 const pizzaSelect=document.getElementById("pizza");
 const ingredientiDiv=document.getElementById("ingredienti");
 
-/* ===== CARICA MENU (INTEGRO, NON MODIFICATO) ===== */
+/* ================= MENU ================= */
 
 async function caricaMenu(){
 
@@ -199,50 +198,14 @@ const pfValido=menu[p].pf>0;
 
 pizzaSelect.innerHTML+=`
 <option value="${p}">
-${p} (${pfValido?
-`Normale €${menu[p].pn} / Familiare €${menu[p].pf}`:
-`€${menu[p].pn}`})
+${p} (${pfValido
+? `Normale €${menu[p].pn} / Familiare €${menu[p].pf}`
+: `€${menu[p].pn}`})
 </option>`;
 }
 }
 
-window.onload=caricaMenu;
-
-/* ===== INGREDIENTI ===== */
-
-pizzaSelect.addEventListener("change",function(){
-
-const p=this.value;
-if(!p) return;
-
-ingredientiDiv.innerHTML=`<b>Ingredienti:</b> ${menu[p].ingredienti}`;
-
-generaEsclusioni(p);
-});
-
-/* ===== ESCLUSIONI ===== */
-
-function generaEsclusioni(pizza){
-
-const div=document.getElementById("esclusioniContainer");
-div.innerHTML="";
-
-menu[pizza].ingredienti
-.split(",")
-.map(x=>x.trim())
-.filter(x=>x)
-.forEach(i=>{
-
-div.innerHTML+=`
-<label>
-<input type="checkbox" value="${i}">
-${i}
-</label>
-`;
-});
-}
-
-/* ===== AGGIUNTE ===== */
+/* ================= AGGIUNTE LISTA ================= */
 
 const aggiunte=[
 {nome:"Patatine",p:1,pf:2},
@@ -253,6 +216,22 @@ const aggiunte=[
 {nome:"Funghi",p:1.5,pf:3},
 {nome:"Bufala",p:2,pf:3.5}
 ];
+
+function caricaAggiunteSelect(){
+
+const sel=document.getElementById("aggiunteSelect");
+
+sel.innerHTML='<option value="">Seleziona aggiunta</option>';
+
+aggiunte.forEach(a=>{
+sel.innerHTML+=`
+<option value="${a.nome}">
+${a.nome} (€${a.p} / €${a.pf})
+</option>`;
+});
+}
+
+/* ================= AGGIUNGI EXTRA ================= */
 
 function aggiungiExtra(){
 
@@ -269,14 +248,14 @@ noteAgg[val]="";
 renderAggiunte();
 }
 
-/* SALVATAGGIO NOTA */
+/* SALVA NOTA */
 function salvaNota(){
-const val = aggiunteSelezionate[aggiunteSelezionate.length-1];
+const val=aggiunteSelezionate[aggiunteSelezionate.length-1];
 noteAgg[val]=document.getElementById("noteAggiunte").value;
 renderAggiunte();
 }
 
-/* RENDER */
+/* RENDER AGGIUNTE */
 function renderAggiunte(){
 
 const div=document.getElementById("listaAggiunte");
@@ -294,7 +273,34 @@ div.innerHTML+=`
 });
 }
 
-/* ===== ORDINE ===== */
+/* ================= ESCLUSIONI ================= */
+
+pizzaSelect.addEventListener("change",function(){
+
+const p=this.value;
+if(!p) return;
+
+ingredientiDiv.innerHTML=`<b>Ingredienti:</b> ${menu[p].ingredienti}`;
+
+const div=document.getElementById("esclusioniContainer");
+div.innerHTML="";
+
+menu[p].ingredienti
+.split(",")
+.map(x=>x.trim())
+.filter(x=>x)
+.forEach(i=>{
+
+div.innerHTML+=`
+<label>
+<input type="checkbox" value="${i}">
+${i}
+</label>
+`;
+});
+});
+
+/* ================= ORDINE ================= */
 
 function aggiungiPizza(){
 
@@ -326,9 +332,9 @@ aggiorna();
 aggiunteSelezionate=[];
 noteAgg={};
 document.getElementById("noteBox").style.display="none";
-}
+});
 
-/* ===== RIEPILOGO ===== */
+/* ================= RIEPILOGO ================= */
 
 function aggiorna(){
 
@@ -351,7 +357,7 @@ div.innerHTML+=`+ ${a}<br>`;
 });
 
 div.innerHTML+=`
-<button onclick="ordine.splice(${i},1);aggiorna()">Rimuovi</button>
+<button class="rimuovi-btn" onclick="ordine.splice(${i},1);aggiorna();">Rimuovi</button>
 <hr>
 </div>
 `;
@@ -360,7 +366,7 @@ div.innerHTML+=`
 div.innerHTML+=`<h3>Totale: €${tot.toFixed(2)}</h3>`;
 }
 
-/* ===== WHATSAPP ===== */
+/* ================= WHATSAPP ================= */
 
 function inviaOrdine(){
 
@@ -378,6 +384,12 @@ msg+="\n";
 
 window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
 }
+
+/* INIT */
+window.onload=function(){
+caricaMenu();
+caricaAggiunteSelect();
+};
 
 </script>
 
