@@ -153,7 +153,7 @@ border-radius:10px;
 <input type="number" id="quantita" value="1" min="1">
 
 <!-- AGGIUNTE -->
-<h4>Aggiunte</h4>
+<h4>Seleziona aggiunte</h4>
 
 <select id="aggiunteSelect"></select>
 <button class="main-btn" type="button" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
@@ -304,7 +304,7 @@ function caricaAggiunteSelect(){
 
 const sel=document.getElementById("aggiunteSelect");
 
-sel.innerHTML='<option value="">Seleziona aggiunta</option>';
+sel.innerHTML='<option value="">Elenco</option>';
 
 aggiunte.forEach(a=>{
 sel.innerHTML+=`
