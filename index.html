@@ -102,18 +102,9 @@ border-radius:10px;
 
 <!-- CLIENTE -->
 <div class="box">
-
 <h3>Dati cliente</h3>
-
 <input type="text" id="nome" placeholder="Nome">
 <input type="text" id="telefonoUtente" placeholder="Telefono">
-
-<select id="modalita">
-<option value="">Modalità ordine</option>
-<option>Consegna a domicilio</option>
-<option>Ritiro in pizzeria</option>
-</select>
-
 </div>
 
 <!-- PIZZA -->
@@ -141,9 +132,11 @@ border-radius:10px;
 
 <div id="listaAggiunte"></div>
 
+<!-- 🔥 FIX SOLO QUI -->
 <div id="noteBox" style="display:none;">
-<h5>Dettaglio aggiunta</h5>
-<textarea id="noteAggiunte"></textarea>
+<h5>Dettaglio aggiunta (solo per Verdure / Salumi)</h5>
+<textarea id="noteAggiunte" placeholder="es. rucola, prosciutto crudo..."></textarea>
+<button class="main-btn" onclick="salvaNota()">Salva dettaglio</button>
 </div>
 
 <h4>Esclusioni</h4>
@@ -168,19 +161,19 @@ border-radius:10px;
 
 <script>
 
+/* ===== MENU ===== */
+
 const sheetUrl="https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/heads/main/menu.csv";
 
 let menu={};
 let ordine=[];
 let aggiunteSelezionate=[];
-
-/* aggiunte con NOTE */
 let noteAgg={};
 
 const pizzaSelect=document.getElementById("pizza");
 const ingredientiDiv=document.getElementById("ingredienti");
 
-/* ================= MENU ================= */
+/* ===== CARICA MENU (INTEGRO, NON MODIFICATO) ===== */
 
 async function caricaMenu(){
 
@@ -202,14 +195,54 @@ pizzaSelect.innerHTML='<option value="">Seleziona pizza</option>';
 
 for(let p in menu){
 
+const pfValido=menu[p].pf>0;
+
 pizzaSelect.innerHTML+=`
-<option value="${p}">${p}</option>`;
+<option value="${p}">
+${p} (${pfValido?
+`Normale €${menu[p].pn} / Familiare €${menu[p].pf}`:
+`€${menu[p].pn}`})
+</option>`;
 }
 }
 
 window.onload=caricaMenu;
 
-/* ================= AGGIUNTE ================= */
+/* ===== INGREDIENTI ===== */
+
+pizzaSelect.addEventListener("change",function(){
+
+const p=this.value;
+if(!p) return;
+
+ingredientiDiv.innerHTML=`<b>Ingredienti:</b> ${menu[p].ingredienti}`;
+
+generaEsclusioni(p);
+});
+
+/* ===== ESCLUSIONI ===== */
+
+function generaEsclusioni(pizza){
+
+const div=document.getElementById("esclusioniContainer");
+div.innerHTML="";
+
+menu[pizza].ingredienti
+.split(",")
+.map(x=>x.trim())
+.filter(x=>x)
+.forEach(i=>{
+
+div.innerHTML+=`
+<label>
+<input type="checkbox" value="${i}">
+${i}
+</label>
+`;
+});
+}
+
+/* ===== AGGIUNTE ===== */
 
 const aggiunte=[
 {nome:"Patatine",p:1,pf:2},
@@ -228,7 +261,6 @@ if(!val) return;
 
 aggiunteSelezionate.push(val);
 
-/* mostra note SOLO per questi */
 if(val==="Verdure" || val==="Salumi"){
 document.getElementById("noteBox").style.display="block";
 noteAgg[val]="";
@@ -237,14 +269,17 @@ noteAgg[val]="";
 renderAggiunte();
 }
 
-function salvaNota(nome){
-noteAgg[nome]=document.getElementById("noteAggiunte").value;
+/* SALVATAGGIO NOTA */
+function salvaNota(){
+const val = aggiunteSelezionate[aggiunteSelezionate.length-1];
+noteAgg[val]=document.getElementById("noteAggiunte").value;
+renderAggiunte();
 }
 
+/* RENDER */
 function renderAggiunte(){
 
 const div=document.getElementById("listaAggiunte");
-
 div.innerHTML="";
 
 aggiunteSelezionate.forEach(a=>{
@@ -259,7 +294,7 @@ div.innerHTML+=`
 });
 }
 
-/* ================= ORDINE ================= */
+/* ===== ORDINE ===== */
 
 function aggiungiPizza(){
 
@@ -272,7 +307,6 @@ let base=formato==="Familiare"?menu[p].pf:menu[p].pn;
 let listaAgg=[];
 
 aggiunteSelezionate.forEach(a=>{
-
 let nota = noteAgg[a] ? ` (${noteAgg[a]})` : "";
 listaAgg.push(a + nota);
 });
@@ -294,7 +328,7 @@ noteAgg={};
 document.getElementById("noteBox").style.display="none";
 }
 
-/* ================= RIEPILOGO ================= */
+/* ===== RIEPILOGO ===== */
 
 function aggiorna(){
 
@@ -324,6 +358,25 @@ div.innerHTML+=`
 });
 
 div.innerHTML+=`<h3>Totale: €${tot.toFixed(2)}</h3>`;
+}
+
+/* ===== WHATSAPP ===== */
+
+function inviaOrdine(){
+
+let msg="🍕 ORDINE\n\n";
+
+ordine.forEach(o=>{
+msg+=`${o.pizza} x${o.quantita} - €${o.totale}\n`;
+
+o.aggiunte.forEach(a=>{
+msg+=`+ ${a}\n`;
+});
+
+msg+="\n";
+});
+
+window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
 }
 
 </script>
