@@ -96,6 +96,7 @@ margin:15px 0;
 
 <div class="container">
 
+<!-- CLIENTE -->
 <div class="box">
 
 <h3>Dati cliente</h3>
@@ -115,6 +116,7 @@ margin:15px 0;
 
 </div>
 
+<!-- PIZZA -->
 <div class="box">
 
 <h3>🍕 Seleziona pizza</h3>
@@ -126,7 +128,6 @@ margin:15px 0;
 <div id="ingredienti"></div>
 
 <label>Formato pizza</label>
-
 <select id="formatoPizza">
 <option value="Normale">Normale</option>
 <option value="Famiglia">Famiglia</option>
@@ -136,7 +137,6 @@ margin:15px 0;
 <input type="number" id="quantita" value="1" min="1">
 
 <h4>Aggiunte</h4>
-
 <div id="aggiunte" class="quick-buttons">
 <button type="button" data-val="Extra mozzarella">Extra mozzarella</button>
 <button type="button" data-val="Olive">Olive</button>
@@ -145,7 +145,6 @@ margin:15px 0;
 </div>
 
 <h4>Esclusioni</h4>
-
 <div id="modifiche" class="quick-buttons">
 <button type="button" data-val="Senza mozzarella">Senza mozzarella</button>
 <button type="button" data-val="Senza cipolla">Senza cipolla</button>
@@ -158,13 +157,14 @@ Aggiungi all'ordine
 
 </div>
 
+<!-- RIEPILOGO -->
 <div class="box">
 
 <h3>🧾 Riepilogo ordine</h3>
 
 <div id="listaOrdine"></div>
 
-<button class="main-btn" onclick="inviaOrdine">
+<button class="main-btn" onclick="inviaOrdine()">
 Invia ordine su WhatsApp
 </button>
 
@@ -185,7 +185,12 @@ let ordine = [];
 let aggiunteSelezionate = [];
 let modificheSelezionate = [];
 
+/* =========================
+   CARICAMENTO MENU
+========================= */
 async function caricaMenu(){
+
+try{
 
 const response = await fetch(sheetUrl);
 const data = await response.text();
@@ -193,23 +198,24 @@ const data = await response.text();
 const righe = data.split("\n").slice(1);
 
 righe.forEach(riga=>{
-  if(!riga.trim()) return;
+if(!riga.trim()) return;
 
-  const [categoria,nome,ingredienti,prezzoNormale,prezzoFamiglia] =
-  riga.split(";").map(x => x.replace("\r","").trim());
+const [categoria,nome,ingredienti,prezzoNormale,prezzoFamiglia] =
+riga.split(";").map(x => x.replace("\r","").trim());
 
-  if(!nome) return;
+if(!nome) return;
 
-  menu[nome] = {
-    categoria: categoria,
-    ingredienti: ingredienti,
-    prezzoNormale: parseFloat(prezzoNormale) || 0,
-    prezzoFamiglia: parseFloat(prezzoFamiglia) || 0
-  };
+menu[nome] = {
+categoria,
+ingredienti,
+prezzoNormale: parseFloat(prezzoNormale) || 0,
+prezzoFamiglia: parseFloat(prezzoFamiglia) || 0
+};
 
 });
 
-pizzaSelect.innerHTML='<option value="">Seleziona pizza</option>';
+/* POPOLA SELECT */
+pizzaSelect.innerHTML = '<option value="">Seleziona pizza</option>';
 
 for(let pizza in menu){
 
@@ -217,16 +223,24 @@ const pn = menu[pizza].prezzoNormale;
 const pf = menu[pizza].prezzoFamiglia;
 
 const option = document.createElement("option");
-
 option.value = pizza;
 option.text = `${pizza} (N €${pn.toFixed(2)} / F €${pf.toFixed(2)})`;
 
 pizzaSelect.add(option);
 }
 
+}catch(err){
+console.error("Errore caricamento menu:", err);
+pizzaSelect.innerHTML = '<option>Errore caricamento menu</option>';
 }
 
-caricaMenu();
+}
+
+window.addEventListener("load", caricaMenu);
+
+/* =========================
+   PREZZO DINAMICO
+========================= */
 
 pizzaSelect.addEventListener("change", aggiornaPrezzoSelezione);
 formatoPizza.addEventListener("change", aggiornaPrezzoSelezione);
@@ -249,19 +263,21 @@ ingredientiDiv.innerHTML =
 
 }
 
+/* =========================
+   MODALITÀ
+========================= */
 document.getElementById("modalita")
 .addEventListener("change",function(){
 
-if(this.value==="Consegna a domicilio"){
-document.getElementById("indirizzoBox").style.display="block";
-}else{
-document.getElementById("indirizzoBox").style.display="none";
-}
+document.getElementById("indirizzoBox").style.display =
+this.value==="Consegna a domicilio" ? "block" : "none";
 
 });
 
-document.querySelectorAll("#aggiunte button")
-.forEach(btn=>{
+/* =========================
+   AGGIUNTE / ESCLUSIONI
+========================= */
+document.querySelectorAll("#aggiunte button").forEach(btn=>{
 btn.addEventListener("click",function(){
 const val=this.dataset.val;
 this.classList.toggle("selected");
@@ -274,8 +290,7 @@ aggiunteSelezionate.push(val);
 });
 });
 
-document.querySelectorAll("#modifiche button")
-.forEach(btn=>{
+document.querySelectorAll("#modifiche button").forEach(btn=>{
 btn.addEventListener("click",function(){
 const val=this.dataset.val;
 this.classList.toggle("selected");
@@ -288,6 +303,9 @@ modificheSelezionate.push(val);
 });
 });
 
+/* =========================
+   AGGIUNGI PIZZA
+========================= */
 function aggiungiPizza(){
 
 const pizza = pizzaSelect.value;
@@ -321,12 +339,15 @@ modificheSelezionate=[];
 
 document.querySelectorAll(".quick-buttons button")
 .forEach(btn=>btn.classList.remove("selected"));
+
 }
 
+/* =========================
+   RIEPILOGO
+========================= */
 function aggiornaLista(){
 
 const div=document.getElementById("listaOrdine");
-
 div.innerHTML="";
 
 let totale=0;
@@ -343,8 +364,8 @@ div.innerHTML+=`
 x${item.quantita}
 - €${subtotale.toFixed(2)}</b><br>
 
-${item.modifiche.length>0 ? "Esclusioni: "+item.modifiche.join(", ") : ""}<br>
-${item.aggiunte.length>0 ? "Aggiunte: "+item.aggiunte.join(", ") : ""}<br>
+${item.modifiche.length ? "Esclusioni: "+item.modifiche.join(", ") : ""}<br>
+${item.aggiunte.length ? "Aggiunte: "+item.aggiunte.join(", ") : ""}<br>
 
 <button onclick="rimuoviPizza(${index})">❌ Rimuovi</button>
 <hr>
@@ -361,6 +382,9 @@ ordine.splice(index,1);
 aggiornaLista();
 }
 
+/* =========================
+   WHATSAPP
+========================= */
 function inviaOrdine(){
 
 if(ordine.length===0){
@@ -391,11 +415,11 @@ messaggio+=`${index+1}) ${item.pizza}
 (${item.formato})
 x${item.quantita}\n`;
 
-if(item.modifiche.length>0){
+if(item.modifiche.length){
 messaggio+=`Esclusioni: ${item.modifiche.join(", ")}\n`;
 }
 
-if(item.aggiunte.length>0){
+if(item.aggiunte.length){
 messaggio+=`Aggiunte: ${item.aggiunte.join(", ")}\n`;
 }
 
@@ -406,7 +430,7 @@ messaggio+=`\n`;
 messaggio+=`Totale: €${totale.toFixed(2)}`;
 
 const url =
-`https://wa.me/${telefonoPizzeria}?text=${encodeURIComponent(messaggio)}`;
+`https://wa.me/${telefonoUtente.value}?text=${encodeURIComponent(messaggio)}`;
 
 window.open(url,"_blank");
 
