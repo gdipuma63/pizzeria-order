@@ -144,13 +144,15 @@ border-radius:10px;
 
 <select id="aggiunteSelect"></select>
 
+<button class="main-btn" type="button" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
+
 <div id="listaAggiunte"></div>
 
-<h5>Note aggiuntive</h5>
-<textarea id="noteAggiunte" placeholder="Scrivi richieste extra..."></textarea>
-
-<!-- 🔥 QUI IL PULSANTE È STATO SPOSTATO -->
-<button class="main-btn" type="button" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
+<!-- 🔥 DETTAGLIO CONDIZIONATO -->
+<div id="noteBox" style="display:none;">
+<h5>Dettaglio aggiunta selezionata</h5>
+<textarea id="noteAggiunte" placeholder="Es: verdure grigliate / salumi misti / specifiche..."></textarea>
+</div>
 
 <h4>Esclusioni (ingredienti pizza)</h4>
 <div id="esclusioniContainer"></div>
@@ -188,7 +190,7 @@ const pizzaSelect=document.getElementById("pizza");
 const ingredientiDiv=document.getElementById("ingredienti");
 const formatoPizza=document.getElementById("formatoPizza");
 
-/* ===== MENU ===== */
+/* ================= MENU ================= */
 
 async function caricaMenu(){
 
@@ -230,7 +232,7 @@ caricaAggiunteSelect();
 
 window.onload=caricaMenu;
 
-/* ===== INGREDIENTI ===== */
+/* ================= INGREDIENTI ================= */
 
 pizzaSelect.addEventListener("change",function(){
 
@@ -244,7 +246,7 @@ generaEsclusioni(p);
 
 });
 
-/* ===== ESCLUSIONI ===== */
+/* ================= ESCLUSIONI ================= */
 
 function generaEsclusioni(pizza){
 
@@ -268,7 +270,7 @@ ${i}
 
 }
 
-/* ===== AGGIUNTE ===== */
+/* ================= AGGIUNTE ================= */
 
 const aggiunte=[
 {nome:"Patatine",p:1,pf:2},
@@ -295,6 +297,8 @@ ${a.nome} (€${a.p} / €${a.pf})
 });
 }
 
+/* ================= AGGIUNTA EXTRA ================= */
+
 function aggiungiExtra(){
 
 const val=document.getElementById("aggiunteSelect").value;
@@ -304,6 +308,15 @@ const obj=aggiunte.find(a=>a.nome===val);
 if(!obj) return;
 
 aggiunteSelezionate.push(obj);
+
+/* 🔥 MOSTRA DETTAGLIO SOLO PER QUESTE */
+if(val==="Verdure" || val==="Salumi"){
+document.getElementById("noteBox").style.display="block";
+} else {
+document.getElementById("noteBox").style.display="none";
+document.getElementById("noteAggiunte").value="";
+}
+
 renderAggiunte();
 }
 
@@ -331,7 +344,7 @@ aggiunteSelezionate.splice(i,1);
 renderAggiunte();
 }
 
-/* ===== ORDINE ===== */
+/* ================= ORDINE ================= */
 
 function aggiungiPizza(){
 
@@ -353,6 +366,12 @@ document.querySelectorAll("#esclusioniContainer input:checked").forEach(cb=>{
 listaAgg.push("NO "+cb.value);
 });
 
+/* 🔥 nota SOLO se attiva */
+let note = "";
+if(document.getElementById("noteBox").style.display==="block"){
+note=document.getElementById("noteAggiunte").value||"";
+}
+
 const totale=(base+extra)*q;
 
 ordine.push({
@@ -361,7 +380,7 @@ formato,
 quantita:q,
 totale,
 aggiunte:listaAgg,
-note:document.getElementById("noteAggiunte").value||""
+note:note
 });
 
 aggiorna();
@@ -370,10 +389,12 @@ aggiunteSelezionate=[];
 renderAggiunte();
 
 document.getElementById("noteAggiunte").value="";
+document.getElementById("noteBox").style.display="none";
+
 document.querySelectorAll("#esclusioniContainer input").forEach(c=>c.checked=false);
 }
 
-/* ===== RIEPILOGO ===== */
+/* ================= RIEPILOGO ================= */
 
 function aggiorna(){
 
@@ -407,7 +428,7 @@ div.innerHTML+=`
 div.innerHTML+=`<h3>Totale: €${tot.toFixed(2)}</h3>`;
 }
 
-/* ===== WHATSAPP ===== */
+/* ================= WHATSAPP ================= */
 
 function inviaOrdine(){
 
