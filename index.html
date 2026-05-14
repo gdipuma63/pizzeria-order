@@ -146,13 +146,21 @@ border-radius:10px;
 <h4>Seleziona aggiunte</h4>
 
 <select id="aggiunteSelect"></select>
-<button class="main-btn" type="button" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
 
 <div id="listaAggiunte"></div>
 
-<!-- ✅ SPOSTATO QUI -->
 <h5>Note aggiuntive</h5>
 <textarea id="noteAggiunte" placeholder="Scrivi richieste extra..."></textarea>
+
+<!-- 🔥 SPOSTATO QUI -->
+<button class="main-btn" type="button" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
+
+<h4>Esclusioni (ingredienti pizza)</h4>
+<div id="esclusioniContainer"></div>
+
+<button class="main-btn" onclick="aggiungiPizza()">
+Aggiungi all'ordine
+</button>
 
 <h4>Esclusioni (ingredienti pizza)</h4>
 <div id="esclusioniContainer"></div>
