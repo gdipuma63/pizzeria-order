@@ -66,8 +66,7 @@ background:#f2f2f2;
 border-radius:8px;
 }
 
-/* ================= LISTA ORDINE ================= */
-
+/* ordine */
 .rimuovi-btn{
 background:#c0392b;
 color:white;
@@ -78,25 +77,17 @@ cursor:pointer;
 margin-top:10px;
 }
 
-hr{
-margin:15px 0;
-}
-
-/* ================= MOBILE FIX ================= */
-
+/* mobile fix */
 @media (max-width:600px){
-
 .rimuovi-btn{
 width:100%;
 font-size:16px;
 }
-
 }
 
-/* ================= AGGIUNTE CHECKBOX ================= */
-
+/* aggiunte */
 .aggiunte-gruppo{
-margin-bottom:15px;
+margin-bottom:10px;
 padding:10px;
 background:#f7f7f7;
 border-radius:10px;
@@ -105,6 +96,10 @@ border-radius:10px;
 .aggiunte-gruppo label{
 display:block;
 margin:5px 0;
+}
+
+hr{
+margin:15px 0;
 }
 
 </style>
@@ -156,14 +151,12 @@ margin:5px 0;
 <label>Quantità</label>
 <input type="number" id="quantita" value="1" min="1">
 
-<!-- AGGIUNTE -->
 <h4>Aggiunte</h4>
 <div id="aggiunteContainer"></div>
 
 <h5>Note aggiuntive</h5>
 <textarea id="noteAggiunte" placeholder="Scrivi richieste extra..."></textarea>
 
-<!-- ESCLUSIONI -->
 <h4>Esclusioni</h4>
 <div id="modifiche">
 <label><input type="checkbox" value="Senza mozzarella"> Senza mozzarella</label>
@@ -198,15 +191,28 @@ const sheetUrl="https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/
 
 let menu={};
 let ordine=[];
-let aggiunteSelezionate=[];
+
+/* AGGIUNTE */
+const aggiunte=[
+{nome:"Patatine",p:1,pf:2},
+{nome:"Wurstel",p:1,pf:2},
+{nome:"Grana",p:1,pf:2},
+{nome:"Ciliegino",p:1,pf:2},
+{nome:"Verdure",p:1,pf:2},
+{nome:"Crema Formaggi",p:1,pf:2},
+{nome:"Salumi",p:1.5,pf:3},
+{nome:"Salsiccia",p:1.5,pf:3},
+{nome:"Funghi",p:1.5,pf:3},
+{nome:"Bufala",p:2,pf:3.5},
+{nome:"Porcini",p:2,pf:3.5},
+{nome:"Tartufo",p:2,pf:3.5}
+];
 
 const pizzaSelect=document.getElementById("pizza");
 const ingredientiDiv=document.getElementById("ingredienti");
 const formatoPizza=document.getElementById("formatoPizza");
-const optionFamiliare=formatoPizza.querySelector('option[value="Familiare"]');
 
-/* ================= MENU ================= */
-
+/* MENU */
 async function caricaMenu(){
 
 const res=await fetch(sheetUrl);
@@ -232,7 +238,7 @@ pizzaSelect.innerHTML='<option value="">Seleziona pizza</option>';
 
 for(let p in menu){
 
-let pfValido=menu[p].pf>0;
+const pfValido=menu[p].pf>0;
 
 pizzaSelect.innerHTML+=`
 <option value="${p}">
@@ -247,23 +253,7 @@ renderAggiunte();
 
 window.onload=caricaMenu;
 
-/* ================= AGGIUNTE ================= */
-
-const aggiunte=[
-{nome:"Patatine",p:1,pf:2},
-{nome:"Wurstel",p:1,pf:2},
-{nome:"Grana",p:1,pf:2},
-{nome:"Ciliegino",p:1,pf:2},
-{nome:"Verdure",p:1,pf:2},
-{nome:"Crema Formaggi",p:1,pf:2},
-{nome:"Salumi",p:1.5,pf:3},
-{nome:"Salsiccia",p:1.5,pf:3},
-{nome:"Funghi",p:1.5,pf:3},
-{nome:"Bufala",p:2,pf:3.5},
-{nome:"Porcini",p:2,pf:3.5},
-{nome:"Tartufo",p:2,pf:3.5}
-];
-
+/* AGGIUNTE CHECKBOX */
 function renderAggiunte(){
 
 const box=document.getElementById("aggiunteContainer");
@@ -275,7 +265,7 @@ div.className="aggiunte-gruppo";
 
 div.innerHTML=`
 <label>
-<input type="checkbox" value="${a.nome}" data-p="${a.p}" data-pf="${a.pf}">
+<input type="checkbox" data-nome="${a.nome}" data-p="${a.p}" data-pf="${a.pf}">
 ${a.nome} (€${a.p} / €${a.pf})
 </label>
 `;
@@ -285,8 +275,7 @@ box.appendChild(div);
 });
 }
 
-/* ================= AGGIUNGI ================= */
-
+/* AGGIUNGI */
 function aggiungiPizza(){
 
 const p=pizzaSelect.value;
@@ -298,14 +287,16 @@ let base=formato==="Familiare"?menu[p].pf:menu[p].pn;
 let extra=0;
 let selezionate=[];
 
+/* aggiunte */
 document.querySelectorAll("#aggiunteContainer input:checked").forEach(cb=>{
 extra += formato==="Familiare"
 ? parseFloat(cb.dataset.pf)
 : parseFloat(cb.dataset.p);
 
-selezionate.push(cb.value);
+selezionate.push(cb.dataset.nome);
 });
 
+/* esclusioni */
 document.querySelectorAll("#modifiche input:checked").forEach(cb=>{
 selezionate.push(cb.value);
 });
@@ -325,11 +316,9 @@ aggiorna();
 
 document.getElementById("noteAggiunte").value="";
 document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=false);
-
 }
 
-/* ================= RIEPILOGO ================= */
-
+/* RIEPILOGO */
 function aggiorna(){
 
 let div=document.getElementById("listaOrdine");
@@ -353,7 +342,7 @@ div.innerHTML+=`+ ${a}<br>`;
 if(o.note)div.innerHTML+=`Note: ${o.note}<br>`;
 
 div.innerHTML+=`
-<button class="rimuovi-btn" onclick="rimuovi(${i})">❌ Rimuovi</button>
+<button class="rimuovi-btn" onclick="ordine.splice(${i},1);aggiorna();">❌ Rimuovi</button>
 <hr>
 </div>
 `;
@@ -362,13 +351,7 @@ div.innerHTML+=`
 div.innerHTML+=`<h3>Totale: €${tot.toFixed(2)}</h3>`;
 }
 
-function rimuovi(i){
-ordine.splice(i,1);
-aggiorna();
-}
-
-/* ================= WHATSAPP ================= */
-
+/* WHATSAPP */
 function inviaOrdine(){
 
 let msg="🍕 ORDINE\n\n";
