@@ -66,7 +66,7 @@ background:#f2f2f2;
 border-radius:8px;
 }
 
-/* ordine */
+/* LISTA ORDINE */
 .rimuovi-btn{
 background:#c0392b;
 color:white;
@@ -77,29 +77,17 @@ cursor:pointer;
 margin-top:10px;
 }
 
-/* mobile fix */
+/* MOBILE */
 @media (max-width:600px){
 .rimuovi-btn{
 width:100%;
-font-size:16px;
 }
 }
 
-/* aggiunte */
-.aggiunte-gruppo{
-margin-bottom:10px;
-padding:10px;
-background:#f7f7f7;
-border-radius:10px;
-}
-
-.aggiunte-gruppo label{
+/* ESCLUSIONI COMPATTE */
+#modifiche label{
 display:block;
-margin:5px 0;
-}
-
-hr{
-margin:15px 0;
+margin:6px 0;
 }
 
 </style>
@@ -151,17 +139,28 @@ margin:15px 0;
 <label>Quantità</label>
 <input type="number" id="quantita" value="1" min="1">
 
-<h4>Aggiunte</h4>
-<div id="aggiunteContainer"></div>
+<!-- ================= AGGIUNTE (SELECT + ADD) ================= -->
 
+<h4>Aggiunte</h4>
+
+<select id="aggiunteSelect"></select>
+<button type="button" class="main-btn" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
+
+<div id="listaAggiunte"></div>
+
+<!-- NOTE -->
 <h5>Note aggiuntive</h5>
 <textarea id="noteAggiunte" placeholder="Scrivi richieste extra..."></textarea>
 
+<!-- ================= ESCLUSIONI ================= -->
+
 <h4>Esclusioni</h4>
+
 <div id="modifiche">
 <label><input type="checkbox" value="Senza mozzarella"> Senza mozzarella</label>
 <label><input type="checkbox" value="Senza cipolla"> Senza cipolla</label>
 <label><input type="checkbox" value="Senza pomodoro"> Senza pomodoro</label>
+<label><input type="checkbox" value="Senza olive"> Senza olive</label>
 </div>
 
 <button class="main-btn" onclick="aggiungiPizza()">
@@ -191,28 +190,14 @@ const sheetUrl="https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/
 
 let menu={};
 let ordine=[];
-
-/* AGGIUNTE */
-const aggiunte=[
-{nome:"Patatine",p:1,pf:2},
-{nome:"Wurstel",p:1,pf:2},
-{nome:"Grana",p:1,pf:2},
-{nome:"Ciliegino",p:1,pf:2},
-{nome:"Verdure",p:1,pf:2},
-{nome:"Crema Formaggi",p:1,pf:2},
-{nome:"Salumi",p:1.5,pf:3},
-{nome:"Salsiccia",p:1.5,pf:3},
-{nome:"Funghi",p:1.5,pf:3},
-{nome:"Bufala",p:2,pf:3.5},
-{nome:"Porcini",p:2,pf:3.5},
-{nome:"Tartufo",p:2,pf:3.5}
-];
+let aggiunteSelezionate=[];
 
 const pizzaSelect=document.getElementById("pizza");
-const ingredientiDiv=document.getElementById("ingredienti");
 const formatoPizza=document.getElementById("formatoPizza");
+const ingredientiDiv=document.getElementById("ingredienti");
 
-/* MENU */
+/* ================= MENU ================= */
+
 async function caricaMenu(){
 
 const res=await fetch(sheetUrl);
@@ -248,34 +233,83 @@ ${p} (${pfValido?
 </option>`;
 }
 
-renderAggiunte();
+caricaAggiunteSelect();
 }
 
 window.onload=caricaMenu;
 
-/* AGGIUNTE CHECKBOX */
-function renderAggiunte(){
+/* ================= AGGIUNTE ================= */
 
-const box=document.getElementById("aggiunteContainer");
+const aggiunte=[
+{nome:"Patatine",p:1,pf:2},
+{nome:"Wurstel",p:1,pf:2},
+{nome:"Grana",p:1,pf:2},
+{nome:"Verdure",p:1,pf:2},
+{nome:"Salumi",p:1.5,pf:3},
+{nome:"Funghi",p:1.5,pf:3},
+{nome:"Bufala",p:2,pf:3.5},
+{nome:"Porcini",p:2,pf:3.5}
+];
+
+function caricaAggiunteSelect(){
+
+const sel=document.getElementById("aggiunteSelect");
+
+sel.innerHTML='<option value="">Seleziona aggiunta</option>';
 
 aggiunte.forEach(a=>{
-
-const div=document.createElement("div");
-div.className="aggiunte-gruppo";
-
-div.innerHTML=`
-<label>
-<input type="checkbox" data-nome="${a.nome}" data-p="${a.p}" data-pf="${a.pf}">
+sel.innerHTML+=`
+<option value="${a.nome}">
 ${a.nome} (€${a.p} / €${a.pf})
-</label>
-`;
+</option>`;
+});
+}
 
-box.appendChild(div);
+/* aggiungi extra */
+
+function aggiungiExtra(){
+
+const sel=document.getElementById("aggiunteSelect");
+const val=sel.value;
+
+if(!val) return;
+
+const obj=aggiunte.find(a=>a.nome===val);
+
+if(!obj) return;
+
+aggiunteSelezionate.push(obj);
+
+renderListaAggiunte();
+}
+
+/* lista aggiunte */
+
+function renderListaAggiunte(){
+
+const div=document.getElementById("listaAggiunte");
+
+div.innerHTML="";
+
+aggiunteSelezionate.forEach((a,i)=>{
+
+div.innerHTML+=`
+<div>
++ ${a.nome}
+<button onclick="rimuoviAgg(${i})">❌</button>
+</div>
+`;
 
 });
 }
 
-/* AGGIUNGI */
+function rimuoviAgg(i){
+aggiunteSelezionate.splice(i,1);
+renderListaAggiunte();
+}
+
+/* ================= AGGIUNGI PIZZA ================= */
+
 function aggiungiPizza(){
 
 const p=pizzaSelect.value;
@@ -285,20 +319,17 @@ const formato=formatoPizza.value;
 let base=formato==="Familiare"?menu[p].pf:menu[p].pn;
 
 let extra=0;
-let selezionate=[];
+let listaAgg=[];
 
 /* aggiunte */
-document.querySelectorAll("#aggiunteContainer input:checked").forEach(cb=>{
-extra += formato==="Familiare"
-? parseFloat(cb.dataset.pf)
-: parseFloat(cb.dataset.p);
-
-selezionate.push(cb.dataset.nome);
+aggiunteSelezionate.forEach(a=>{
+extra += formato==="Familiare"?a.pf:a.p;
+listaAgg.push(a.nome);
 });
 
 /* esclusioni */
 document.querySelectorAll("#modifiche input:checked").forEach(cb=>{
-selezionate.push(cb.value);
+listaAgg.push(cb.value);
 });
 
 const totale=(base+extra)*q;
@@ -308,17 +339,21 @@ pizza:p,
 formato,
 quantita:q,
 totale,
-aggiunte:selezionate,
+aggiunte:listaAgg,
 note:document.getElementById("noteAggiunte").value||""
 });
 
 aggiorna();
 
+aggiunteSelezionate=[];
+renderListaAggiunte();
+
 document.getElementById("noteAggiunte").value="";
-document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=false);
+document.querySelectorAll("#modifiche input").forEach(c=>c.checked=false);
 }
 
-/* RIEPILOGO */
+/* ================= RIEPILOGO ================= */
+
 function aggiorna(){
 
 let div=document.getElementById("listaOrdine");
@@ -351,7 +386,8 @@ div.innerHTML+=`
 div.innerHTML+=`<h3>Totale: €${tot.toFixed(2)}</h3>`;
 }
 
-/* WHATSAPP */
+/* ================= WHATSAPP ================= */
+
 function inviaOrdine(){
 
 let msg="🍕 ORDINE\n\n";
