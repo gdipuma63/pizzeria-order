@@ -34,7 +34,7 @@ background:white;
 padding:20px;
 border-radius:12px;
 margin-bottom:20px;
-box-shadow:0 2px 5px rgba(0,0,0,0.06);
+box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
 input,select,button,textarea{
@@ -59,13 +59,14 @@ cursor:pointer;
 background:#2f2215;
 }
 
+/* ✅ INGREDIENTI SENZA SFONDO */
 #ingredienti{
 margin-top:12px;
-margin-bottom:15px;
-padding:12px;
-background:#f5e1c8;
-border-left:5px solid #4b3621;
-border-radius:0;
+margin-bottom:10px;
+padding:0;
+background:none;
+border:none;
+box-shadow:none;
 font-size:16px;
 line-height:1.4;
 }
@@ -105,7 +106,6 @@ margin:6px 0;
 
 <div class="container">
 
-<!-- CLIENTE -->
 <div class="box">
 
 <h3>Dati cliente</h3>
@@ -125,7 +125,6 @@ margin:6px 0;
 
 </div>
 
-<!-- PIZZA -->
 <div class="box">
 
 <h3>🍕 Seleziona pizza</h3>
@@ -134,6 +133,7 @@ margin:6px 0;
 <option>Caricamento menu...</option>
 </select>
 
+<!-- SOLO TESTO, SENZA BOX -->
 <div id="ingredienti"></div>
 
 <h4>Esclusioni (ingredienti pizza)</h4>
@@ -164,7 +164,6 @@ Aggiungi all'ordine
 
 </div>
 
-<!-- RIEPILOGO -->
 <div class="box">
 
 <h3>🧾 Riepilogo ordine</h3>
@@ -205,7 +204,6 @@ righe.forEach(r => {
 
 if(!r.trim()) return;
 
-/* ✔ separazione corretta campi CSV */
 const [cat, nome, ing, pn, pf] =
 r.split(";").map(x => x.trim());
 
@@ -250,14 +248,13 @@ generaEsclusioni(p);
 
 });
 
-/* ================= ESCLUSIONI (CORRETTE) ================= */
+/* ================= ESCLUSIONI ================= */
 
 function generaEsclusioni(pizza){
 
 const div = document.getElementById("esclusioniContainer");
 div.innerHTML = "";
 
-/* ✔ SPLIT CORRETTO: virgola */
 menu[pizza].ingredienti
 .split(",")
 .map(x => x.trim())
@@ -347,21 +344,18 @@ const formato = formatoPizza.value;
 
 let base = formato === "Familiare" ? menu[p].pf : menu[p].pn;
 
-let extra = 0;
 let listaAgg = [];
 
-/* aggiunte */
 aggiunteSelezionate.forEach(a => {
 listaAgg.push(a.nome);
 });
 
-/* esclusioni */
 document.querySelectorAll("#esclusioniContainer input:checked")
 .forEach(cb => {
 listaAgg.push("NO " + cb.value);
 });
 
-const totale = (base + extra) * q;
+const totale = base * q;
 
 ordine.push({
 pizza: p,
