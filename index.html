@@ -126,6 +126,13 @@ margin:15px 0;
 
 <div id="ingredienti"></div>
 
+<label>Formato pizza</label>
+
+<select id="formatoPizza">
+<option value="Normale">Normale</option>
+<option value="Famiglia">Famiglia</option>
+</select>
+  
 <label>Quantità</label>
 <input type="number" id="quantita" value="1" min="1">
 
@@ -196,7 +203,7 @@ const righe = data.split("\n").slice(1);
 
 righe.forEach(riga=>{
 
-const [categoria,nome,ingredienti,prezzoNormale] = riga.split(";");
+const [categoria,nome,ingredienti,prezzoNormale,prezzoFamiglia] = riga.split(";");
 
 if(nome){
 
@@ -206,7 +213,8 @@ categoria: categoria.trim(),
 
 ingredienti: ingredienti.trim(),
 
-prezzo: parseFloat(prezzoNormale)
+prezzoNormale: parseFloat(prezzoNormale),
+prezzoFamiglia: parseFloat(prezzoFamiglia)
 
 };
 
@@ -322,13 +330,23 @@ return;
 
 }
 
+const formato =
+document.getElementById("formatoPizza").value;
+
+const prezzo =
+formato==="Famiglia"
+? menu[pizza].prezzoFamiglia
+: menu[pizza].prezzoNormale;
+
 ordine.push({
 
 pizza:pizza,
 
+formato:formato,
+
 quantita:quantita,
 
-prezzo:menu[pizza].prezzo,
+prezzo:prezzo,
 
 aggiunte:[...aggiunteSelezionate],
 
@@ -365,7 +383,9 @@ div.innerHTML+=`
 
 <div>
 
-<b>${index+1}) ${item.pizza} x${item.quantita}
+<b>${index+1}) ${item.pizza}
+(${item.formato})
+x${item.quantita}
 - €${subtotale.toFixed(2)}</b><br>
 
 ${item.modifiche.length>0?
@@ -441,7 +461,9 @@ const subtotale=item.prezzo*item.quantita;
 
 totale+=subtotale;
 
-messaggio+=`${index+1}) ${item.pizza} x${item.quantita}\n`;
+messaggio+=`${index+1}) ${item.pizza}
+(${item.formato})
+x${item.quantita}\n`;
 
 if(item.modifiche.length>0){
 
