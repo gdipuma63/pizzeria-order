@@ -6,16 +6,97 @@
 <title>Ordina la tua pizza</title>
 
 <style>
-body{font-family:Arial,sans-serif;background:#d2b48c;margin:0;padding:0;}
-.header{background:#4b3621;color:white;padding:20px;text-align:center;font-size:28px;font-weight:bold;}
-.container{max-width:800px;margin:auto;padding:20px;}
-.box{background:white;padding:20px;border-radius:12px;margin-bottom:20px;box-shadow:0 0 10px rgba(0,0,0,0.1);}
-input,select,button,textarea{width:100%;padding:12px;margin-top:10px;border-radius:8px;border:1px solid #ccc;font-size:16px;box-sizing:border-box;}
-.main-btn{background:#4b3621;color:white;border:none;font-weight:bold;cursor:pointer;}
-.main-btn:hover{background:#2f2215;}
-#ingredienti{margin-top:10px;padding:10px;background:#f2f2f2;border-radius:8px;}
-</style>
 
+body{
+font-family:Arial,sans-serif;
+background:#d2b48c;
+margin:0;
+padding:0;
+}
+
+.header{
+background:#4b3621;
+color:white;
+padding:20px;
+text-align:center;
+font-size:28px;
+font-weight:bold;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+padding:20px;
+}
+
+.box{
+background:white;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+input,select,button,textarea{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ccc;
+font-size:16px;
+box-sizing:border-box;
+}
+
+.main-btn{
+background:#4b3621;
+color:white;
+border:none;
+font-weight:bold;
+cursor:pointer;
+}
+
+.main-btn:hover{
+background:#2f2215;
+}
+
+#ingredienti{
+margin-top:10px;
+padding:10px;
+background:#f2f2f2;
+border-radius:8px;
+}
+
+#listaOrdine button{
+background:#c0392b;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:6px;
+cursor:pointer;
+margin-top:8px;
+}
+
+/* 📱 FIX MOBILE */
+@media (max-width: 600px) {
+
+#listaOrdine div {
+padding-bottom: 10px;
+}
+
+#listaOrdine button {
+width: 100%;
+margin-top: 8px;
+padding: 10px;
+font-size: 16px;
+}
+
+hr {
+margin: 10px 0;
+}
+
+}
+
+</style>
 </head>
 
 <body>
@@ -26,6 +107,7 @@ input,select,button,textarea{width:100%;padding:12px;margin-top:10px;border-radi
 
 <!-- CLIENTE -->
 <div class="box">
+
 <h3>Dati cliente</h3>
 
 <input type="text" id="nome" placeholder="Nome">
@@ -40,6 +122,7 @@ input,select,button,textarea{width:100%;padding:12px;margin-top:10px;border-radi
 <div id="indirizzoBox" style="display:none;">
 <input type="text" id="indirizzo" placeholder="Indirizzo">
 </div>
+
 </div>
 
 <!-- PIZZA -->
@@ -65,18 +148,33 @@ input,select,button,textarea{width:100%;padding:12px;margin-top:10px;border-radi
 <h4>Aggiunte</h4>
 <div id="aggiunteContainer"></div>
 
-<h5>Note</h5>
-<textarea id="noteAggiunte"></textarea>
+<h5>Note aggiuntive</h5>
+<textarea id="noteAggiunte" placeholder="Scrivi richieste extra..."></textarea>
 
-<button class="main-btn" onclick="aggiungiPizza()">Aggiungi all'ordine</button>
+<h4>Esclusioni</h4>
+<div id="modifiche" class="quick-buttons">
+<button type="button" data-val="Senza mozzarella">Senza mozzarella</button>
+<button type="button" data-val="Senza cipolla">Senza cipolla</button>
+<button type="button" data-val="Senza pomodoro">Senza pomodoro</button>
+</div>
+
+<button class="main-btn" onclick="aggiungiPizza()">
+Aggiungi all'ordine
+</button>
 
 </div>
 
 <!-- RIEPILOGO -->
 <div class="box">
+
 <h3>🧾 Riepilogo ordine</h3>
+
 <div id="listaOrdine"></div>
-<button class="main-btn" onclick="inviaOrdine()">Invia WhatsApp</button>
+
+<button class="main-btn" onclick="inviaOrdine()">
+Invia ordine su WhatsApp
+</button>
+
 </div>
 
 </div>
@@ -198,27 +296,25 @@ const formato=formatoPizza.value;
 
 let base=formato==="Familiare"?menu[p].pf:menu[p].pn;
 
-/* 🔥 CALCOLO AGGIUNTE */
 let extra=0;
 
 aggiunteSelezionate.forEach(a=>{
 extra += (formato==="Familiare"?a.pf:a.p);
 });
 
-const totale=base+extra;
+const totale=(base+extra)*q;
 
 ordine.push({
 pizza:p,
 formato,
 quantita:q,
-base,
-extra,
-totale:totale*q,
+totale,
 aggiunte:[...aggiunteSelezionate],
 note:document.getElementById("noteAggiunte").value||""
 });
 
 aggiorna();
+
 aggiunteSelezionate=[];
 document.getElementById("noteAggiunte").value="";
 }
@@ -247,10 +343,15 @@ div.innerHTML+=`+ ${a.nome}<br>`;
 
 if(o.note)div.innerHTML+=`Note: ${o.note}<br>`;
 
-div.innerHTML+="<hr></div>";
+div.innerHTML+=`<button onclick="rimuovi(${i})">❌ Rimuovi</button><hr></div>`;
 });
 
 div.innerHTML+=`<h3>Totale: €${tot.toFixed(2)}</h3>`;
+}
+
+function rimuovi(i){
+ordine.splice(i,1);
+aggiorna();
 }
 
 /* ================= WHATSAPP ================= */
