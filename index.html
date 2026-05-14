@@ -162,6 +162,8 @@ border-radius:10px;
 
 <script>
 
+/* ================= MENU ================= */
+
 const sheetUrl="https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/heads/main/menu.csv";
 
 let menu={};
@@ -172,14 +174,18 @@ let noteAgg={};
 const pizzaSelect=document.getElementById("pizza");
 const ingredientiDiv=document.getElementById("ingredienti");
 
-/* ================= MENU ================= */
+/* ================= CARICA MENU ================= */
 
 async function caricaMenu(){
+
+try{
 
 const res=await fetch(sheetUrl);
 const data=await res.text();
 
 const righe=data.split("\n").slice(1);
+
+menu={};
 
 righe.forEach(r=>{
 
@@ -187,7 +193,12 @@ if(!r.trim()) return;
 
 const [cat,nome,ing,pn,pf]=r.split(";").map(x=>x.trim());
 
-menu[nome]={ingredienti:ing,pn:+pn,pf:+pf};
+menu[nome]={
+ingredienti:ing || "",
+pn:+pn||0,
+pf:+pf||0
+};
+
 });
 
 pizzaSelect.innerHTML='<option value="">Seleziona pizza</option>';
@@ -203,9 +214,19 @@ ${p} (${pfValido
 : `€${menu[p].pn}`})
 </option>`;
 }
+
+caricaAggiunteSelect();
+
+}catch(e){
+console.log("Errore menu:",e);
+pizzaSelect.innerHTML="<option>Errore caricamento menu</option>";
 }
 
-/* ================= AGGIUNTE LISTA ================= */
+}
+
+window.onload=caricaMenu;
+
+/* ================= AGGIUNTE ================= */
 
 const aggiunte=[
 {nome:"Patatine",p:1,pf:2},
@@ -229,51 +250,10 @@ sel.innerHTML+=`
 ${a.nome} (€${a.p} / €${a.pf})
 </option>`;
 });
+
 }
 
-/* ================= AGGIUNGI EXTRA ================= */
-
-function aggiungiExtra(){
-
-const val=document.getElementById("aggiunteSelect").value;
-if(!val) return;
-
-aggiunteSelezionate.push(val);
-
-if(val==="Verdure" || val==="Salumi"){
-document.getElementById("noteBox").style.display="block";
-noteAgg[val]="";
-}
-
-renderAggiunte();
-}
-
-/* SALVA NOTA */
-function salvaNota(){
-const val=aggiunteSelezionate[aggiunteSelezionate.length-1];
-noteAgg[val]=document.getElementById("noteAggiunte").value;
-renderAggiunte();
-}
-
-/* RENDER AGGIUNTE */
-function renderAggiunte(){
-
-const div=document.getElementById("listaAggiunte");
-div.innerHTML="";
-
-aggiunteSelezionate.forEach(a=>{
-
-let nota = noteAgg[a] ? ` (${noteAgg[a]})` : "";
-
-div.innerHTML+=`
-<div class="aggiunte-box">
-+ ${a}${nota}
-</div>
-`;
-});
-}
-
-/* ================= ESCLUSIONI ================= */
+/* ================= INGREDIENTI + ESCLUSIONI ================= */
 
 pizzaSelect.addEventListener("change",function(){
 
@@ -298,7 +278,59 @@ ${i}
 </label>
 `;
 });
+
 });
+
+/* ================= AGGIUNTE ================= */
+
+function aggiungiExtra(){
+
+const val=document.getElementById("aggiunteSelect").value;
+if(!val) return;
+
+aggiunteSelezionate.push(val);
+
+if(val==="Verdure" || val==="Salumi"){
+document.getElementById("noteBox").style.display="block";
+noteAgg[val]="";
+}
+
+renderAggiunte();
+
+}
+
+/* ================= NOTE ================= */
+
+function salvaNota(){
+
+const val=aggiunteSelezionate[aggiunteSelezionate.length-1];
+noteAgg[val]=document.getElementById("noteAggiunte").value;
+
+renderAggiunte();
+
+}
+
+/* ================= RENDER ================= */
+
+function renderAggiunte(){
+
+const div=document.getElementById("listaAggiunte");
+
+div.innerHTML="";
+
+aggiunteSelezionate.forEach(a=>{
+
+let nota = noteAgg[a] ? ` (${noteAgg[a]})` : "";
+
+div.innerHTML+=`
+<div class="aggiunte-box">
++ ${a}${nota}
+</div>
+`;
+
+});
+
+}
 
 /* ================= ORDINE ================= */
 
@@ -332,7 +364,8 @@ aggiorna();
 aggiunteSelezionate=[];
 noteAgg={};
 document.getElementById("noteBox").style.display="none";
-});
+
+}
 
 /* ================= RIEPILOGO ================= */
 
@@ -384,12 +417,6 @@ msg+="\n";
 
 window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
 }
-
-/* INIT */
-window.onload=function(){
-caricaMenu();
-caricaAggiunteSelect();
-};
 
 </script>
 
