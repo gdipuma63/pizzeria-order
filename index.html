@@ -79,10 +79,6 @@ cursor:pointer;
 margin-top:10px;
 }
 
-@media (max-width:600px){
-.rimuovi-btn{ width:100%; }
-}
-
 #esclusioniContainer label{
 display:block;
 margin:6px 0;
@@ -148,13 +144,13 @@ border-radius:10px;
 
 <select id="aggiunteSelect"></select>
 
-<button class="main-btn" type="button" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
-
 <div id="listaAggiunte"></div>
 
-<!-- 🔥 ORA LE NOTE SONO QUI DOPO IL PULSANTE -->
 <h5>Note aggiuntive</h5>
 <textarea id="noteAggiunte" placeholder="Scrivi richieste extra..."></textarea>
+
+<!-- 🔥 QUI IL PULSANTE È STATO SPOSTATO -->
+<button class="main-btn" type="button" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
 
 <h4>Esclusioni (ingredienti pizza)</h4>
 <div id="esclusioniContainer"></div>
@@ -182,8 +178,6 @@ Invia ordine su WhatsApp
 
 <script>
 
-/* ===== MENU ===== */
-
 const sheetUrl="https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/heads/main/menu.csv";
 
 let menu={};
@@ -194,7 +188,7 @@ const pizzaSelect=document.getElementById("pizza");
 const ingredientiDiv=document.getElementById("ingredienti");
 const formatoPizza=document.getElementById("formatoPizza");
 
-/* ===== CARICA MENU ===== */
+/* ===== MENU ===== */
 
 async function caricaMenu(){
 
@@ -367,8 +361,8 @@ formato,
 quantita:q,
 totale,
 aggiunte:listaAgg,
-note:document.getElementById("noteAggiunte").value||"
-"});
+note:document.getElementById("noteAggiunte").value||""
+});
 
 aggiorna();
 
