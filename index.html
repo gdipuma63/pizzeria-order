@@ -147,10 +147,12 @@ border-radius:10px;
 <h4>Seleziona aggiunte</h4>
 
 <select id="aggiunteSelect"></select>
+
 <button class="main-btn" type="button" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
 
 <div id="listaAggiunte"></div>
 
+<!-- 🔥 ORA LE NOTE SONO QUI DOPO IL PULSANTE -->
 <h5>Note aggiuntive</h5>
 <textarea id="noteAggiunte" placeholder="Scrivi richieste extra..."></textarea>
 
@@ -180,6 +182,8 @@ Invia ordine su WhatsApp
 
 <script>
 
+/* ===== MENU ===== */
+
 const sheetUrl="https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/heads/main/menu.csv";
 
 let menu={};
@@ -190,7 +194,7 @@ const pizzaSelect=document.getElementById("pizza");
 const ingredientiDiv=document.getElementById("ingredienti");
 const formatoPizza=document.getElementById("formatoPizza");
 
-/* ================= MENU ================= */
+/* ===== CARICA MENU ===== */
 
 async function caricaMenu(){
 
@@ -217,9 +221,9 @@ pizzaSelect.innerHTML='<option value="">Seleziona pizza</option>';
 
 for(let p in menu){
 
-const pfValido = menu[p].pf > 0;
+const pfValido=menu[p].pf>0;
 
-pizzaSelect.innerHTML += `
+pizzaSelect.innerHTML+=`
 <option value="${p}">
 ${p} (${pfValido
 ? `Normale €${menu[p].pn} / Familiare €${menu[p].pf}`
@@ -232,21 +236,21 @@ caricaAggiunteSelect();
 
 window.onload=caricaMenu;
 
-/* ================= INGREDIENTI ================= */
+/* ===== INGREDIENTI ===== */
 
 pizzaSelect.addEventListener("change",function(){
 
 const p=this.value;
 if(!p) return;
 
-ingredientiDiv.innerHTML =
+ingredientiDiv.innerHTML=
 `<b>Ingredienti:</b> ${menu[p].ingredienti}`;
 
 generaEsclusioni(p);
 
 });
 
-/* ================= ESCLUSIONI (FIX DEFINITIVO) ================= */
+/* ===== ESCLUSIONI ===== */
 
 function generaEsclusioni(pizza){
 
@@ -254,12 +258,12 @@ const div=document.getElementById("esclusioniContainer");
 div.innerHTML="";
 
 menu[pizza].ingredienti
-.split(",")   // 🔥 FIX IMPORTANTE
-.map(x => x.trim())
-.filter(x => x.length > 0)
-.forEach(i => {
+.split(",")
+.map(x=>x.trim())
+.filter(x=>x.length>0)
+.forEach(i=>{
 
-div.innerHTML += `
+div.innerHTML+=`
 <label>
 <input type="checkbox" value="${i}">
 ${i}
@@ -270,7 +274,7 @@ ${i}
 
 }
 
-/* ================= AGGIUNTE ================= */
+/* ===== AGGIUNTE ===== */
 
 const aggiunte=[
 {nome:"Patatine",p:1,pf:2},
@@ -333,7 +337,7 @@ aggiunteSelezionate.splice(i,1);
 renderAggiunte();
 }
 
-/* ================= ORDINE ================= */
+/* ===== ORDINE ===== */
 
 function aggiungiPizza(){
 
@@ -363,8 +367,8 @@ formato,
 quantita:q,
 totale,
 aggiunte:listaAgg,
-note:document.getElementById("noteAggiunte").value||""
-});
+note:document.getElementById("noteAggiunte").value||"
+"});
 
 aggiorna();
 
@@ -375,7 +379,7 @@ document.getElementById("noteAggiunte").value="";
 document.querySelectorAll("#esclusioniContainer input").forEach(c=>c.checked=false);
 }
 
-/* ================= RIEPILOGO ================= */
+/* ===== RIEPILOGO ===== */
 
 function aggiorna(){
 
@@ -409,7 +413,7 @@ div.innerHTML+=`
 div.innerHTML+=`<h3>Totale: €${tot.toFixed(2)}</h3>`;
 }
 
-/* ================= WHATSAPP ================= */
+/* ===== WHATSAPP ===== */
 
 function inviaOrdine(){
 
