@@ -59,14 +59,20 @@ cursor:pointer;
 background:#2f2215;
 }
 
+/* ================= INGREDIENTI ================= */
+
 #ingredienti{
-margin-top:10px;
-padding:10px;
-background:#f2f2f2;
+margin-top:12px;
+padding:14px;
+background:#fff3e6;
+border-left:5px solid #4b3621;
 border-radius:8px;
+font-size:16px;
+line-height:1.4;
 }
 
-/* LISTA ORDINE */
+/* ================= LISTA ORDINE ================= */
+
 .rimuovi-btn{
 background:#c0392b;
 color:white;
@@ -77,17 +83,24 @@ cursor:pointer;
 margin-top:10px;
 }
 
-/* MOBILE */
 @media (max-width:600px){
 .rimuovi-btn{
 width:100%;
 }
 }
 
-/* ESCLUSIONI COMPATTE */
-#modifiche label{
+/* ================= ESCLUSIONI ================= */
+
+#esclusioniContainer label{
 display:block;
 margin:6px 0;
+}
+
+.aggiunte-box{
+margin-top:10px;
+padding:10px;
+background:#f7f7f7;
+border-radius:10px;
 }
 
 </style>
@@ -139,12 +152,11 @@ margin:6px 0;
 <label>Quantità</label>
 <input type="number" id="quantita" value="1" min="1">
 
-<!-- ================= AGGIUNTE (SELECT + ADD) ================= -->
-
+<!-- AGGIUNTE -->
 <h4>Aggiunte</h4>
 
 <select id="aggiunteSelect"></select>
-<button type="button" class="main-btn" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
+<button class="main-btn" type="button" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
 
 <div id="listaAggiunte"></div>
 
@@ -152,16 +164,9 @@ margin:6px 0;
 <h5>Note aggiuntive</h5>
 <textarea id="noteAggiunte" placeholder="Scrivi richieste extra..."></textarea>
 
-<!-- ================= ESCLUSIONI ================= -->
-
-<h4>Esclusioni</h4>
-
-<div id="modifiche">
-<label><input type="checkbox" value="Senza mozzarella"> Senza mozzarella</label>
-<label><input type="checkbox" value="Senza cipolla"> Senza cipolla</label>
-<label><input type="checkbox" value="Senza pomodoro"> Senza pomodoro</label>
-<label><input type="checkbox" value="Senza olive"> Senza olive</label>
-</div>
+<!-- ESCLUSIONI -->
+<h4>Esclusioni (ingredienti pizza)</h4>
+<div id="esclusioniContainer"></div>
 
 <button class="main-btn" onclick="aggiungiPizza()">
 Aggiungi all'ordine
@@ -193,8 +198,8 @@ let ordine=[];
 let aggiunteSelezionate=[];
 
 const pizzaSelect=document.getElementById("pizza");
-const formatoPizza=document.getElementById("formatoPizza");
 const ingredientiDiv=document.getElementById("ingredienti");
+const formatoPizza=document.getElementById("formatoPizza");
 
 /* ================= MENU ================= */
 
@@ -238,6 +243,50 @@ caricaAggiunteSelect();
 
 window.onload=caricaMenu;
 
+/* ================= INGREDIENTI ================= */
+
+pizzaSelect.addEventListener("change",function(){
+
+const p=this.value;
+
+if(!p) return;
+
+ingredientiDiv.innerHTML =
+`<b>Ingredienti:</b> ${menu[p].ingredienti}`;
+
+generaEsclusioni(p);
+
+/* scroll mobile */
+setTimeout(()=>{
+ingredientiDiv.scrollIntoView({behavior:"smooth",block:"center"});
+},200);
+
+});
+
+/* ================= ESCLUSIONI DINAMICHE ================= */
+
+function generaEsclusioni(pizza){
+
+const div=document.getElementById("esclusioniContainer");
+div.innerHTML="";
+
+const ingr=menu[pizza].ingredienti.split(" ");
+
+ingr.forEach(i=>{
+
+if(!i.trim()) return;
+
+div.innerHTML+=`
+<label>
+<input type="checkbox" value="${i}">
+${i}
+</label>
+`;
+
+});
+
+}
+
 /* ================= AGGIUNTE ================= */
 
 const aggiunte=[
@@ -265,12 +314,9 @@ ${a.nome} (€${a.p} / €${a.pf})
 });
 }
 
-/* aggiungi extra */
-
 function aggiungiExtra(){
 
-const sel=document.getElementById("aggiunteSelect");
-const val=sel.value;
+const val=document.getElementById("aggiunteSelect").value;
 
 if(!val) return;
 
@@ -280,12 +326,10 @@ if(!obj) return;
 
 aggiunteSelezionate.push(obj);
 
-renderListaAggiunte();
+renderAggiunte();
 }
 
-/* lista aggiunte */
-
-function renderListaAggiunte(){
+function renderAggiunte(){
 
 const div=document.getElementById("listaAggiunte");
 
@@ -294,18 +338,19 @@ div.innerHTML="";
 aggiunteSelezionate.forEach((a,i)=>{
 
 div.innerHTML+=`
-<div>
+<div class="aggiunte-box">
 + ${a.nome}
 <button onclick="rimuoviAgg(${i})">❌</button>
 </div>
 `;
 
 });
+
 }
 
 function rimuoviAgg(i){
 aggiunteSelezionate.splice(i,1);
-renderListaAggiunte();
+renderAggiunte();
 }
 
 /* ================= AGGIUNGI PIZZA ================= */
@@ -328,8 +373,8 @@ listaAgg.push(a.nome);
 });
 
 /* esclusioni */
-document.querySelectorAll("#modifiche input:checked").forEach(cb=>{
-listaAgg.push(cb.value);
+document.querySelectorAll("#esclusioniContainer input:checked").forEach(cb=>{
+listaAgg.push("NO "+cb.value);
 });
 
 const totale=(base+extra)*q;
@@ -346,10 +391,10 @@ note:document.getElementById("noteAggiunte").value||""
 aggiorna();
 
 aggiunteSelezionate=[];
-renderListaAggiunte();
+renderAggiunte();
 
 document.getElementById("noteAggiunte").value="";
-document.querySelectorAll("#modifiche input").forEach(c=>c.checked=false);
+document.querySelectorAll("#esclusioniContainer input").forEach(c=>c.checked=false);
 }
 
 /* ================= RIEPILOGO ================= */
