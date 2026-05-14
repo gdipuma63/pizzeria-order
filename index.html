@@ -195,6 +195,10 @@ const data = await response.text();
 const righe = data.split("\n").slice(1);
 
 righe.forEach(riga=>{
+  if(!riga.trim()) return;
+
+  const [categoria,nome,ingredienti,prezzoNormale,prezzoFamiglia] =
+  riga.split(";").map(x => x.replace("\r","").trim());
 
 const [categoria,nome,ingredienti,prezzoNormale,prezzoFamiglia] =
 riga.split(";").map(x => x.trim());
@@ -221,7 +225,10 @@ for(let pizza in menu){
 const option=document.createElement("option");
 
 option.value=pizza;
-option.text = `${pizza} (€${menu[pizza].prezzoNormale.toFixed(2)})`;
+const pn = parseFloat(menu[pizza].prezzoNormale) || 0;
+const pf = parseFloat(menu[pizza].prezzoFamiglia) || 0;
+
+option.text = `${pizza} (N €${pn.toFixed(2)} / F €${pf.toFixed(2)})`;
 
 pizzaSelect.add(option);
 
@@ -241,7 +248,28 @@ ingredientiDiv.innerHTML =
 }
 
 });
+const formatoPizza = document.getElementById("formatoPizza");
 
+function aggiornaPrezzoSelezione(){
+
+const pizza = pizzaSelect.value;
+if(!pizza) return;
+
+const formato = formatoPizza.value;
+
+const prezzo =
+formato === "Famiglia"
+? menu[pizza].prezzoFamiglia
+: menu[pizza].prezzoNormale;
+
+ingredientiDiv.innerHTML =
+`<b>Ingredienti:</b> ${menu[pizza].ingredienti}<br>
+<b>Prezzo selezionato:</b> €${parseFloat(prezzo).toFixed(2)}`;
+
+}
+pizzaSelect.addEventListener("change", aggiornaPrezzoSelezione);
+formatoPizza.addEventListener("change", aggiornaPrezzoSelezione);
+  
 document.getElementById("modalita")
 .addEventListener("change",function(){
 
