@@ -105,12 +105,10 @@ margin:6px 0;
 
 <!-- CLIENTE -->
 <div class="box">
-
 <h3>Dati cliente</h3>
 
 <input type="text" id="nome" placeholder="Nome">
 <input type="text" id="telefonoUtente" placeholder="Telefono">
-
 </div>
 
 <!-- PIZZA -->
@@ -124,7 +122,7 @@ margin:6px 0;
 
 <div id="ingredienti"></div>
 
-<h4>Esclusioni (ingredienti pizza)</h4>
+<h4>Esclusioni</h4>
 <div id="esclusioniContainer"></div>
 
 <label>Formato pizza</label>
@@ -139,13 +137,12 @@ margin:6px 0;
 <h4>Seleziona aggiunte</h4>
 
 <select id="aggiunteSelect"></select>
-
 <button class="main-btn" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
 
 <div id="listaAggiunte"></div>
 
 <h5>Note aggiuntive (solo Verdure / Salumi)</h5>
-<textarea id="noteAggiunte" style="display:none" placeholder="Specificare dettagli..."></textarea>
+<textarea id="noteAggiunte" style="display:none" placeholder="Dettaglio aggiunta..."></textarea>
 
 <button class="main-btn" onclick="aggiungiPizza()">
 Aggiungi all'ordine
@@ -358,7 +355,15 @@ let base = formato === "Familiare" ? menu[p].pf : menu[p].pn;
 let listaAgg = [];
 
 aggiunteSelezionate.forEach(a=>{
+
+if((a === "Verdure" || a === "Salumi") &&
+document.getElementById("noteAggiunte").value){
+
+listaAgg.push(`${a} (${document.getElementById("noteAggiunte").value})`);
+}else{
 listaAgg.push(a);
+}
+
 });
 
 document.querySelectorAll("#esclusioniContainer input:checked")
@@ -373,14 +378,12 @@ pizza:p,
 formato,
 quantita:q,
 totale,
-aggiunte:listaAgg,
-note: document.getElementById("noteAggiunte").value || ""
+aggiunte:listaAgg
 });
 
 aggiorna();
 
 aggiunteSelezionate = [];
-renderAggiunte();
 
 document.getElementById("noteAggiunte").value = "";
 document.getElementById("noteAggiunte").style.display = "none";
@@ -409,8 +412,6 @@ o.aggiunte.forEach(a=>{
 div.innerHTML += `+ ${a}<br>`;
 });
 
-if(o.note) div.innerHTML += `Note: ${o.note}<br>`;
-
 div.innerHTML += `
 <button class="rimuovi-btn" onclick="ordine.splice(${i},1);aggiorna();">❌ Rimuovi</button>
 <hr>
@@ -434,8 +435,6 @@ o.aggiunte.forEach(a=>{
 msg += `+ ${a}\n`;
 });
 
-if(o.note) msg += `Note: ${o.note}\n`;
-
 msg += "\n";
 });
 
@@ -445,4 +444,4 @@ window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
 </script>
 
 </body>
-</html>>
+</html>
