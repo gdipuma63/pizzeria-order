@@ -285,18 +285,20 @@ ${i}
 
 function aggiungiExtra(){
 
-const val=document.getElementById("aggiunteSelect").value;
+const sel = document.getElementById("aggiunteSelect");
+const val = sel.value;
+
 if(!val) return;
 
-aggiunteSelezionate.push(val);
+const obj = aggiunte.find(a => a.nome === val);
+if(!obj) return;
 
-if(val==="Verdure" || val==="Salumi"){
-document.getElementById("noteBox").style.display="block";
-noteAgg[val]="";
-}
+aggiunteSelezionate.push(obj);
 
 renderAggiunte();
 
+/* 🔥 RESET SELECT DOPO AGGIUNTA */
+sel.value = "";
 }
 
 /* ================= NOTE ================= */
