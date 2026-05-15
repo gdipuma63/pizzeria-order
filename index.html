@@ -280,6 +280,21 @@ ingredientiDiv.innerHTML =
 
 generaEsclusioni(p);
 
+const formato = document.getElementById("formatoPizza");
+formato.innerHTML = "";
+
+const pfValido = menu[p].pf > 0;
+
+if(pfValido){
+formato.innerHTML = `
+<option value="Normale">Normale</option>
+<option value="Familiare">Familiare</option>
+`;
+} else {
+formato.innerHTML = `
+<option value="Normale">Normale</option>
+`;
+}
 });
 
 /* ================= ESCLUSIONI ================= */
