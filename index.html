@@ -103,6 +103,35 @@ font-weight:bold;
 #esclusioniSelect{
 margin-top:4px;
 }
+
+#esclusioniChips{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:4px;
+}
+
+.chip{
+padding:8px 12px;
+border:1px solid #ccc;
+border-radius:20px;
+cursor:pointer;
+font-size:14px;
+background:#fff;
+user-select:none;
+transition:0.2s;
+}
+
+.chip:hover{
+border-color:#4b3621;
+}
+
+.chip.active{
+background:#e8f0fe;
+color:#1a73e8;
+border-color:#1a73e8;
+font-weight:bold;
+}
  
 </style>
 </head>
@@ -133,7 +162,7 @@ margin-top:4px;
 <div id="ingredienti"></div>
 
 <h4>Seleziona ingredienti da eliminare:</h4>
-<select id="esclusioniSelect" multiple size="6" style="width:100%;padding:12px;border-radius:8px;border:1px solid #ccc;font-size:16px;"></select>
+<div id="esclusioniChips"></div>
 
 <label>Formato pizza</label>
 <select id="formatoPizza">
@@ -252,8 +281,8 @@ generaEsclusioni(p);
 
 function generaEsclusioni(pizza){
 
-const sel = document.getElementById("esclusioniSelect");
-sel.innerHTML = "";
+const div = document.getElementById("esclusioniChips");
+div.innerHTML = "";
 
 menu[pizza].ingredienti
 .split(",")
@@ -261,10 +290,15 @@ menu[pizza].ingredienti
 .filter(x => x)
 .forEach(i => {
 
-const opt = document.createElement("option");
-opt.value = i;
-opt.textContent = i;
-sel.appendChild(opt);
+const chip = document.createElement("div");
+chip.className = "chip";
+chip.textContent = i;
+
+chip.onclick = () => {
+chip.classList.toggle("active");
+};
+
+div.appendChild(chip);
 
 });
 
@@ -375,9 +409,9 @@ listaAgg.push(a);
 
 });
 
-Array.from(document.getElementById("esclusioniSelect").selectedOptions)
-.forEach(opt=>{
-listaAgg.push("- " + opt.value);
+document.querySelectorAll("#esclusioniChips .chip.active")
+.forEach(chip=>{
+listaAgg.push("- " + chip.textContent);
 });
 
 const totale = base * q;
