@@ -384,10 +384,25 @@ aggiunte:listaAgg
 
 aggiorna();
 
+/* RESET COMPLETO MODULO */
+
 aggiunteSelezionate = [];
+renderAggiunte();
+
+pizzaSelect.value = "";
+
+document.getElementById("ingredienti").innerHTML = "";
+
+document.getElementById("formatoPizza").value = "Normale";
+
+document.getElementById("quantita").value = 1;
+
+document.getElementById("aggiunteSelect").value = "";
 
 document.getElementById("noteAggiunte").value = "";
 document.getElementById("noteAggiunte").style.display = "none";
+
+document.getElementById("esclusioniContainer").innerHTML = "";
 
 }
 
