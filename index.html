@@ -425,7 +425,11 @@ div.innerHTML += `
 `;
 
 o.aggiunte.forEach(a=>{
-div.innerHTML += `+ ${a}<br>`;
+if(a.startsWith("- ")){
+    div.innerHTML += `${a}<br>`;
+} else {
+    div.innerHTML += `+ ${a}<br>`;
+}
 });
 
 div.innerHTML += `
