@@ -123,7 +123,7 @@ margin:6px 0;
 <div id="ingredienti"></div>
 
 <h4>Esclusioni</h4>
-<div id="esclusioniContainer"></div>
+<select id="esclusioniSelect" multiple size="6" style="width:100%;padding:12px;border-radius:8px;border:1px solid #ccc;font-size:16px;"></select>
 
 <label>Formato pizza</label>
 <select id="formatoPizza">
@@ -242,8 +242,8 @@ generaEsclusioni(p);
 
 function generaEsclusioni(pizza){
 
-const div = document.getElementById("esclusioniContainer");
-div.innerHTML = "";
+const sel = document.getElementById("esclusioniSelect");
+sel.innerHTML = "";
 
 menu[pizza].ingredienti
 .split(",")
@@ -251,12 +251,10 @@ menu[pizza].ingredienti
 .filter(x => x)
 .forEach(i => {
 
-div.innerHTML += `
-<label>
-<input type="checkbox" value="${i}">
-${i}
-</label>
-`;
+const opt = document.createElement("option");
+opt.value = i;
+opt.textContent = i;
+sel.appendChild(opt);
 
 });
 
@@ -367,9 +365,9 @@ listaAgg.push(a);
 
 });
 
-document.querySelectorAll("#esclusioniContainer input:checked")
-.forEach(cb=>{
-listaAgg.push("- " + cb.value);
+Array.from(document.getElementById("esclusioniSelect").selectedOptions)
+.forEach(opt=>{
+listaAgg.push("- " + opt.value);
 });
 
 const totale = base * q;
@@ -402,7 +400,8 @@ document.getElementById("aggiunteSelect").value = "";
 document.getElementById("noteAggiunte").value = "";
 document.getElementById("noteAggiunte").style.display = "none";
 
-document.getElementById("esclusioniContainer").innerHTML = "";
+/* RESET ESCLUSIONI MULTI-SELECT */
+document.getElementById("esclusioniSelect").selectedIndex = -1;
 
 }
 
