@@ -169,7 +169,9 @@ margin-bottom:25px;
 
 <div id="ingredienti"></div>
 
-<h4>Seleziona ingredienti da eliminare:</h4>
+<h4 id="labelEsclusioni" style="display:none;">
+Seleziona ingredienti da eliminare:
+</h4>
 <div id="esclusioniChips"></div>
 
 <label>Formato pizza</label>
@@ -279,7 +281,8 @@ ingredientiDiv.innerHTML =
 `<b>Ingredienti:</b> ${menu[p].ingredienti}`;
 
 generaEsclusioni(p);
-
+document.getElementById("labelEsclusioni").style.display = "block";
+ 
 const formato = document.getElementById("formatoPizza");
 formato.innerHTML = "";
 
