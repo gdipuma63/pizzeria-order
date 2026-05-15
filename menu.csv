@@ -1,5 +1,5 @@
 Categoria;Nome;Ingredienti;Prezzo_Normale;Prezzo_Famiglia
-I Covaccini;COVACCINO;Panipizza, Bufala, Crudo, Rucola, Grana;7.50;14.00
+I Covaccini;COVACCINO;Bufala, Crudo, Rucola, Grana;7.50;14.00
 I Covaccini;ESTIVA;Bufala, Ciliegino, Rucola, Bresaola, Limone Scaglie di grana;8.00;15.00
 I Covaccini;LEGGERA;Bufala, Funghi porcini, Rucola, Scaglie di grana;7.50;14.00
 I Covaccini;ORTOLANA;Bufala, Funghi, Emmenthal, Ciliegino, Rucola, Scaglie di grana;7.50;14.00
@@ -83,7 +83,7 @@ Calzoni e Cannoli;CALZONE 4 GUSTI;Pomodoro, Mozzarella, Prosciutto, Funghi, Wurs
 Calzoni e Cannoli;CANNOLO NAPOLETANO;Pomodoro, Mozzarella di bufala, Scaglie di grana;8.00;
 Calzoni e Cannoli;CANNOLO LIPARI;Mozzarella, Prosciutto, Salame piccante, Crema ai formaggi;8.00;
 Calzoni e Cannoli;CANNOLO SICILIANO;Prosciutto, Funghi, Cipolla, Caciocavallo, Mozzarella;7.00;
-Pizza Dolce;PIZZA DOLCE;Panepizza, Nutella, Granella di mandorle, Pistacchio, Zucchero a velo;6.00;
+Pizza Dolce;PIZZA DOLCE;Nutella, Granella di mandorle, Pistacchio, Zucchero a velo;6.00;
 Pizza Siciliana;CUDDURUNI;Acciughe, Cipolla, Ciliegino, Pecorino, Mollica bianca, Sale, Pepe, Origano;7.00;
 Pizza Siciliana;SFINCIONE;Acciughe, Cipolla, Tumma locale, Pomodoro, Mollica bianca, Caciocavallo stagionato, Sale, Pepe, Origano;7.00;
 Pizza Siciliana;RIA NATA;Pesto di prezzemolo e mentuccia, Acciughe, Cipolla, Ciliegino, Tumma locale, Cipolla bianca, Caciocavallo stagionato, Sale, Pepe, Origano;7.00;
