@@ -257,7 +257,6 @@ onclick="usaGeolocalizzazione()">
 
 <h3 style="text-align:center;">🍕 MENU' PIZZE 🍕</h3>
 <div id="listaPizze"></div>
-<div id="ingredienti"></div>
 
 <h4 id="labelEsclusioni" style="display:none;">
 Seleziona ingredienti da eliminare:
@@ -436,8 +435,6 @@ document.querySelectorAll(".pizza-item")
 .forEach(el => el.classList.remove("active"));
 
 elemento.classList.add("active");
-
-ingredientiDiv.innerHTML = `<b>Ingredienti:</b> ${menu[p].ingredienti}`;
 
 generaEsclusioni(p);
 document.getElementById("labelEsclusioni").style.display = "block";
