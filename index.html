@@ -392,11 +392,14 @@ const cat = document.getElementById("filtroCategoria").value;
 
 if(cat === "Tutte"){
 renderPizze(tuttePizze);
+document.getElementById("listaPizze").scrollIntoView({ behavior: "smooth" });
 return;
 }
 
 const filtrate = tuttePizze.filter(p => menu[p].categoria === cat);
 renderPizze(filtrate);
+
+document.getElementById("listaPizze").scrollIntoView({ behavior: "smooth" });
 }
 
 /* ================= RENDER PIZZE ================= */
