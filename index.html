@@ -46,7 +46,13 @@ border:1px solid #ccc;
 font-size:16px;
 box-sizing:border-box;
 }
-
+label{
+    display:block;
+    margin-top:14px;
+    margin-bottom:6px;
+    font-weight:600;
+    color:#4b3621;
+}
 .main-btn{
 background:#4b3621;
 color:white;
@@ -57,13 +63,6 @@ cursor:pointer;
 
 .main-btn:hover{
 background:#2f2215;
-}
-
-#ingredienti{
-margin-top:12px;
-padding:14px;
-font-size:16px;
-line-height:1.4;
 }
 
 .rimuovi-btn{
@@ -113,9 +112,9 @@ border-color:#4b3621;
 }
 
 .chip.active{
-background:#e8f0fe;
-color:#1a73e8;
-border-color:#1a73e8;
+background:#4b3621;
+color:white;
+border-color:#4b3621;
 font-weight:bold;
 }
 
@@ -182,8 +181,7 @@ transition:0.2s;
 }
 
 .modalita-btn.active{
-background:#4b3621;
-color:white;
+transform: scale(1.02);
 }
 
 @media (max-width:600px){
@@ -191,15 +189,7 @@ color:white;
 .modalita-box{
 flex-direction:column;
 }
-
-label{
-    display:block;
-    margin-top:14px;
-    margin-bottom:6px;
-    font-weight:600;
-    color:#4b3621;
-}
-    
+  
 }
 </style>
 </head>
