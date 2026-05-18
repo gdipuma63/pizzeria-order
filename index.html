@@ -77,7 +77,7 @@ margin-top:10px;
 }
 
 @media (max-width:600px){
-.rimuovi-btn{ width:100%; }
+.rimuovi-btn{ width:100%;
 }
 
 .aggiunte-box{
@@ -161,7 +161,36 @@ font-weight:bold;
 margin-top:6px;
 color:#1a73e8;
 }
+.modalita-box{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
 
+.modalita-btn{
+flex:1;
+background:#f1f1f1;
+color:#333;
+border:none;
+padding:14px;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
+transition:0.2s;
+}
+
+.modalita-btn.active{
+background:#4b3621;
+color:white;
+}
+
+@media (max-width:600px){
+
+.modalita-box{
+flex-direction:column;
+}
+
+}
 </style>
 </head>
 
@@ -267,12 +296,32 @@ let menu = {};
 let ordine = [];
 let aggiunteSelezionate = [];
 let pizzaSelezionata = null;
+let modalitaOrdine = "Ritiro";
 
 const listaPizze = document.getElementById("listaPizze");
 const ingredientiDiv = document.getElementById("ingredienti");
 
 let tuttePizze = [];
 
+function selezionaModalita(tipo){
+
+modalitaOrdine = tipo;
+
+document.getElementById("btnRitiro")
+.classList.remove("active");
+
+document.getElementById("btnConsegna")
+.classList.remove("active");
+
+if(tipo === "Ritiro"){
+document.getElementById("btnRitiro")
+.classList.add("active");
+}else{
+document.getElementById("btnConsegna")
+.classList.add("active");
+}
+
+}
 /* ================= MENU ================= */
 
 async function caricaMenu(){
@@ -582,7 +631,7 @@ div.innerHTML += `<h3>Totale: €${tot.toFixed(2)}</h3>`;
 function inviaOrdine(){
 
 let msg = "🍕 ORDINE\n\n";
-
+msg += "Modalità: " + modalitaOrdine + "\n\n";
 ordine.forEach(o=>{
 msg += `${o.pizza} x${o.quantita} - €${o.totale}\n`;
 o.aggiunte.forEach(a=> msg += `+ ${a}\n`);
