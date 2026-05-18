@@ -172,21 +172,50 @@ color:#1a73e8;
 <div class="container">
 
 <!-- CLIENTE -->
+<!-- CLIENTE -->
 <div class="box">
+
 <h3>Dati cliente</h3>
-<input type="text" id="nome" placeholder="Nome">
+
+<input type="text" id="nome" placeholder="Nominativo">
+
 <input type="text" id="telefonoUtente" placeholder="Telefono">
+
+<h4>Modalità ordine</h4>
+
+<div class="modalita-box">
+
+<button type="button"
+class="modalita-btn active"
+id="btnRitiro"
+onclick="selezionaModalita('da riitirare')">
+
+🏠 Ritiro in pizzeria
+
+</button>
+
+<button type="button"
+class="modalita-btn"
+id="btnConsegna"
+onclick="selezionaModalita('Consegna a domicilio')">
+
+🛵 Consegna a domicilio
+
+</button>
+
+</div>
+
 </div>
 
 <!-- PIZZA -->
 <div class="box">
 
-<h3>🍕 Seleziona filtro categoria</h3>
+<h3 style="text-align:center;">🍕 Seleziona categoria 🍕</h3>
 <select id="filtroCategoria" onchange="filtraPizze()">
 <option value="Tutte">Tutte le categorie</option>
 </select>
 
-<h3>🍕 Seleziona pizza</h3>
+<h3 style="text-align:center;">🍕 MENU PIZZE 🍕</h3>
 <div id="listaPizze"></div>
 <div id="ingredienti"></div>
 
