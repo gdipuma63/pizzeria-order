@@ -89,21 +89,12 @@ background:#f7f7f7;
 border-radius:10px;
 }
 
-#esclusioniSelect option:checked{
-background:#e8f0fe;
-color:#1a73e8;
-font-weight:bold;
-}
-
-#esclusioniSelect{
-margin-top:4px;
-}
-
 #esclusioniChips{
 display:flex;
 flex-wrap:wrap;
 gap:8px;
 margin-top:4px;
+margin-bottom:25px;
 }
 
 .chip{
@@ -130,10 +121,6 @@ font-weight:bold;
 
 h4{
 margin-bottom:20px;
-}
-
-#esclusioniChips{
-margin-bottom:25px;
 }
 
 #formatoPizza{
@@ -258,7 +245,7 @@ const sheetUrl =
 let menu = {};
 let ordine = [];
 let aggiunteSelezionate = [];
-let pizzaSelezionata = "";
+let pizzaSelezionata = null;
 const listaPizze = document.getElementById("listaPizze");
 const ingredientiDiv = document.getElementById("ingredienti");
 
