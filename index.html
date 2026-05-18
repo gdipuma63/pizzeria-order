@@ -181,8 +181,12 @@ color:#1a73e8;
 <!-- PIZZA -->
 <div class="box">
 
-<h3>🍕 Seleziona pizza</h3>
+<h3>🍕 Seleziona filtro categoria</h3>
+<select id="filtroCategoria" onchange="filtraPizze()">
+<option value="Tutte">Tutte le categorie</option>
+</select>
 
+<h3>🍕 Seleziona pizza</h3>
 <div id="listaPizze"></div>
 <div id="ingredienti"></div>
 
@@ -238,6 +242,8 @@ let pizzaSelezionata = null;
 const listaPizze = document.getElementById("listaPizze");
 const ingredientiDiv = document.getElementById("ingredienti");
 
+let tuttePizze = [];
+
 /* ================= MENU ================= */
 
 async function caricaMenu(){
@@ -246,7 +252,11 @@ const res = await fetch(sheetUrl);
 const data = await res.text();
 
 const righe = data.split("\n").slice(1);
+
 menu = {};
+tuttePizze = [];
+
+const categorieSet = new Set();
 
 righe.forEach(r => {
 if(!r.trim()) return;
@@ -254,15 +264,54 @@ if(!r.trim()) return;
 const [cat, nome, ing, pn, pf] = r.split(";").map(x => x.trim());
 
 menu[nome] = {
+categoria: cat,
 ingredienti: ing || "",
 pn: parseFloat(pn) || 0,
 pf: parseFloat(pf) || 0
 };
+
+tuttePizze.push(nome);
+categorieSet.add(cat);
 });
+
+caricaCategorie([...categorieSet]);
+renderPizze(tuttePizze);
+caricaAggiunteSelect();
+}
+
+window.onload = caricaMenu;
+
+/* ================= CATEGORIE ================= */
+
+function caricaCategorie(categorie){
+const sel = document.getElementById("filtroCategoria");
+categorie.forEach(c=>{
+const opt = document.createElement("option");
+opt.value = c;
+opt.textContent = c;
+sel.appendChild(opt);
+});
+}
+
+function filtraPizze(){
+const cat = document.getElementById("filtroCategoria").value;
+
+if(cat === "Tutte"){
+renderPizze(tuttePizze);
+return;
+}
+
+const filtrate = tuttePizze.filter(p => menu[p].categoria === cat);
+renderPizze(filtrate);
+}
+
+/* ================= RENDER PIZZE ================= */
+
+function renderPizze(lista){
 
 listaPizze.innerHTML = "";
 
-for(let p in menu){
+lista.forEach(p => {
 
 const pfValido = menu[p].pf > 0;
 
@@ -279,12 +328,8 @@ ${pfValido ? `Normale €${menu[p].pn} • Familiare €${menu[p].pf}` : `€${m
 
 div.onclick = () => selezionaPizza(p, div);
 listaPizze.appendChild(div);
+});
 }
-
-caricaAggiunteSelect();
-}
-
-window.onload = caricaMenu;
 
 /* ================= SELEZIONE PIZZA ================= */
 
@@ -353,6 +398,7 @@ const aggiunte = [
 function caricaAggiunteSelect(){
 
 const sel = document.getElementById("aggiunteSelect");
+
 sel.innerHTML = '<option value="">Seleziona</option>';
 
 aggiunte.forEach(a=>{
@@ -402,7 +448,7 @@ aggiunteSelezionate.splice(i,1);
 renderAggiunte();
 }
 
-/* ================= ORDINE ================= */
+/* ================= AGGIUNGI PIZZA ================= */
 
 function aggiungiPizza(){
 
@@ -432,7 +478,6 @@ aggiunte:listaAgg
 
 aggiorna();
 
-/* reset */
 aggiunteSelezionate = [];
 renderAggiunte();
 pizzaSelezionata = null;
