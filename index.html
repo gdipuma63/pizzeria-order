@@ -144,7 +144,49 @@ margin-bottom:25px;
 #formatoPizza{
 margin-bottom:18px;
 }
- 
+#listaPizze{
+max-height:320px;
+overflow-y:auto;
+border:1px solid #ccc;
+border-radius:12px;
+margin-top:10px;
+}
+
+.pizza-item{
+padding:12px;
+border-bottom:1px solid #eee;
+cursor:pointer;
+transition:0.2s;
+background:white;
+}
+
+.pizza-item:hover{
+background:#f8f8f8;
+}
+
+.pizza-item.active{
+background:#e8f0fe;
+border-left:4px solid #1a73e8;
+}
+
+.pizza-nome{
+font-weight:bold;
+font-size:16px;
+color:#4b3621;
+}
+
+.pizza-ingredienti{
+font-size:13px;
+color:#666;
+margin-top:4px;
+}
+
+.pizza-prezzo{
+font-size:14px;
+font-weight:bold;
+margin-top:6px;
+color:#1a73e8;
+}
 </style>
 </head>
 
@@ -167,9 +209,7 @@ margin-bottom:18px;
 
 <h3>🍕 Seleziona pizza</h3>
 
-<select id="pizza">
-<option>Caricamento menu...</option>
-</select>
+<div id="listaPizze"></div>
 
 <div id="ingredienti"></div>
 
@@ -223,8 +263,8 @@ const sheetUrl =
 let menu = {};
 let ordine = [];
 let aggiunteSelezionate = [];
-
-const pizzaSelect = document.getElementById("pizza");
+let pizzaSelezionata = "";
+const listaPizze = document.getElementById("listaPizze");
 const ingredientiDiv = document.getElementById("ingredienti");
 
 /* ================= MENU ================= */
@@ -253,19 +293,33 @@ pf: parseFloat(pf) || 0
 
 });
 
-pizzaSelect.innerHTML = '<option value="">Seleziona pizza</option>';
+listaPizze.innerHTML = "";
 
 for(let p in menu){
 
 const pfValido = menu[p].pf > 0;
 
-pizzaSelect.innerHTML += `
-<option value="${p}">
-${p} (${pfValido
-? `Normale €${menu[p].pn} / Familiare €${menu[p].pf}`
-: `€${menu[p].pn}`})
- - (${menu[p].ingredienti})
-</option>`;
+const div = document.createElement("div");
+div.className = "pizza-item";
+
+div.innerHTML = `
+<div class="pizza-nome">${p}</div>
+
+<div class="pizza-ingredienti">
+${menu[p].ingredienti}
+</div>
+
+<div class="pizza-prezzo">
+${pfValido
+? `Normale €${menu[p].pn} • Familiare €${menu[p].pf}`
+: `€${menu[p].pn}`}
+</div>
+`;
+
+div.onclick = () => selezionaPizza(p, div);
+
+listaPizze.appendChild(div);
+
 }
 
 caricaAggiunteSelect();
@@ -276,17 +330,25 @@ window.onload = caricaMenu;
 
 /* ================= INGREDIENTI ================= */
 
-pizzaSelect.addEventListener("change", function(){
+function selezionaPizza(p, elemento){
 
-const p = this.value;
-if(!p) return;
+pizzaSelezionata = p;
 
+/* evidenzia pizza selezionata */
+document.querySelectorAll(".pizza-item")
+.forEach(el => el.classList.remove("active"));
+
+elemento.classList.add("active");
+
+/* ingredienti */
 ingredientiDiv.innerHTML =
 `<b>Ingredienti:</b> ${menu[p].ingredienti}`;
 
+/* esclusioni */
 generaEsclusioni(p);
 document.getElementById("labelEsclusioni").style.display = "block";
- 
+
+/* formato pizza */
 const formato = document.getElementById("formatoPizza");
 formato.innerHTML = "";
 
@@ -297,13 +359,14 @@ formato.innerHTML = `
 <option value="Normale">Normale</option>
 <option value="Familiare">Familiare</option>
 `;
-} else {
+}else{
 formato.innerHTML = `
 <option value="Normale">Normale</option>
 `;
 }
-});
 
+}
+ 
 /* ================= ESCLUSIONI ================= */
 
 function generaEsclusioni(pizza){
@@ -416,7 +479,7 @@ renderAggiunte();
 
 function aggiungiPizza(){
 
-const p = pizzaSelect.value;
+const p = pizzaSelezionata;
 const q = parseInt(document.getElementById("quantita").value);
 const formato = document.getElementById("formatoPizza").value;
 
@@ -458,7 +521,10 @@ aggiorna();
 aggiunteSelezionate = [];
 renderAggiunte();
 
-pizzaSelect.value = "";
+pizzaSelezionata = "";
+
+document.querySelectorAll(".pizza-item")
+.forEach(el => el.classList.remove("active"));
 
 document.getElementById("ingredienti").innerHTML = "";
 document.getElementById("esclusioniChips").innerHTML = "";
