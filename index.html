@@ -218,7 +218,7 @@ flex-direction:column;
 <button type="button"
 class="modalita-btn active"
 id="btnRitiro"
-onclick="selezionaModalita('da riitirare')">
+onclick="selezionaModalita('Ritiro')"
 
 🏠 Ritiro in pizzeria
 
@@ -308,18 +308,15 @@ function selezionaModalita(tipo){
 
 modalitaOrdine = tipo;
 
-document.getElementById("btnRitiro")
-.classList.remove("active");
-
-document.getElementById("btnConsegna")
-.classList.remove("active");
+document.getElementById("btnRitiro").classList.remove("active");
+document.getElementById("btnConsegna").classList.remove("active");
 
 if(tipo === "Ritiro"){
-document.getElementById("btnRitiro")
-.classList.add("active");
-}else{
-document.getElementById("btnConsegna")
-.classList.add("active");
+document.getElementById("btnRitiro").classList.add("active");
+}
+
+if(tipo === "Consegna a domicilio"){
+document.getElementById("btnConsegna").classList.add("active");
 }
 
 }
