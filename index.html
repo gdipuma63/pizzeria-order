@@ -434,6 +434,9 @@ function renderAggiunte(){
 const div = document.getElementById("listaAggiunte");
 div.innerHTML = "";
 
+/* 🔴 FIX: evita rendering inutile se vuoto */
+if(aggiunteSelezionate.length === 0) return;
+
 aggiunteSelezionate.forEach((a,i)=>{
 div.innerHTML += `
 <div class="aggiunte-box">
@@ -441,11 +444,6 @@ div.innerHTML += `
 <button onclick="rimuoviAgg(${i})">❌</button>
 </div>`;
 });
-}
-
-function rimuoviAgg(i){
-aggiunteSelezionate.splice(i,1);
-renderAggiunte();
 }
 
 /* ================= AGGIUNGI PIZZA ================= */
