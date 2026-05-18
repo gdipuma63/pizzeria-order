@@ -545,6 +545,10 @@ div.innerHTML += `
 });
 }
 
+function rimuoviAgg(i){
+    aggiunteSelezionate.splice(i,1);
+    renderAggiunte();
+}
 /* ================= AGGIUNGI PIZZA ================= */
 function usaGeolocalizzazione(){
 
