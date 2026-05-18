@@ -235,6 +235,16 @@ onclick="selezionaModalita('Consegna a domicilio')">
 
 </div>
 
+<input type="text" id="indirizzo" placeholder="Indirizzo (solo consegna a domicilio)" style="display:none;">
+
+<button type="button"
+class="main-btn"
+id="btnGeo"
+style="display:none;"
+onclick="usaGeolocalizzazione()">
+📍 Usa posizione attuale
+</button>
+
 <!-- PIZZA -->
 <div class="box">
 
@@ -311,13 +321,19 @@ document.getElementById("btnConsegna").classList.remove("active");
 
 if(tipo === "Ritiro"){
 document.getElementById("btnRitiro").classList.add("active");
+
 document.getElementById("indirizzo").style.display = "none";
+document.getElementById("btnGeo").style.display = "none";
 document.getElementById("indirizzo").value = "";
+
 }
 
 if(tipo === "Consegna a domicilio"){
 document.getElementById("btnConsegna").classList.add("active");
+
 document.getElementById("indirizzo").style.display = "block";
+document.getElementById("btnGeo").style.display = "block";
+
 }
 
 }
@@ -528,7 +544,39 @@ div.innerHTML += `
 }
 
 /* ================= AGGIUNGI PIZZA ================= */
+function usaGeolocalizzazione(){
 
+if(!navigator.geolocation){
+alert("Geolocalizzazione non supportata dal browser");
+return;
+}
+
+navigator.geolocation.getCurrentPosition(async (pos)=>{
+
+const lat = pos.coords.latitude;
+const lon = pos.coords.longitude;
+
+try{
+const res = await fetch(
+`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+);
+
+const data = await res.json();
+
+if(data && data.display_name){
+document.getElementById("indirizzo").value = data.display_name;
+}else{
+alert("Indirizzo non trovato, inserisci manualmente");
+}
+
+}catch(e){
+alert("Errore geolocalizzazione");
+}
+
+});
+
+}
+  
 function aggiungiPizza(){
 
 if(!pizzaSelezionata) return;
