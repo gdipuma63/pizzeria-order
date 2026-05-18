@@ -126,6 +126,8 @@ margin-bottom:20px;
 #formatoPizza{
 margin-bottom:18px;
 }
+
+/* LISTA PIZZE SCROLL */
 #listaPizze{
 max-height:320px;
 overflow-y:auto;
@@ -140,6 +142,7 @@ border-bottom:1px solid #eee;
 cursor:pointer;
 transition:0.2s;
 background:white;
+line-height:1.3;
 }
 
 .pizza-item:hover{
@@ -169,6 +172,7 @@ font-weight:bold;
 margin-top:6px;
 color:#1a73e8;
 }
+
 </style>
 </head>
 
@@ -246,6 +250,7 @@ let menu = {};
 let ordine = [];
 let aggiunteSelezionate = [];
 let pizzaSelezionata = null;
+
 const listaPizze = document.getElementById("listaPizze");
 const ingredientiDiv = document.getElementById("ingredienti");
 
@@ -310,27 +315,23 @@ caricaAggiunteSelect();
 
 window.onload = caricaMenu;
 
-/* ================= INGREDIENTI ================= */
+/* ================= SELEZIONE PIZZA ================= */
 
 function selezionaPizza(p, elemento){
 
 pizzaSelezionata = p;
 
-/* evidenzia pizza selezionata */
 document.querySelectorAll(".pizza-item")
 .forEach(el => el.classList.remove("active"));
 
 elemento.classList.add("active");
 
-/* ingredienti */
 ingredientiDiv.innerHTML =
 `<b>Ingredienti:</b> ${menu[p].ingredienti}`;
 
-/* esclusioni */
 generaEsclusioni(p);
 document.getElementById("labelEsclusioni").style.display = "block";
 
-/* formato pizza */
 const formato = document.getElementById("formatoPizza");
 formato.innerHTML = "";
 
@@ -348,7 +349,7 @@ formato.innerHTML = `
 }
 
 }
- 
+
 /* ================= ESCLUSIONI ================= */
 
 function generaEsclusioni(pizza){
@@ -366,9 +367,7 @@ const chip = document.createElement("div");
 chip.className = "chip";
 chip.textContent = i;
 
-chip.onclick = () => {
-chip.classList.toggle("active");
-};
+chip.onclick = () => chip.classList.toggle("active");
 
 div.appendChild(chip);
 
@@ -404,7 +403,7 @@ ${a.nome} (€${a.p} / €${a.pf})
 
 }
 
-/* ================= AGGIUNGI EXTRA ================= */
+/* ================= AGGIUNTA EXTRA ================= */
 
 function aggiungiExtra(){
 
@@ -417,7 +416,6 @@ aggiunteSelezionate.push(val);
 
 sel.value = "";
 
-/* mostra textarea solo per Verdure / Salumi */
 if(val === "Verdure" || val === "Salumi"){
 document.getElementById("noteAggiunte").style.display = "block";
 document.getElementById("noteAggiunte").focus();
@@ -430,7 +428,7 @@ renderAggiunte();
 
 }
 
-/* ================= RENDER AGGIUNTE ================= */
+/* ================= RENDER ================= */
 
 function renderAggiunte(){
 
@@ -450,14 +448,12 @@ div.innerHTML += `
 
 }
 
-/* ================= RIMUOVI ================= */
-
 function rimuoviAgg(i){
 aggiunteSelezionate.splice(i,1);
 renderAggiunte();
 }
 
-/* ================= ORDINE ================= */
+/* ================= AGGIUNGI PIZZA ================= */
 
 function aggiungiPizza(){
 
@@ -465,20 +461,19 @@ const p = pizzaSelezionata;
 const q = parseInt(document.getElementById("quantita").value);
 const formato = document.getElementById("formatoPizza").value;
 
-let base = formato === "Familiare" ? menu[p].pf : menu[p].pn;
+let base = formato === "Familiare"
+? menu[p].pf
+: menu[p].pn;
 
 let listaAgg = [];
 
 aggiunteSelezionate.forEach(a=>{
-
 if((a === "Verdure" || a === "Salumi") &&
 document.getElementById("noteAggiunte").value){
-
 listaAgg.push(`${a} (${document.getElementById("noteAggiunte").value})`);
 }else{
 listaAgg.push(a);
 }
-
 });
 
 document.querySelectorAll("#esclusioniChips .chip.active")
@@ -498,12 +493,11 @@ aggiunte:listaAgg
 
 aggiorna();
 
-/* RESET COMPLETO MODULO */
-
+/* RESET */
 aggiunteSelezionate = [];
 renderAggiunte();
 
-pizzaSelezionata = "";
+pizzaSelezionata = null;
 
 document.querySelectorAll(".pizza-item")
 .forEach(el => el.classList.remove("active"));
@@ -511,7 +505,8 @@ document.querySelectorAll(".pizza-item")
 document.getElementById("ingredienti").innerHTML = "";
 document.getElementById("esclusioniChips").innerHTML = "";
 document.getElementById("labelEsclusioni").style.display = "none";
-document.getElementById("formatoPizza").value = "Normale";
+
+document.getElementById("formatoPizza").selectedIndex = 0;
 
 document.getElementById("quantita").value = 1;
 
@@ -542,9 +537,9 @@ div.innerHTML += `
 
 o.aggiunte.forEach(a=>{
 if(a.startsWith("- ")){
-    div.innerHTML += `${a}<br>`;
-} else {
-    div.innerHTML += `+ ${a}<br>`;
+div.innerHTML += `${a}<br>`;
+}else{
+div.innerHTML += `+ ${a}<br>`;
 }
 });
 
