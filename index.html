@@ -63,7 +63,6 @@ background:#2f2215;
 margin-top:12px;
 padding:14px;
 font-size:16px;
-line-height:1.4;
 }
 
 .rimuovi-btn{
@@ -76,70 +75,9 @@ cursor:pointer;
 margin-top:10px;
 }
 
-@media (max-width:600px){
-.rimuovi-btn{ width:100%; }
-}
-
-.aggiunte-box{
-margin-top:10px;
-padding:10px;
-background:#f7f7f7;
-border-radius:10px;
-}
-
-#esclusioniChips{
-display:flex;
-flex-wrap:wrap;
-gap:8px;
-margin-top:4px;
-margin-bottom:25px;
-}
-
-.chip{
-padding:8px 12px;
-border:1px solid #ccc;
-border-radius:20px;
-cursor:pointer;
-font-size:14px;
-background:#fff;
-}
-
-.chip.active{
-background:#e8f0fe;
-color:#1a73e8;
-border-color:#1a73e8;
-font-weight:bold;
-}
-
-#listaPizze{
-max-height:320px;
-overflow-y:auto;
-border:1px solid #ccc;
-border-radius:12px;
-margin-top:10px;
-}
-
-.pizza-item{
-padding:12px;
-border-bottom:1px solid #eee;
-cursor:pointer;
-background:white;
-}
-
-.pizza-item.active{
-background:#e8f0fe;
-border-left:4px solid #1a73e8;
-}
-
-.pizza-nome{
-font-weight:bold;
-color:#4b3621;
-}
-
 .modalita-box{
 display:flex;
 gap:10px;
-margin-top:10px;
 }
 
 .modalita-btn{
@@ -157,8 +95,36 @@ background:#4b3621;
 color:white;
 }
 
-@media (max-width:600px){
-.modalita-box{ flex-direction:column; }
+#listaPizze{
+max-height:300px;
+overflow-y:auto;
+border:1px solid #ccc;
+border-radius:10px;
+margin-top:10px;
+}
+
+.pizza-item{
+padding:10px;
+border-bottom:1px solid #eee;
+cursor:pointer;
+}
+
+.pizza-item.active{
+background:#e8f0fe;
+}
+
+.chip{
+display:inline-block;
+padding:6px 10px;
+margin:4px;
+border:1px solid #ccc;
+border-radius:20px;
+cursor:pointer;
+}
+
+.chip.active{
+background:#4b3621;
+color:white;
 }
 
 </style>
@@ -178,38 +144,22 @@ color:white;
 <input type="text" id="nome" placeholder="Nominativo">
 <input type="text" id="telefonoUtente" placeholder="Telefono">
 
-<h4 style="text-align:center;">Modalità di consegna</h4>
+<h4>Modalità consegna</h4>
 
 <div class="modalita-box">
+<button id="btnRitiro" class="modalita-btn active" onclick="selezionaModalita('Ritiro')">Ritiro</button>
+<button id="btnConsegna" class="modalita-btn" onclick="selezionaModalita('Consegna')">Consegna</button>
+</div>
 
-<button type="button"
-class="modalita-btn active"
-id="btnRitiro"
-onclick="selezionaModalita('Ritiro')">🏠 Ritiro</button>
-
-<button type="button"
-class="modalita-btn"
-id="btnConsegna"
-onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna</button>
+<input id="indirizzo" placeholder="Indirizzo" style="display:none;">
+<button id="btnGeo" class="main-btn" style="display:none;" onclick="usaGeolocalizzazione()">📍 Usa posizione</button>
 
 </div>
 
-<input type="text" id="indirizzo"
-placeholder="Indirizzo (solo consegna a domicilio)"
-style="display:none;">
-
-<button type="button"
-class="main-btn"
-id="btnGeo"
-style="display:none;"
-onclick="usaGeolocalizzazione()">📍 Usa posizione</button>
-
-</div>
-
-<!-- PIZZA -->
+<!-- MENU -->
 <div class="box">
 
-<h3 style="text-align:center;">🍕 MENU</h3>
+<h3>Menu pizze</h3>
 
 <select id="filtroCategoria" onchange="filtraPizze()">
 <option value="Tutte">Tutte</option>
@@ -233,8 +183,6 @@ onclick="usaGeolocalizzazione()">📍 Usa posizione</button>
 
 <div id="listaAggiunte"></div>
 
-<textarea id="noteAggiunte" style="display:none"></textarea>
-
 <button class="main-btn" onclick="aggiungiPizza()">Aggiungi ordine</button>
 
 </div>
@@ -242,7 +190,7 @@ onclick="usaGeolocalizzazione()">📍 Usa posizione</button>
 <!-- RIEPILOGO -->
 <div class="box">
 
-<h3>Riepilogo</h3>
+<h3>Ordine</h3>
 <div id="listaOrdine"></div>
 
 <button class="main-btn" onclick="inviaOrdine()">Invia WhatsApp</button>
@@ -253,37 +201,31 @@ onclick="usaGeolocalizzazione()">📍 Usa posizione</button>
 
 <script>
 
-const sheetUrl = "https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/heads/main/menu.csv";
+const sheetUrl="https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/heads/main/menu.csv";
 
-let menu = {};
-let ordine = [];
-let aggiunteSelezionate = [];
-let pizzaSelezionata = null;
-let modalitaOrdine = "Ritiro";
+let menu={},ordine=[],pizzaSelezionata=null,aggiunteSelezionate=[],modalita="Ritiro",tuttePizze=[];
 
-const listaPizze = document.getElementById("listaPizze");
-const ingredientiDiv = document.getElementById("ingredienti");
+const listaPizze=document.getElementById("listaPizze");
+const ingredientiDiv=document.getElementById("ingredienti");
 
-let tuttePizze = [];
-
+/* MODALITÀ */
 function selezionaModalita(tipo){
 
-modalitaOrdine = tipo;
+modalita=tipo;
 
 document.getElementById("btnRitiro").classList.remove("active");
 document.getElementById("btnConsegna").classList.remove("active");
 
-if(tipo === "Ritiro"){
+if(tipo==="Ritiro"){
 document.getElementById("btnRitiro").classList.add("active");
-document.getElementById("indirizzo").style.display = "none";
-document.getElementById("btnGeo").style.display = "none";
-document.getElementById("indirizzo").value = "";
+document.getElementById("indirizzo").style.display="none";
+document.getElementById("btnGeo").style.display="none";
 }
 
-if(tipo === "Consegna a domicilio"){
+if(tipo==="Consegna"){
 document.getElementById("btnConsegna").classList.add("active");
-document.getElementById("indirizzo").style.display = "block";
-document.getElementById("btnGeo").style.display = "block";
+document.getElementById("indirizzo").style.display="block";
+document.getElementById("btnGeo").style.display="block";
 }
 
 }
@@ -291,49 +233,58 @@ document.getElementById("btnGeo").style.display = "block";
 /* MENU */
 async function caricaMenu(){
 
-const res = await fetch(sheetUrl);
-const data = await res.text();
+const res=await fetch(sheetUrl);
+const data=await res.text();
 
-const righe = data.split("\n").slice(1);
+const righe=data.split("\n").slice(1);
 
-menu = {};
-tuttePizze = [];
+const catSet=new Set();
 
-const categorieSet = new Set();
+righe.forEach(r=>{
 
-righe.forEach(r => {
-if(!r.trim()) return;
+if(!r.trim())return;
 
-const [cat,nome,ing,pn,pf] = r.split(";").map(x=>x.trim());
+const[cat,nome,ing,pn,pf]=r.split(";");
 
 menu[nome]={categoria:cat,ingredienti:ing,pn:+pn,pf:+pf};
 
 tuttePizze.push(nome);
-categorieSet.add(cat);
+catSet.add(cat);
+
 });
 
-caricaCategorie([...categorieSet]);
+caricaCategorie([...catSet]);
 renderPizze(tuttePizze);
 caricaAggiunteSelect();
+
 }
 
-window.onload = caricaMenu;
+window.onload=caricaMenu;
 
 /* CATEGORIE */
-function caricaCategorie(categorie){
+function caricaCategorie(cat){
+
 const sel=document.getElementById("filtroCategoria");
-categorie.forEach(c=>{
+
+cat.forEach(c=>{
+
 const opt=document.createElement("option");
 opt.value=c;
 opt.textContent=c;
 sel.appendChild(opt);
+
 });
+
 }
 
 function filtraPizze(){
-const cat=document.getElementById("filtroCategoria").value;
-if(cat==="Tutte") return renderPizze(tuttePizze);
-renderPizze(tuttePizze.filter(p=>menu[p].categoria===cat));
+
+const c=document.getElementById("filtroCategoria").value;
+
+if(c==="Tutte")return renderPizze(tuttePizze);
+
+renderPizze(tuttePizze.filter(p=>menu[p].categoria===c));
+
 }
 
 /* RENDER */
@@ -353,6 +304,7 @@ div.onclick=()=>selezionaPizza(p,div);
 listaPizze.appendChild(div);
 
 });
+
 }
 
 /* PIZZA */
@@ -365,22 +317,80 @@ el.classList.add("active");
 
 ingredientiDiv.innerHTML=menu[p].ingredienti;
 
+/* ESCLUSIONI */
+const div=document.getElementById("esclusioniChips");
+div.innerHTML="";
+
+menu[p].ingredienti.split(",").forEach(i=>{
+
+if(!i.trim())return;
+
+const chip=document.createElement("div");
+chip.className="chip";
+chip.textContent=i;
+
+chip.onclick=()=>chip.classList.toggle("active");
+
+div.appendChild(chip);
+
+});
+
+/* FORMATO */
+const f=document.getElementById("formatoPizza");
+f.innerHTML="";
+
+if(menu[p].pf>0){
+f.innerHTML=`<option>Normale</option><option>Familiare</option>`;
+}else{
+f.innerHTML=`<option>Normale</option>`;
+}
+
 }
 
 /* AGGIUNTE */
+const aggiunte=[
+{nome:"Patatine",p:1,pf:2},
+{nome:"Wurstel",p:1,pf:2},
+{nome:"Grana",p:1,pf:2}
+];
+
+function caricaAggiunteSelect(){
+
+const sel=document.getElementById("aggiunteSelect");
+
+sel.innerHTML='<option value="">Seleziona</option>';
+
+aggiunte.forEach(a=>{
+
+sel.innerHTML+=`<option value="${a.nome}">${a.nome}</option>`;
+
+});
+
+}
+
 function aggiungiExtra(){
-const val=document.getElementById("aggiunteSelect").value;
-if(!val) return;
-aggiunteSelezionate.push(val);
+
+const v=document.getElementById("aggiunteSelect").value;
+if(!v)return;
+
+aggiunteSelezionate.push(v);
 renderAggiunte();
+
 }
 
 function renderAggiunte(){
+
 const div=document.getElementById("listaAggiunte");
 div.innerHTML="";
+
 aggiunteSelezionate.forEach((a,i)=>{
-div.innerHTML+=`<div class="aggiunte-box">${a}<button onclick="rimuoviAgg(${i})">❌</button></div>`;
+
+div.innerHTML+=`
+<div>${a} <button onclick="rimuoviAgg(${i})">❌</button></div>
+`;
+
 });
+
 }
 
 function rimuoviAgg(i){
@@ -391,16 +401,13 @@ renderAggiunte();
 /* GEO */
 function usaGeolocalizzazione(){
 
-navigator.geolocation.getCurrentPosition(async pos=>{
+navigator.geolocation.getCurrentPosition(async p=>{
 
-const lat=pos.coords.latitude;
-const lon=pos.coords.longitude;
+const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${p.coords.latitude}&lon=${p.coords.longitude}`);
+const d=await r.json();
 
-const res=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-const data=await res.json();
-
-if(data.display_name){
-document.getElementById("indirizzo").value=data.display_name;
+if(d.display_name){
+document.getElementById("indirizzo").value=d.display_name;
 }
 
 });
@@ -410,43 +417,36 @@ document.getElementById("indirizzo").value=data.display_name;
 /* ORDINE */
 function aggiungiPizza(){
 
-if(!pizzaSelezionata) return;
-
-if(modalitaOrdine==="Consegna a domicilio"){
-if(document.getElementById("indirizzo").value.trim()===""){
-alert("Inserisci indirizzo");
-return;
-}
-}
+if(!pizzaSelezionata)return;
 
 ordine.push({pizza:pizzaSelezionata});
+
 aggiorna();
 
 }
 
 function aggiorna(){
-let div=document.getElementById("listaOrdine");
+
+const div=document.getElementById("listaOrdine");
 div.innerHTML="";
-ordine.forEach(o=>{
-div.innerHTML+=`<div>${o.pizza}</div>`;
-});
+
+ordine.forEach(o=>div.innerHTML+=`<div>${o.pizza}</div>`);
+
 }
 
 /* WHATSAPP */
 function inviaOrdine(){
 
-let msg="ORDINE\n";
-msg+="Modalità: "+modalitaOrdine+"\n";
+let msg="🍕 ORDINE\n";
+msg+="Modalità: "+modalita+"\n";
 
-if(modalitaOrdine==="Consegna a domicilio"){
+if(modalita==="Consegna"){
 msg+="Indirizzo: "+document.getElementById("indirizzo").value+"\n";
 }
 
-ordine.forEach(o=>{
-msg+=o.pizza+"\n";
-});
+ordine.forEach(o=>msg+=o.pizza+"\n");
 
-window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
 
 }
 
