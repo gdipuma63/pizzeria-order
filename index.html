@@ -461,10 +461,21 @@ const base = (formato === "Familiare")
 ? menu[pizzaSelezionata].pf
 : menu[pizzaSelezionata].pn;
 
-const listaAgg = [];
+let listaAgg = [];
 
+/* ESCLUSIONI */
 document.querySelectorAll("#esclusioniChips .chip.active")
 .forEach(c => listaAgg.push("- " + c.textContent));
+
+/* AGGIUNTE (🔴 FIX MANCANTE) */
+aggiunteSelezionate.forEach(a=>{
+listaAgg.push("+ " + a);
+});
+
+/* NOTE AGGIUNTE */
+if(document.getElementById("noteAggiunte").value.trim()){
+listaAgg.push("nota: " + document.getElementById("noteAggiunte").value);
+}
 
 const totale = base * q;
 
@@ -478,8 +489,10 @@ aggiunte:listaAgg
 
 aggiorna();
 
+/* RESET */
 aggiunteSelezionate = [];
 renderAggiunte();
+
 pizzaSelezionata = null;
 
 document.querySelectorAll(".pizza-item")
@@ -489,6 +502,7 @@ document.getElementById("ingredienti").innerHTML = "";
 document.getElementById("esclusioniChips").innerHTML = "";
 document.getElementById("labelEsclusioni").style.display = "none";
 document.getElementById("quantita").value = 1;
+
 document.getElementById("noteAggiunte").value = "";
 document.getElementById("noteAggiunte").style.display = "none";
 }
