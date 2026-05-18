@@ -62,8 +62,6 @@ background:#2f2215;
 #ingredienti{
 margin-top:12px;
 padding:14px;
-background:transparent;
-border:none;
 font-size:16px;
 line-height:1.4;
 }
@@ -119,15 +117,6 @@ border-color:#1a73e8;
 font-weight:bold;
 }
 
-h4{
-margin-bottom:20px;
-}
-
-#formatoPizza{
-margin-bottom:18px;
-}
-
-/* LISTA PIZZE SCROLL */
 #listaPizze{
 max-height:320px;
 overflow-y:auto;
@@ -140,9 +129,9 @@ margin-top:10px;
 padding:12px;
 border-bottom:1px solid #eee;
 cursor:pointer;
-transition:0.2s;
 background:white;
 line-height:1.3;
+transition:0.2s;
 }
 
 .pizza-item:hover{
@@ -185,7 +174,6 @@ color:#1a73e8;
 <!-- CLIENTE -->
 <div class="box">
 <h3>Dati cliente</h3>
-
 <input type="text" id="nome" placeholder="Nome">
 <input type="text" id="telefonoUtente" placeholder="Telefono">
 </div>
@@ -196,7 +184,6 @@ color:#1a73e8;
 <h3>🍕 Seleziona pizza</h3>
 
 <div id="listaPizze"></div>
-
 <div id="ingredienti"></div>
 
 <h4 id="labelEsclusioni" style="display:none;">
@@ -211,14 +198,13 @@ Seleziona ingredienti da eliminare:
 <input type="number" id="quantita" value="1" min="1">
 
 <h4>Seleziona aggiunte</h4>
-
 <select id="aggiunteSelect"></select>
 <button class="main-btn" onclick="aggiungiExtra()">➕ Aggiungi aggiunta</button>
 
 <div id="listaAggiunte"></div>
 
-<h5>Specificare l'aggiunta per verdure e salumi</h5>
-<textarea id="noteAggiunte" style="display:none" placeholder="Dettaglio aggiunta..."></textarea>
+<h5>Specificare verdure / salumi</h5>
+<textarea id="noteAggiunte" style="display:none"></textarea>
 
 <button class="main-btn" onclick="aggiungiPizza()">
 Aggiungi all'ordine
@@ -230,7 +216,6 @@ Aggiungi all'ordine
 <div class="box">
 
 <h3>🧾 Riepilogo ordine</h3>
-
 <div id="listaOrdine"></div>
 
 <button class="main-btn" onclick="inviaOrdine()">
@@ -243,8 +228,7 @@ Invia ordine su WhatsApp
 
 <script>
 
-const sheetUrl =
-"https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/heads/main/menu.csv";
+const sheetUrl = "https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/heads/main/menu.csv";
 
 let menu = {};
 let ordine = [];
@@ -262,22 +246,18 @@ const res = await fetch(sheetUrl);
 const data = await res.text();
 
 const righe = data.split("\n").slice(1);
-
 menu = {};
 
 righe.forEach(r => {
-
 if(!r.trim()) return;
 
-const [cat, nome, ing, pn, pf] =
-r.split(";").map(x => x.trim());
+const [cat, nome, ing, pn, pf] = r.split(";").map(x => x.trim());
 
 menu[nome] = {
 ingredienti: ing || "",
 pn: parseFloat(pn) || 0,
 pf: parseFloat(pf) || 0
 };
-
 });
 
 listaPizze.innerHTML = "";
@@ -291,26 +271,17 @@ div.className = "pizza-item";
 
 div.innerHTML = `
 <div class="pizza-nome">${p}</div>
-
-<div class="pizza-ingredienti">
-${menu[p].ingredienti}
-</div>
-
+<div class="pizza-ingredienti">${menu[p].ingredienti}</div>
 <div class="pizza-prezzo">
-${pfValido
-? `Normale €${menu[p].pn} • Familiare €${menu[p].pf}`
-: `€${menu[p].pn}`}
+${pfValido ? `Normale €${menu[p].pn} • Familiare €${menu[p].pf}` : `€${menu[p].pn}`}
 </div>
 `;
 
 div.onclick = () => selezionaPizza(p, div);
-
 listaPizze.appendChild(div);
-
 }
 
 caricaAggiunteSelect();
-
 }
 
 window.onload = caricaMenu;
@@ -326,8 +297,7 @@ document.querySelectorAll(".pizza-item")
 
 elemento.classList.add("active");
 
-ingredientiDiv.innerHTML =
-`<b>Ingredienti:</b> ${menu[p].ingredienti}`;
+ingredientiDiv.innerHTML = `<b>Ingredienti:</b> ${menu[p].ingredienti}`;
 
 generaEsclusioni(p);
 document.getElementById("labelEsclusioni").style.display = "block";
@@ -335,19 +305,14 @@ document.getElementById("labelEsclusioni").style.display = "block";
 const formato = document.getElementById("formatoPizza");
 formato.innerHTML = "";
 
-const pfValido = menu[p].pf > 0;
-
-if(pfValido){
+if(menu[p].pf > 0){
 formato.innerHTML = `
-<option value="Normale">Normale</option>
-<option value="Familiare">Familiare</option>
+<option>Normale</option>
+<option>Familiare</option>
 `;
 }else{
-formato.innerHTML = `
-<option value="Normale">Normale</option>
-`;
+formato.innerHTML = `<option>Normale</option>`;
 }
-
 }
 
 /* ================= ESCLUSIONI ================= */
@@ -366,13 +331,10 @@ menu[pizza].ingredienti
 const chip = document.createElement("div");
 chip.className = "chip";
 chip.textContent = i;
-
 chip.onclick = () => chip.classList.toggle("active");
-
 div.appendChild(chip);
 
 });
-
 }
 
 /* ================= AGGIUNTE ================= */
@@ -391,41 +353,32 @@ const aggiunte = [
 function caricaAggiunteSelect(){
 
 const sel = document.getElementById("aggiunteSelect");
-
-sel.innerHTML = '<option value="">Seleziona aggiunta</option>';
+sel.innerHTML = '<option value="">Seleziona</option>';
 
 aggiunte.forEach(a=>{
-sel.innerHTML += `
-<option value="${a.nome}">
-${a.nome} (€${a.p} / €${a.pf})
-</option>`;
+sel.innerHTML += `<option>${a.nome} (€${a.p})</option>`;
 });
-
 }
 
-/* ================= AGGIUNTA EXTRA ================= */
+/* ================= AGGIUNGI EXTRA ================= */
 
 function aggiungiExtra(){
 
 const sel = document.getElementById("aggiunteSelect");
 const val = sel.value;
-
 if(!val) return;
 
 aggiunteSelezionate.push(val);
-
 sel.value = "";
 
 if(val === "Verdure" || val === "Salumi"){
 document.getElementById("noteAggiunte").style.display = "block";
-document.getElementById("noteAggiunte").focus();
-} else {
+}else{
 document.getElementById("noteAggiunte").style.display = "none";
 document.getElementById("noteAggiunte").value = "";
 }
 
 renderAggiunte();
-
 }
 
 /* ================= RENDER ================= */
@@ -435,17 +388,13 @@ function renderAggiunte(){
 const div = document.getElementById("listaAggiunte");
 div.innerHTML = "";
 
-aggiunteSelezionate.forEach((a,i) => {
-
+aggiunteSelezionate.forEach((a,i)=>{
 div.innerHTML += `
 <div class="aggiunte-box">
 + ${a}
 <button onclick="rimuoviAgg(${i})">❌</button>
-</div>
-`;
-
+</div>`;
 });
-
 }
 
 function rimuoviAgg(i){
@@ -453,38 +402,28 @@ aggiunteSelezionate.splice(i,1);
 renderAggiunte();
 }
 
-/* ================= AGGIUNGI PIZZA ================= */
+/* ================= ORDINE ================= */
 
 function aggiungiPizza(){
 
-const p = pizzaSelezionata;
+if(!pizzaSelezionata) return;
+
 const q = parseInt(document.getElementById("quantita").value);
 const formato = document.getElementById("formatoPizza").value;
 
-let base = formato === "Familiare"
-? menu[p].pf
-: menu[p].pn;
+const base = (formato === "Familiare")
+? menu[pizzaSelezionata].pf
+: menu[pizzaSelezionata].pn;
 
-let listaAgg = [];
-
-aggiunteSelezionate.forEach(a=>{
-if((a === "Verdure" || a === "Salumi") &&
-document.getElementById("noteAggiunte").value){
-listaAgg.push(`${a} (${document.getElementById("noteAggiunte").value})`);
-}else{
-listaAgg.push(a);
-}
-});
+const listaAgg = [];
 
 document.querySelectorAll("#esclusioniChips .chip.active")
-.forEach(chip=>{
-listaAgg.push("- " + chip.textContent);
-});
+.forEach(c => listaAgg.push("- " + c.textContent));
 
 const totale = base * q;
 
 ordine.push({
-pizza:p,
+pizza:pizzaSelezionata,
 formato,
 quantita:q,
 totale,
@@ -493,10 +432,9 @@ aggiunte:listaAgg
 
 aggiorna();
 
-/* RESET */
+/* reset */
 aggiunteSelezionate = [];
 renderAggiunte();
-
 pizzaSelezionata = null;
 
 document.querySelectorAll(".pizza-item")
@@ -505,16 +443,9 @@ document.querySelectorAll(".pizza-item")
 document.getElementById("ingredienti").innerHTML = "";
 document.getElementById("esclusioniChips").innerHTML = "";
 document.getElementById("labelEsclusioni").style.display = "none";
-
-document.getElementById("formatoPizza").selectedIndex = 0;
-
 document.getElementById("quantita").value = 1;
-
-document.getElementById("aggiunteSelect").value = "";
-
 document.getElementById("noteAggiunte").value = "";
 document.getElementById("noteAggiunte").style.display = "none";
-
 }
 
 /* ================= RIEPILOGO ================= */
@@ -527,7 +458,6 @@ div.innerHTML = "";
 let tot = 0;
 
 ordine.forEach((o,i)=>{
-
 tot += o.totale;
 
 div.innerHTML += `
@@ -536,18 +466,13 @@ div.innerHTML += `
 `;
 
 o.aggiunte.forEach(a=>{
-if(a.startsWith("- ")){
 div.innerHTML += `${a}<br>`;
-}else{
-div.innerHTML += `+ ${a}<br>`;
-}
 });
 
 div.innerHTML += `
-<button class="rimuovi-btn" onclick="ordine.splice(${i},1);aggiorna();">❌ Rimuovi</button>
+<button class="rimuovi-btn" onclick="ordine.splice(${i},1);aggiorna();">❌</button>
 <hr>
-</div>
-`;
+</div>`;
 });
 
 div.innerHTML += `<h3>Totale: €${tot.toFixed(2)}</h3>`;
@@ -561,11 +486,7 @@ let msg = "🍕 ORDINE\n\n";
 
 ordine.forEach(o=>{
 msg += `${o.pizza} x${o.quantita} - €${o.totale}\n`;
-
-o.aggiunte.forEach(a=>{
-msg += `+ ${a}\n`;
-});
-
+o.aggiunte.forEach(a=> msg += `+ ${a}\n`);
 msg += "\n";
 });
 
