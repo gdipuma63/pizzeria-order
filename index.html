@@ -580,6 +580,14 @@ alert("Errore geolocalizzazione");
 function aggiungiPizza(){
 
 if(!pizzaSelezionata) return;
+  
+if(modalitaOrdine === "Consegna a domicilio"){
+    const indirizzo = document.getElementById("indirizzo").value.trim();
+    if(indirizzo === ""){
+        alert("Inserisci l'indirizzo per la consegna a domicilio");
+        return;
+    }
+}
 
 const q = parseInt(document.getElementById("quantita").value);
 const formato = document.getElementById("formatoPizza").value;
@@ -678,11 +686,19 @@ div.innerHTML += `<h3>Totale: €${tot.toFixed(2)}</h3>`;
 function inviaOrdine(){
 
 let msg = "🍕 ORDINE\n\n";
+if(modalitaOrdine === "Consegna a domicilio"){
+    const indirizzo = document.getElementById("indirizzo").value.trim();
+    if(indirizzo === ""){
+        alert("Indirizzo mancante");
+        return;
+    }
+}
 msg += "Modalità: " + modalitaOrdine + "\n";
 
-const indirizzo = document.getElementById("indirizzo").value;
+const indirizzo = document.getElementById("indirizzo").value.trim();
+
 if(modalitaOrdine === "Consegna a domicilio"){
-msg += "Indirizzo: " + indirizzo + "\n";
+    msg += "Indirizzo: " + (indirizzo || "NON INSERITO") + "\n";
 }
 
 msg += "\n";
