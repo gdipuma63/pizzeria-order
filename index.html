@@ -89,11 +89,6 @@ background:#f7f7f7;
 border-radius:10px;
 }
 
-#esclusioniContainer label{
-display:block;
-margin:6px 0;
-}
-
 #esclusioniSelect option:checked{
 background:#e8f0fe;
 color:#1a73e8;
@@ -537,11 +532,6 @@ document.getElementById("aggiunteSelect").value = "";
 
 document.getElementById("noteAggiunte").value = "";
 document.getElementById("noteAggiunte").style.display = "none";
-
-/* RESET ESCLUSIONI CHIPS */
-document.querySelectorAll(".chip.active").forEach(c=>{
-    c.classList.remove("active");
-});
 
 }
 
