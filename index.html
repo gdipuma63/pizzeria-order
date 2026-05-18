@@ -14,6 +14,7 @@ margin:0;
 padding:0;
 }
 
+/* HEADER */
 .header{
 background:#4b3621;
 color:white;
@@ -23,12 +24,14 @@ font-size:28px;
 font-weight:bold;
 }
 
+/* CONTAINER */
 .container{
 max-width:800px;
 margin:auto;
 padding:20px;
 }
 
+/* BOX */
 .box{
 background:white;
 padding:20px;
@@ -37,34 +40,47 @@ margin-bottom:20px;
 box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
-input,select,button,textarea{
+/* INPUT GENERALI */
+input,select,textarea{
 width:100%;
 padding:12px;
-margin-top:10px;
+margin-bottom:10px;
 border-radius:8px;
 border:1px solid #ccc;
 font-size:16px;
 box-sizing:border-box;
 }
+
+/* LABEL */
 label{
-    display:block;
-    margin-top:14px;
-    margin-bottom:6px;
-    font-weight:600;
-    color:#4b3621;
+display:block;
+margin-top:14px;
+margin-bottom:8px;
+font-weight:600;
+color:#4b3621;
 }
+
+/* BUTTON BASE */
+button{
+cursor:pointer;
+}
+
+/* BOTTONE PRINCIPALE */
 .main-btn{
 background:#4b3621;
 color:white;
 border:none;
 font-weight:bold;
 cursor:pointer;
+padding:12px;
+border-radius:8px;
 }
 
 .main-btn:hover{
 background:#2f2215;
 }
 
+/* RIEPILOGO RIMUOVI */
 .rimuovi-btn{
 background:#c0392b;
 color:white;
@@ -75,12 +91,18 @@ cursor:pointer;
 margin-top:10px;
 }
 
+/* MOBILE */
 @media (max-width:600px){
 .rimuovi-btn{
 width:100%;
 }
+
+.modalita-box{
+flex-direction:column;
+}
 }
 
+/* AGGIUNTE BOX */
 .aggiunte-box{
 margin-top:10px;
 padding:10px;
@@ -88,6 +110,7 @@ background:#f7f7f7;
 border-radius:10px;
 }
 
+/* CHIPS ESCLUSIONE */
 #esclusioniChips{
 display:flex;
 flex-wrap:wrap;
@@ -118,6 +141,7 @@ border-color:#4b3621;
 font-weight:bold;
 }
 
+/* LISTA PIZZE */
 #listaPizze{
 max-height:320px;
 overflow-y:auto;
@@ -144,6 +168,7 @@ background:#e8f0fe;
 border-left:4px solid #1a73e8;
 }
 
+/* TESTI PIZZA */
 .pizza-nome{
 font-weight:bold;
 font-size:16px;
@@ -162,6 +187,8 @@ font-weight:bold;
 margin-top:6px;
 color:#1a73e8;
 }
+
+/* MODALITA */
 .modalita-box{
 display:flex;
 gap:10px;
@@ -181,16 +208,11 @@ transition:0.2s;
 }
 
 .modalita-btn.active{
+background:#4b3621;
+color:white;
 transform: scale(1.02);
 }
 
-@media (max-width:600px){
-
-.modalita-box{
-flex-direction:column;
-}
-  
-}
 </style>
 </head>
 
