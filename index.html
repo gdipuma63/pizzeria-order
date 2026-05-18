@@ -475,7 +475,16 @@ if(document.getElementById("noteAggiunte").value.trim()){
 listaAgg.push("nota: " + document.getElementById("noteAggiunte").value);
 }
 
-const totale = base * q;
+let extraTotale = 0;
+
+aggiunteSelezionate.forEach(a => {
+const add = aggiunte.find(x => x.nome === a);
+if(add){
+extraTotale += (formato === "Familiare") ? add.pf : add.p;
+}
+});
+
+const totale = (base * q) + (extraTotale * q);
 
 ordine.push({
 pizza:pizzaSelezionata,
