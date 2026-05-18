@@ -311,10 +311,13 @@ document.getElementById("btnConsegna").classList.remove("active");
 
 if(tipo === "Ritiro"){
 document.getElementById("btnRitiro").classList.add("active");
+document.getElementById("indirizzo").style.display = "none";
+document.getElementById("indirizzo").value = "";
 }
 
 if(tipo === "Consegna a domicilio"){
 document.getElementById("btnConsegna").classList.add("active");
+document.getElementById("indirizzo").style.display = "block";
 }
 
 }
@@ -627,7 +630,14 @@ div.innerHTML += `<h3>Totale: €${tot.toFixed(2)}</h3>`;
 function inviaOrdine(){
 
 let msg = "🍕 ORDINE\n\n";
-msg += "Modalità: " + modalitaOrdine + "\n\n";
+msg += "Modalità: " + modalitaOrdine + "\n";
+
+const indirizzo = document.getElementById("indirizzo").value;
+if(modalitaOrdine === "Consegna a domicilio"){
+msg += "Indirizzo: " + indirizzo + "\n";
+}
+
+msg += "\n";
 ordine.forEach(o=>{
 msg += `${o.pizza} x${o.quantita} - €${o.totale}\n`;
 o.aggiunte.forEach(a=> msg += `+ ${a}\n`);
