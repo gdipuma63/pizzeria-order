@@ -123,7 +123,15 @@ background:#4b3621;
 color:white;
 border-color:#4b3621;
 }
-
+.aggiunte-box{
+background:#f7f7f7;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
 /* LISTA PIZZE */
 #listaPizze{
 max-height:320px;
@@ -176,6 +184,13 @@ font-weight:bold;
 .modalita-btn.active{
 background:#4b3621;
 color:white;
+}
+
+.pizza-ingredienti{
+font-size:13px;
+color:#666;
+margin:4px 0;
+line-height:1.4;
 }
 
 </style>
@@ -467,22 +482,96 @@ renderAggiunte();
 /* AGGIUNGI ORDINE */
 function aggiungiPizza(){
 
-if(!pizzaSelezionata) return;
+if(!pizzaSelezionata){
+alert("Seleziona una pizza");
+return;
+}
 
 const nome=document.getElementById("nome").value.trim();
 const tel=document.getElementById("telefonoUtente").value.trim();
 
-if(!nome||!tel){
+if(!nome || !tel){
 alert("Compila nome e telefono");
 return;
 }
 
+if(modalitaOrdine==="Consegna a domicilio"){
+
+const indirizzo=document.getElementById("indirizzo").value.trim();
+
+if(!indirizzo){
+alert("Inserisci indirizzo");
+return;
+}
+
+}
+
+const q=parseInt(document.getElementById("quantita").value);
+
+const formato=document.getElementById("formatoPizza").value;
+
+const base=(formato==="Familiare")
+? menu[pizzaSelezionata].pf
+: menu[pizzaSelezionata].pn;
+
+let extras=[];
+
+document.querySelectorAll("#esclusioniChips .chip.active")
+.forEach(c=>{
+extras.push("- "+c.textContent);
+});
+
+aggiunteSelezionate.forEach(a=>{
+extras.push("+ "+a);
+});
+
+let extraTot=0;
+
+aggiunteSelezionate.forEach(a=>{
+
+const add=aggiunte.find(x=>x.nome===a);
+
+if(add){
+
+extraTot+=(formato==="Familiare")
+? add.pf
+: add.p;
+
+}
+
+});
+
+const totale=(base*q)+(extraTot*q);
+
 ordine.push({
 pizza:pizzaSelezionata,
-quantita:1
+quantita:q,
+formato,
+totale,
+extras
 });
 
 aggiorna();
+
+aggiunteSelezionate=[];
+
+document.getElementById("quantita").value=1;
+
+document.getElementById("aggiunteSelect").value="";
+
+document.getElementById("listaAggiunte").innerHTML="";
+
+document.getElementById("esclusioniChips").innerHTML="";
+
+document.getElementById("labelEsclusioni").style.display="none";
+
+document.querySelectorAll(".pizza-item")
+.forEach(x=>x.classList.remove("active"));
+
+pizzaSelezionata=null;
+
+document.getElementById("formatoPizza").innerHTML="";
+
 }
 
 function aggiorna(){
