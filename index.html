@@ -453,12 +453,20 @@ const aggiunte = [
 ];
 
 function caricaAggiunteSelect(){
+
 const sel=document.getElementById("aggiunteSelect");
+
 sel.innerHTML="<option value=''>Seleziona</option>";
 
 aggiunte.forEach(a=>{
-sel.innerHTML+=`<option>${a.nome}</option>`;
+
+sel.innerHTML+=`
+<option value="${a.nome}">
+${a.nome} (+€${a.p})
+</option>`;
+
 });
+
 }
 
 function aggiungiExtra(){
