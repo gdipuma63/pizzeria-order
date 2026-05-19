@@ -267,8 +267,7 @@ Seleziona ingredienti da eliminare:
 <input type="number" id="quantita" value="1" min="1">
 
 <h4>Seleziona ingredienti da aggiungere:</h4>
-<select id="aggiunteSelect"></select>
-<button class="main-btn" onclick="aggiungiExtra()">➕ Aggiungi</button>
+<select id="aggiunteSelect" onchange="aggiungiExtra()"></select>
 
 <div id="listaAggiunte"></div>
 
@@ -477,9 +476,31 @@ ${a.nome} (+€${a.p})
 }
 
 function aggiungiExtra(){
-const v=document.getElementById("aggiunteSelect").value;
-if(!v) return;
-aggiunteSelezionate.push(v);
+
+const sel=document.getElementById("aggiunteSelect");
+const val=sel.value;
+
+if(!val) return;
+
+// evita duplicati
+if(aggiunteSelezionate.includes(val)){
+sel.value="";
+return;
+}
+
+aggiunteSelezionate.push(val);
+
+// reset select
+sel.value="";
+sel.selectedIndex = 0;
+// gestione note
+if(val==="Verdure" || val==="Salumi"){
+document.getElementById("noteAggiunte").style.display="block";
+}else{
+document.getElementById("noteAggiunte").style.display="none";
+document.getElementById("noteAggiunte").value="";
+}
+
 renderAggiunte();
 }
 
