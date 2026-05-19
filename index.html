@@ -650,7 +650,8 @@ pizza: pizzaSelezionata,
 quantita: q,
 formato: formato,
 totale: totale,
-aggiunte: [...aggiunteSelezionate]
+aggiunte: [...aggiunteSelezionate],
+esclusioni: [...document.querySelectorAll("#esclusioniChips .chip.active")].map(c => c.textContent)
 });
 
 aggiorna();
