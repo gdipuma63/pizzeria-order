@@ -577,23 +577,95 @@ document.getElementById("formatoPizza").innerHTML="";
 function aggiorna(){
 
 const div=document.getElementById("listaOrdine");
+
 div.innerHTML="";
 
-ordine.forEach(o=>{
-div.innerHTML+=`<div>${o.pizza}</div>`;
+let totale=0;
+
+ordine.forEach((o,i)=>{
+
+totale+=o.totale;
+
+div.innerHTML+=`
+<div class="aggiunte-box">
+
+<div>
+<b>${o.pizza}</b><br>
+${o.formato} x${o.quantita}<br>
+€ ${o.totale.toFixed(2)}<br>
+
+${o.extras.map(e=>e+"<br>").join("")}
+
+</div>
+
+<button class="rimuovi-btn"
+onclick="rimuoviOrdine(${i})">
+❌
+</button>
+
+</div>
+`;
+
 });
+
+div.innerHTML+=`<h3>Totale € ${totale.toFixed(2)}</h3>`;
+
 }
 
+function rimuoviOrdine(i){
+
+ordine.splice(i,1);
+
+aggiorna();
+
+}
 /* WHATSAPP */
 function inviaOrdine(){
 
-let msg="🍕 ORDINE\n\n";
+if(ordine.length===0){
+alert("Ordine vuoto");
+return;
+}
+
+const nome=document.getElementById("nome").value.trim();
+const tel=document.getElementById("telefonoUtente").value.trim();
+
+let msg="🍕 ORDINE PIZZERIA\n\n";
+
+msg+="👤 "+nome+"\n";
+msg+="📞 "+tel+"\n";
+msg+="🚚 "+modalitaOrdine+"\n";
+
+if(modalitaOrdine==="Consegna a domicilio"){
+
+msg+="📍 "+document.getElementById("indirizzo").value+"\n";
+
+}
+
+msg+="\n";
+
+let totale=0;
 
 ordine.forEach(o=>{
-msg+=o.pizza+"\n";
+
+totale+=o.totale;
+
+msg+=`${o.pizza} (${o.formato}) x${o.quantita}\n`;
+
+o.extras.forEach(e=>{
+msg+=e+"\n";
 });
 
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
+msg+=`€ ${o.totale.toFixed(2)}\n\n`;
+
+});
+
+msg+="💰 Totale: € "+totale.toFixed(2);
+
+window.open(
+"https://wa.me/?text="+encodeURIComponent(msg)
+);
+
 }
 
 </script>
