@@ -646,11 +646,11 @@ extraTot+=(formato==="Familiare")
 const totale=(base*q)+(extraTot*q);
 
 ordine.push({
-pizza:pizzaSelezionata,
-quantita:q,
-formato,
-totale,
-extras
+pizza: pizzaSelezionata,
+quantita: q,
+formato: formato,
+totale: totale,
+aggiunte: [...aggiunteSelezionate]
 });
 
 aggiorna();
@@ -754,8 +754,8 @@ totale+=o.totale;
 
 msg+=`${o.pizza} (${o.formato}) x${o.quantita}\n`;
 
-o.extras.forEach(e=>{
-msg+=e+"\n";
+o.aggiunte.forEach(a=>{
+msg += "+ " + a + "\n";
 });
 
 msg+=`€ ${o.totale.toFixed(2)}\n\n`;
