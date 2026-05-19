@@ -203,6 +203,14 @@ margin:4px 0;
 line-height:1.4;
 }
 
+#previewOrdine{
+margin-top:15px;
+padding:12px;
+background:#f7f7f7;
+border-radius:10px;
+font-size:14px;
+line-height:1.4;
+}
 </style>
 </head>
 
@@ -267,11 +275,17 @@ Seleziona ingredienti da eliminare:
 <input type="number" id="quantita" value="1" min="1">
 
 <h4>Seleziona ingredienti da aggiungere:</h4>
-<select id="aggiunteSelect" onchange="aggiungiExtra()"></select>
+
+<select id="aggiunteSelect"></select>
 
 <div id="listaAggiunte"></div>
 
 <textarea id="noteAggiunte" style="display:none"></textarea>
+
+<div id="previewOrdine" class="aggiunte-box" style="display:none;">
+<b>Anteprima ordine:</b>
+<div id="previewTesto"></div>
+</div>
 
 <button class="main-btn" onclick="aggiungiPizza()">
 Aggiungi all'ordine
@@ -424,7 +438,7 @@ el.classList.add("active");
 generaEsclusioni(p);
 
 document.getElementById("labelEsclusioni").style.display="block";
-
+aggiornaPreview();
 const f=document.getElementById("formatoPizza");
 f.innerHTML=menu[p].pf?`<option>Normale</option><option>Familiare</option>`:`<option>Normale</option>`;
 }
@@ -441,7 +455,10 @@ if(!i.trim()) return;
 const chip=document.createElement("div");
 chip.className="chip";
 chip.textContent=i.trim();
-chip.onclick=()=>chip.classList.toggle("active");
+chip.onclick = () => {
+chip.classList.toggle("active");
+aggiornaPreview();
+};
 div.appendChild(chip);
 });
 }
@@ -502,6 +519,7 @@ document.getElementById("noteAggiunte").value="";
 }
 
 renderAggiunte();
+aggiornaPreview();
 }
 
 function renderAggiunte(){
@@ -517,6 +535,47 @@ ${a}
 });
 }
 
+function aggiornaPreview(){
+
+if(!pizzaSelezionata){
+document.getElementById("previewOrdine").style.display="none";
+return;
+}
+
+const formato=document.getElementById("formatoPizza").value;
+const q=document.getElementById("quantita").value;
+
+let testo="";
+
+testo+=`🍕 ${pizzaSelezionata}<br>`;
+testo+=`📦 ${formato}<br>`;
+testo+=`🔢 Quantità: ${q}<br>`;
+
+// esclusioni
+const excl=[];
+document.querySelectorAll("#esclusioniChips .chip.active")
+.forEach(c=>excl.push("- "+c.textContent));
+
+if(excl.length){
+testo+=`<br><b>❌ Esclusioni:</b><br>`;
+excl.forEach(e=>testo+=e+"<br>");
+}
+
+// aggiunte
+if(aggiunteSelezionate.length){
+testo+=`<br><b>➕ Aggiunte:</b><br>`;
+aggiunteSelezionate.forEach(a=>testo+="+ "+a+"<br>");
+}
+
+// note
+const note=document.getElementById("noteAggiunte").value.trim();
+if(note){
+testo+=`<br>📝 ${note}<br>`;
+}
+
+document.getElementById("previewOrdine").style.display="block";
+document.getElementById("previewTesto").innerHTML=testo;
+}
 function rimuoviAgg(i){
 aggiunteSelezionate.splice(i,1);
 renderAggiunte();
@@ -710,6 +769,9 @@ window.open(
 );
 
 }
+
+document.getElementById("quantita").addEventListener("input", aggiornaPreview);
+document.getElementById("formatoPizza").addEventListener("change", aggiornaPreview);
 
 </script>
 
