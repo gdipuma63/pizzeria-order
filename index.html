@@ -357,26 +357,38 @@ document.getElementById("listaPizze")
 }
 
 /* RENDER */
-function renderPizze(list){
+function renderPizze(lista){
 
-listaPizze.innerHTML="";
+listaPizze.innerHTML = "";
 
-list.forEach(p=>{
+lista.forEach(p => {
 
-const div=document.createElement("div");
-div.className="pizza-item";
+const pfValido = menu[p].pf > 0;
 
-div.innerHTML=`
+const div = document.createElement("div");
+div.className = "pizza-item";
+
+div.innerHTML = `
 <div class="pizza-nome">${p}</div>
-<div class="pizza-prezzo">€${menu[p].pn}</div>
+
+<div class="pizza-ingredienti">
+${menu[p].ingredienti}
+</div>
+
+<div class="pizza-prezzo">
+${pfValido
+? `Normale €${menu[p].pn} • Familiare €${menu[p].pf}`
+: `€${menu[p].pn}`}
+</div>
 `;
 
-div.onclick=()=>selezionaPizza(p,div);
+div.onclick = () => selezionaPizza(p, div);
 
 listaPizze.appendChild(div);
-});
-}
 
+});
+
+}
 /* SELEZIONE PIZZA */
 function selezionaPizza(p,el){
 
