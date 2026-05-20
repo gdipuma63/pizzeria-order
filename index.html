@@ -483,9 +483,9 @@ sel.innerHTML="<option value=''>Seleziona</option>";
 
 aggiunte.forEach(a=>{
 
-sel.innerHTML+=`
+sel.innerHTML += `
 <option value="${a.nome}">
-${a.nome} (+€${a.p})
+${a.nome} (+€${a.p} Normale • +€${a.pf} Familiare)
 </option>`;
 
 });
