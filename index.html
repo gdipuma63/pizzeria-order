@@ -433,6 +433,8 @@ function selezionaPizza(p,el){
 
 pizzaSelezionata=p;
 
+statoAggiunte = "base"; // 🔴 FIX FONDAMENTALE
+
 document.querySelectorAll(".pizza-item").forEach(x=>x.classList.remove("active"));
 el.classList.add("active");
 
@@ -440,6 +442,7 @@ generaEsclusioni(p);
 
 document.getElementById("labelEsclusioni").style.display="block";
 aggiornaPreview();
+
 const f=document.getElementById("formatoPizza");
 f.innerHTML = menu[p].pf
 ? `<option>Normale</option><option>Familiare</option>`
