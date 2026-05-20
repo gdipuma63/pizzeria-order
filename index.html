@@ -486,56 +486,68 @@ const aggiunte = [
 function caricaAggiunteSelect(){
 
 const sel = document.getElementById("aggiunteSelect");
+sel.innerHTML = "";
 
-let lista = [];
-
+/* --- BASE --- */
 if(statoAggiunte === "base"){
 
-sel.innerHTML = "<option value=''>Seleziona</option>";
+sel.innerHTML = `<option value=''>Seleziona aggiunta</option>`;
 
 aggiunte.forEach(a => {
-sel.innerHTML += `<option value="${a.nome}">${a.nome} (+€${a.p})</option>`;
+sel.innerHTML += `
+<option value="EXTRA_${a.nome}">
+${a.nome} (+€${a.p})
+</option>`;
 });
 
-sel.innerHTML += `<option value="VERDURE">VERDURE</option>`;
-sel.innerHTML += `<option value="SALUMI">SALUMI</option>`;
+sel.innerHTML += `<option value="NAV_VERDURE">VERDURE</option>`;
+sel.innerHTML += `<option value="NAV_SALUMI">SALUMI</option>`;
 
 return;
 }
 
-/* VERDURE */
+/* --- VERDURE --- */
 if(statoAggiunte === "verdure"){
 
-lista = [
+sel.innerHTML = `<option value=''>Seleziona verdura</option>`;
+
+const verdure = [
 "Zucchine",
 "Melanzane",
 "Peperoni",
 "Funghi",
-"Funghi porcini",
-"← Torna indietro"
+"Funghi porcini"
 ];
 
-/* SALUMI */
-}else if(statoAggiunte === "salumi"){
+verdure.forEach(v=>{
+sel.innerHTML += `<option value="ADD_${v}">${v}</option>`;
+});
 
-lista = [
+sel.innerHTML += `<option value="BACK">← Torna alle aggiunte</option>`;
+
+return;
+}
+
+/* --- SALUMI --- */
+if(statoAggiunte === "salumi"){
+
+sel.innerHTML = `<option value=''>Seleziona salume</option>`;
+
+const salumi = [
 "Prosciutto",
 "Prosciutto crudo",
 "Speck",
 "Salame",
 "Salame piccante",
-"Bresaola",
-"← Torna indietro"
+"Bresaola"
 ];
 
-}
-
-sel.innerHTML = "<option value=''>Seleziona</option>";
-
-lista.forEach(item => {
-sel.innerHTML += `<option value="${item}">${item}</option>`;
+salumi.forEach(s=>{
+sel.innerHTML += `<option value="ADD_${s}">${s}</option>`;
 });
 
+sel.innerHTML += `<option value="BACK">← Torna alle aggiunte</option>`;
+}
 }
 
 function aggiungiExtra(){
@@ -545,49 +557,55 @@ const val = sel.value;
 
 if(!val) return;
 
-/* NAVIGAZIONE CATEGORIE */
-
-if(val === "VERDURE"){
-
-sel.value = "";
-
+/* --- NAVIGAZIONE CATEGORIE --- */
+if(val === "NAV_VERDURE"){
 statoAggiunte = "verdure";
 caricaAggiunteSelect();
-
+sel.value = "";
 return;
 }
 
-if(val === "SALUMI"){
-
-sel.value = "";
-
+if(val === "NAV_SALUMI"){
 statoAggiunte = "salumi";
 caricaAggiunteSelect();
-
+sel.value = "";
 return;
 }
 
-if(val === "← Torna indietro"){
+if(val === "BACK"){
 statoAggiunte = "base";
 caricaAggiunteSelect();
-return;
-}
-
-/* SELEZIONE AGGIUNTA */
-
-if(aggiunteSelezionate.includes(val)){
 sel.value = "";
 return;
 }
 
-aggiunteSelezionate.push(val);
+/* --- AGGIUNTE BASE (EXTRA_) --- */
+if(val.startsWith("EXTRA_")){
+const item = val.replace("EXTRA_","");
+
+if(!aggiunteSelezionate.includes(item)){
+aggiunteSelezionate.push(item);
+}
 
 sel.value = "";
-
-/* aggiorna UI */
 renderAggiunte();
 aggiornaPreview();
+return;
+}
 
+/* --- VERDURE / SALUMI (ADD_) --- */
+if(val.startsWith("ADD_")){
+const item = val.replace("ADD_","");
+
+if(!aggiunteSelezionate.includes(item)){
+aggiunteSelezionate.push(item);
+}
+
+sel.value = "";
+renderAggiunte();
+aggiornaPreview();
+return;
+}
 }
 
 function renderAggiunte(){
