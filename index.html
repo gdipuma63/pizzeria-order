@@ -786,10 +786,6 @@ document.getElementById("listaAggiunte").innerHTML = "";
 document.getElementById("esclusioniChips").innerHTML = "";
 document.getElementById("labelEsclusioni").style.display = "none";
 
-// reset note
-document.getElementById("noteAggiunte").value = "";
-document.getElementById("noteAggiunte").style.display = "none";
-
 // reset anteprima
 document.getElementById("previewTesto").innerHTML = "";
 document.getElementById("previewOrdine").style.display = "none";
@@ -801,8 +797,7 @@ document.querySelectorAll(".pizza-item")
 pizzaSelezionata = null;
 
 // reset formato
-document.getElementById("formatoPizza").innerHTML = "";
-document.getElementById("formatoPizza").value = "";
+document.getElementById("formatoPizza").selectedIndex = 0;
 
 }
 
