@@ -486,21 +486,9 @@ const sel = document.getElementById("aggiunteSelect");
 
 let lista = [];
 
-/* 🔹 placeholder dinamico */
-let titolo = "Seleziona ingrediente";
-
-if(statoAggiunte === "verdure"){
-titolo = "Seleziona verdura";
-}
-
-if(statoAggiunte === "salumi"){
-titolo = "Seleziona salume";
-}
-
-/* BASE */
 if(statoAggiunte === "base"){
 
-sel.innerHTML = `<option value=''>${titolo}</option>`;
+sel.innerHTML = "<option value=''>Seleziona</option>";
 
 aggiunte.forEach(a => {
 sel.innerHTML += `<option value="${a.nome}">${a.nome} (+€${a.p})</option>`;
@@ -539,8 +527,7 @@ lista = [
 
 }
 
-/* RENDER SOTTO-LISTE */
-sel.innerHTML = `<option value=''>${titolo}</option>`;
+sel.innerHTML = "<option value=''>Seleziona</option>";
 
 lista.forEach(item => {
 sel.innerHTML += `<option value="${item}">${item}</option>`;
