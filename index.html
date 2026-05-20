@@ -472,21 +472,25 @@ div.appendChild(chip);
 }
 
 /* AGGIUNTE */
+  
 const aggiunte = [
-
 /* EXTRA BASE */
 {nome:"Patatine",p:1,pf:2},
 {nome:"Wurstel",p:1,pf:2},
 {nome:"Grana",p:1,pf:2},
 {nome:"Bufala",p:2,pf:3.5},
+];
 
+const verdure = [
 /* VERDURE */
 {nome:"Zucchine",p:1,pf:2},
 {nome:"Melanzane",p:1,pf:2},
 {nome:"Peperoni",p:1,pf:2},
 {nome:"Funghi",p:2,pf:3.5},
 {nome:"Funghi porcini",p:2,pf:3.5},
-  
+];
+
+const salumi = [
 /* SALUMI */
 {nome:"Prosciutto",p:1.5,pf:3},
 {nome:"Prosciutto crudo",p:1.5,pf:3},
@@ -545,7 +549,10 @@ const verdure = [
 ];
 
 verdure.forEach(v=>{
-sel.innerHTML += `<option value="ADD_${v}">${v}</option>`;
+sel.innerHTML += `
+<option value="ADD_${v.nome}">
+${v.nome} (+€${v.p})
+</option>`;
 });
 
 sel.innerHTML += `<option value="BACK">← Torna alle aggiunte</option>`;
@@ -568,7 +575,10 @@ const salumi = [
 ];
 
 salumi.forEach(s=>{
-sel.innerHTML += `<option value="ADD_${s}">${s}</option>`;
+sel.innerHTML += `
+<option value="ADD_${s.nome}">
+${s.nome} (+€${s.p})
+</option>`;
 });
 
 sel.innerHTML += `<option value="BACK">← Torna alle aggiunte</option>`;
@@ -745,9 +755,27 @@ extras.push("+ "+a);
 
 let extraTot=0;
 
+const tutteLeAggiunte = [
+...aggiunte,
+...verdure,
+...salumi
+];
+
+let extraTot = 0;
+
 aggiunteSelezionate.forEach(a=>{
 
-const add=aggiunte.find(x=>x.nome===a);
+const add = tutteLeAggiunte.find(x => x.nome === a);
+
+if(add){
+
+extraTot += (formato==="Familiare")
+? add.pf
+: add.p;
+
+}
+
+});
 
 if(add){
 
