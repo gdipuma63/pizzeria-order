@@ -333,6 +333,11 @@ document.getElementById("btnConsegna").classList.remove("active");
 document.getElementById("indirizzo").style.display =
 (tipo === "Consegna a domicilio") ? "block" : "none";
 
+/* 👇 AGGIUNTA QUI */
+if (tipo === "Ritiro") {
+    document.getElementById("indirizzo").value = "";
+}
+  
 document.getElementById("btnRitiro").classList.toggle("active", tipo==="Ritiro");
 document.getElementById("btnConsegna").classList.toggle("active", tipo==="Consegna a domicilio");
 }
@@ -359,7 +364,9 @@ pn:parseFloat(pn),
 pf:parseFloat(pf)
 };
 
-tuttePizze.push(nome);
+if (!tuttePizze.includes(nome)) {
+    tuttePizze.push(nome);
+}
 categorieSet.add(cat);
 });
 
@@ -684,6 +691,7 @@ testo+=`<br>📝 ${note}<br>`;
 document.getElementById("previewOrdine").style.display="block";
 document.getElementById("previewTesto").innerHTML=testo;
 }
+
 function rimuoviAgg(i){
 aggiunteSelezionate.splice(i,1);
 renderAggiunte();
@@ -802,6 +810,7 @@ pizzaSelezionata = null;
 
 // reset formato
 document.getElementById("formatoPizza").innerHTML = "";
+document.getElementById("formatoPizza").value = "";
 
 }
 
