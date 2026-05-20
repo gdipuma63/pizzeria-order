@@ -680,11 +680,6 @@ testo+=`<br><b>➕ Aggiunte:</b><br>`;
 aggiunteSelezionate.forEach(a=>testo+="+ "+a+"<br>");
 }
 
-// note
-if(note){
-testo+=`<br>📝 ${note}<br>`;
-}
-
 document.getElementById("previewOrdine").style.display="block";
 document.getElementById("previewTesto").innerHTML=testo;
 }
