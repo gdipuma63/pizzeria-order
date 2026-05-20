@@ -540,14 +540,6 @@ if(statoAggiunte === "verdure"){
 
 sel.innerHTML = `<option value=''>Seleziona verdura</option>`;
 
-const verdure = [
-"Zucchine",
-"Melanzane",
-"Peperoni",
-"Funghi",
-"Funghi porcini"
-];
-
 verdure.forEach(v=>{
 sel.innerHTML += `
 <option value="ADD_${v.nome}">
@@ -564,15 +556,6 @@ return;
 if(statoAggiunte === "salumi"){
 
 sel.innerHTML = `<option value=''>Seleziona salume</option>`;
-
-const salumi = [
-"Prosciutto",
-"Prosciutto crudo",
-"Speck",
-"Salame",
-"Salame piccante",
-"Bresaola"
-];
 
 salumi.forEach(s=>{
 sel.innerHTML += `
@@ -761,21 +744,9 @@ const tutteLeAggiunte = [
 ...salumi
 ];
 
-let extraTot = 0;
-
 aggiunteSelezionate.forEach(a=>{
 
 const add = tutteLeAggiunte.find(x => x.nome === a);
-
-if(add){
-
-extraTot += (formato==="Familiare")
-? add.pf
-: add.p;
-
-}
-
-});
 
 if(add){
 
