@@ -736,29 +736,27 @@ aggiunteSelezionate.forEach(a=>{
 extras.push("+ "+a);
 });
 
-let extraTot=0;
-
 const tutteLeAggiunte = [
-...aggiunte,
-...verdure,
-...salumi
+  ...aggiunte,
+  ...verdure,
+  ...salumi
 ];
 
-aggiunteSelezionate.forEach(a=>{
+let extraTotale = 0;
 
-const add = tutteLeAggiunte.find(x => x.nome === a);
+aggiunteSelezionate.forEach(a => {
 
-if(add){
+  const add = tutteLeAggiunte.find(x => x.nome === a);
 
-extraTot+=(formato==="Familiare")
-? add.pf
-: add.p;
+  if (!add) return;
 
-}
+  extraTotale += (formato === "Familiare")
+    ? add.pf
+    : add.p;
 
 });
 
-const totale=(base*q)+(extraTot*q);
+const totale = (base * q) + (extraTotale * q);
 
 ordine.push({
 pizza: pizzaSelezionata,
