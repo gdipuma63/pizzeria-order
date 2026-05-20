@@ -476,8 +476,6 @@ const aggiunte = [
 {nome:"Patatine",p:1,pf:2},
 {nome:"Wurstel",p:1,pf:2},
 {nome:"Grana",p:1,pf:2},
-{nome:"Verdure",p:1,pf:2},
-{nome:"Salumi",p:1.5,pf:3},
 {nome:"Funghi",p:1.5,pf:3},
 {nome:"Bufala",p:2,pf:3.5},
 {nome:"Porcini",p:2,pf:3.5}
@@ -493,6 +491,7 @@ if(statoAggiunte === "base"){
 
 sel.innerHTML = `<option value=''>Seleziona aggiunta</option>`;
 
+/* extra normali */
 aggiunte.forEach(a => {
 sel.innerHTML += `
 <option value="EXTRA_${a.nome}">
@@ -500,8 +499,18 @@ ${a.nome} (+€${a.p})
 </option>`;
 });
 
-sel.innerHTML += `<option value="NAV_VERDURE">VERDURE</option>`;
-sel.innerHTML += `<option value="NAV_SALUMI">SALUMI</option>`;
+sel.innerHTML += `<option disabled>────────────</option>`;
+
+/* NAV ma con aspetto "normale" */
+sel.innerHTML += `
+<option value="NAV_VERDURE">
+Verdure (+€1)
+</option>`;
+
+sel.innerHTML += `
+<option value="NAV_SALUMI">
+Salumi (+€1.5)
+</option>`;
 
 return;
 }
