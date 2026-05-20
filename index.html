@@ -554,7 +554,11 @@ function aggiungiExtra(){
 
 const sel = document.getElementById("aggiunteSelect");
 const val = sel.value;
-
+  
+/* 🔍 DEBUG STEP 3 */
+console.log("STATO AGGIUNTE:", statoAggiunte);
+console.log("VALORE SELEZIONATO:", val);
+  
 if(!val) return;
 
 /* --- NAVIGAZIONE CATEGORIE --- */
@@ -876,7 +880,6 @@ window.open(
 document.getElementById("quantita").addEventListener("input", aggiornaPreview);
 document.getElementById("formatoPizza").addEventListener("change", () => {
 aggiornaPreview();
-caricaAggiunteSelect();
 });
 
 </script>
