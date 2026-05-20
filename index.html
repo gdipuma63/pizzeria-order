@@ -276,7 +276,7 @@ Seleziona ingredienti da eliminare:
 
 <h4>Seleziona ingredienti da aggiungere:</h4>
 
-<select id="aggiunteSelect"></select>
+<select id="aggiunteSelect" onchange="aggiungiExtra()"></select>
 
 <div id="listaAggiunte"></div>
 
@@ -713,7 +713,7 @@ div.innerHTML+=`
 ${o.formato} x${o.quantita}<br>
 € ${o.totale.toFixed(2)}<br>
 
-${o.extras.map(e=>e+"<br>").join("")}
+${o.extras ? o.extras.map(e=>e+"<br>").join("") : ""}
 
 </div>
 
