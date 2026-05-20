@@ -487,6 +487,12 @@ const sel = document.getElementById("aggiunteSelect");
 
 let lista = [];
 
+/* SICUREZZA: normalizza stato */
+if(!["base","verdure","salumi"].includes(statoAggiunte)){
+    statoAggiunte = "base";
+}
+
+/* BASE */
 if(statoAggiunte === "base"){
 
 sel.innerHTML = "<option value=''>Seleziona</option>";
@@ -513,6 +519,8 @@ lista = [
 "← Torna indietro"
 ];
 
+sel.innerHTML = "<option value=''>Seleziona verdura</option>";
+
 /* SALUMI */
 }else if(statoAggiunte === "salumi"){
 
@@ -525,6 +533,8 @@ lista = [
 "Bresaola",
 "← Torna indietro"
 ];
+
+sel.innerHTML = "<option value=''>Seleziona salume</option>";
 
 }
 
@@ -755,7 +765,7 @@ document.querySelectorAll(".pizza-item")
 pizzaSelezionata = null;
 
 // reset formato
-document.getElementById("formatoPizza").innerHTML = "";
+document.getElementById("formatoPizza").innerHTML = "<option>Normale</option>";
 
 /* RESET AGGIUNTE (IMPORTANTE) */
 statoAggiunte = "base";
