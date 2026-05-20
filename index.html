@@ -579,6 +579,7 @@ document.getElementById("previewTesto").innerHTML=testo;
 function rimuoviAgg(i){
 aggiunteSelezionate.splice(i,1);
 renderAggiunte();
+aggiornaPreview();
 }
 
 /* AGGIUNGI ORDINE */
@@ -650,29 +651,45 @@ pizza: pizzaSelezionata,
 quantita: q,
 formato: formato,
 totale: totale,
-aggiunte: [...aggiunteSelezionate]
+aggiunte: [...aggiunteSelezionate],
+extras: [...extras]
 });
 
 aggiorna();
 
-aggiunteSelezionate=[];
+/* RESET COMPLETO FORM PIZZA */
 
-document.getElementById("quantita").value=1;
+aggiunteSelezionate = [];
 
-document.getElementById("aggiunteSelect").value="";
+// reset quantità
+document.getElementById("quantita").value = 1;
 
-document.getElementById("listaAggiunte").innerHTML="";
+// reset select aggiunte
+document.getElementById("aggiunteSelect").selectedIndex = 0;
 
-document.getElementById("esclusioniChips").innerHTML="";
+// reset lista aggiunte
+document.getElementById("listaAggiunte").innerHTML = "";
 
-document.getElementById("labelEsclusioni").style.display="none";
+// reset esclusioni
+document.getElementById("esclusioniChips").innerHTML = "";
+document.getElementById("labelEsclusioni").style.display = "none";
 
+// reset note
+document.getElementById("noteAggiunte").value = "";
+document.getElementById("noteAggiunte").style.display = "none";
+
+// reset anteprima
+document.getElementById("previewTesto").innerHTML = "";
+document.getElementById("previewOrdine").style.display = "none";
+
+// deseleziona pizza
 document.querySelectorAll(".pizza-item")
-.forEach(x=>x.classList.remove("active"));
+.forEach(x => x.classList.remove("active"));
 
-pizzaSelezionata=null;
+pizzaSelezionata = null;
 
-document.getElementById("formatoPizza").innerHTML="";
+// reset formato
+document.getElementById("formatoPizza").innerHTML = "";
 
 }
 
