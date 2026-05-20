@@ -78,6 +78,13 @@ border-radius:8px;
 background:#2f2215;
 }
 
+#aggiunteSelect + button{
+margin-top:10px;
+}
+
+#listaAggiunte + textarea + button{
+margin-top:20px;
+}
 /* DELETE */
 .rimuovi-btn{
 background:#c0392b;
@@ -91,8 +98,11 @@ margin-top:10px;
 
 /* MOBILE */
 @media (max-width:600px){
-.rimuovi-btn{width:100%;}
-.modalita-box{flex-direction:column;}
+
+.modalita-box{
+flex-direction:column;
+}
+
 }
 
 /* CHIPS */
@@ -123,7 +133,15 @@ background:#4b3621;
 color:white;
 border-color:#4b3621;
 }
-
+.aggiunte-box{
+background:#f7f7f7;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
 /* LISTA PIZZE */
 #listaPizze{
 max-height:320px;
@@ -178,6 +196,21 @@ background:#4b3621;
 color:white;
 }
 
+.pizza-ingredienti{
+font-size:13px;
+color:#666;
+margin:4px 0;
+line-height:1.4;
+}
+
+#previewOrdine{
+margin-top:15px;
+padding:12px;
+background:#f7f7f7;
+border-radius:10px;
+font-size:14px;
+line-height:1.4;
+}
 </style>
 </head>
 
@@ -241,13 +274,18 @@ Seleziona ingredienti da eliminare:
 <label>Quantità</label>
 <input type="number" id="quantita" value="1" min="1">
 
-<h4>Aggiunte</h4>
+<h4>Seleziona ingredienti da aggiungere:</h4>
+
 <select id="aggiunteSelect"></select>
-<button class="main-btn" onclick="aggiungiExtra()">➕ Aggiungi</button>
 
 <div id="listaAggiunte"></div>
 
 <textarea id="noteAggiunte" style="display:none"></textarea>
+
+<div id="previewOrdine" class="aggiunte-box" style="display:none;">
+<b>Anteprima ordine:</b>
+<div id="previewTesto"></div>
+</div>
 
 <button class="main-btn" onclick="aggiungiPizza()">
 Aggiungi all'ordine
@@ -400,7 +438,7 @@ el.classList.add("active");
 generaEsclusioni(p);
 
 document.getElementById("labelEsclusioni").style.display="block";
-
+aggiornaPreview();
 const f=document.getElementById("formatoPizza");
 f.innerHTML=menu[p].pf?`<option>Normale</option><option>Familiare</option>`:`<option>Normale</option>`;
 }
@@ -417,33 +455,71 @@ if(!i.trim()) return;
 const chip=document.createElement("div");
 chip.className="chip";
 chip.textContent=i.trim();
-chip.onclick=()=>chip.classList.toggle("active");
+chip.onclick = () => {
+chip.classList.toggle("active");
+aggiornaPreview();
+};
 div.appendChild(chip);
 });
 }
 
 /* AGGIUNTE */
-const aggiunte=[
+const aggiunte = [
 {nome:"Patatine",p:1,pf:2},
 {nome:"Wurstel",p:1,pf:2},
 {nome:"Grana",p:1,pf:2},
-{nome:"Verdure",p:1,pf:2}
+{nome:"Verdure",p:1,pf:2},
+{nome:"Salumi",p:1.5,pf:3},
+{nome:"Funghi",p:1.5,pf:3},
+{nome:"Bufala",p:2,pf:3.5},
+{nome:"Porcini",p:2,pf:3.5}
 ];
 
 function caricaAggiunteSelect(){
+
 const sel=document.getElementById("aggiunteSelect");
+
 sel.innerHTML="<option value=''>Seleziona</option>";
 
 aggiunte.forEach(a=>{
-sel.innerHTML+=`<option>${a.nome}</option>`;
+
+sel.innerHTML+=`
+<option value="${a.nome}">
+${a.nome} (+€${a.p})
+</option>`;
+
 });
+
 }
 
 function aggiungiExtra(){
-const v=document.getElementById("aggiunteSelect").value;
-if(!v) return;
-aggiunteSelezionate.push(v);
+
+const sel=document.getElementById("aggiunteSelect");
+const val=sel.value;
+
+if(!val) return;
+
+// evita duplicati
+if(aggiunteSelezionate.includes(val)){
+sel.value="";
+return;
+}
+
+aggiunteSelezionate.push(val);
+
+// reset select
+sel.value="";
+sel.selectedIndex = 0;
+// gestione note
+if(val==="Verdure" || val==="Salumi"){
+document.getElementById("noteAggiunte").style.display="block";
+}else{
+document.getElementById("noteAggiunte").style.display="none";
+document.getElementById("noteAggiunte").value="";
+}
+
 renderAggiunte();
+aggiornaPreview();
 }
 
 function renderAggiunte(){
@@ -459,6 +535,47 @@ ${a}
 });
 }
 
+function aggiornaPreview(){
+
+if(!pizzaSelezionata){
+document.getElementById("previewOrdine").style.display="none";
+return;
+}
+
+const formato=document.getElementById("formatoPizza").value;
+const q=document.getElementById("quantita").value;
+
+let testo="";
+
+testo+=`🍕 ${pizzaSelezionata}<br>`;
+testo+=`📦 ${formato}<br>`;
+testo+=`🔢 Quantità: ${q}<br>`;
+
+// esclusioni
+const excl=[];
+document.querySelectorAll("#esclusioniChips .chip.active")
+.forEach(c=>excl.push("- "+c.textContent));
+
+if(excl.length){
+testo+=`<br><b>❌ Esclusioni:</b><br>`;
+excl.forEach(e=>testo+=e+"<br>");
+}
+
+// aggiunte
+if(aggiunteSelezionate.length){
+testo+=`<br><b>➕ Aggiunte:</b><br>`;
+aggiunteSelezionate.forEach(a=>testo+="+ "+a+"<br>");
+}
+
+// note
+const note=document.getElementById("noteAggiunte").value.trim();
+if(note){
+testo+=`<br>📝 ${note}<br>`;
+}
+
+document.getElementById("previewOrdine").style.display="block";
+document.getElementById("previewTesto").innerHTML=testo;
+}
 function rimuoviAgg(i){
 aggiunteSelezionate.splice(i,1);
 renderAggiunte();
@@ -467,45 +584,194 @@ renderAggiunte();
 /* AGGIUNGI ORDINE */
 function aggiungiPizza(){
 
-if(!pizzaSelezionata) return;
+if(!pizzaSelezionata){
+alert("Seleziona una pizza");
+return;
+}
 
 const nome=document.getElementById("nome").value.trim();
 const tel=document.getElementById("telefonoUtente").value.trim();
 
-if(!nome||!tel){
+if(!nome || !tel){
 alert("Compila nome e telefono");
 return;
 }
 
+if(modalitaOrdine==="Consegna a domicilio"){
+
+const indirizzo=document.getElementById("indirizzo").value.trim();
+
+if(!indirizzo){
+alert("Inserisci indirizzo");
+return;
+}
+
+}
+
+const q=parseInt(document.getElementById("quantita").value);
+
+const formato=document.getElementById("formatoPizza").value;
+
+const base=(formato==="Familiare")
+? menu[pizzaSelezionata].pf
+: menu[pizzaSelezionata].pn;
+
+let extras=[];
+
+document.querySelectorAll("#esclusioniChips .chip.active")
+.forEach(c=>{
+extras.push("- "+c.textContent);
+});
+
+aggiunteSelezionate.forEach(a=>{
+extras.push("+ "+a);
+});
+
+let extraTot=0;
+
+aggiunteSelezionate.forEach(a=>{
+
+const add=aggiunte.find(x=>x.nome===a);
+
+if(add){
+
+extraTot+=(formato==="Familiare")
+? add.pf
+: add.p;
+
+}
+
+});
+
+const totale=(base*q)+(extraTot*q);
+
 ordine.push({
-pizza:pizzaSelezionata,
-quantita:1
+pizza: pizzaSelezionata,
+quantita: q,
+formato: formato,
+totale: totale,
+aggiunte: [...aggiunteSelezionate]
 });
 
 aggiorna();
+
+aggiunteSelezionate=[];
+
+document.getElementById("quantita").value=1;
+
+document.getElementById("aggiunteSelect").value="";
+
+document.getElementById("listaAggiunte").innerHTML="";
+
+document.getElementById("esclusioniChips").innerHTML="";
+
+document.getElementById("labelEsclusioni").style.display="none";
+
+document.querySelectorAll(".pizza-item")
+.forEach(x=>x.classList.remove("active"));
+
+pizzaSelezionata=null;
+
+document.getElementById("formatoPizza").innerHTML="";
+
 }
 
 function aggiorna(){
 
 const div=document.getElementById("listaOrdine");
+
 div.innerHTML="";
 
-ordine.forEach(o=>{
-div.innerHTML+=`<div>${o.pizza}</div>`;
+let totale=0;
+
+ordine.forEach((o,i)=>{
+
+totale+=o.totale;
+
+div.innerHTML+=`
+<div class="aggiunte-box">
+
+<div>
+<b>${o.pizza}</b><br>
+${o.formato} x${o.quantita}<br>
+€ ${o.totale.toFixed(2)}<br>
+
+${o.extras.map(e=>e+"<br>").join("")}
+
+</div>
+
+<button class="rimuovi-btn"
+onclick="rimuoviOrdine(${i})">
+❌
+</button>
+
+</div>
+`;
+
 });
+
+div.innerHTML+=`<h3>Totale € ${totale.toFixed(2)}</h3>`;
+
 }
 
+function rimuoviOrdine(i){
+
+ordine.splice(i,1);
+
+aggiorna();
+
+}
 /* WHATSAPP */
 function inviaOrdine(){
 
-let msg="🍕 ORDINE\n\n";
+if(ordine.length===0){
+alert("Ordine vuoto");
+return;
+}
+
+const nome=document.getElementById("nome").value.trim();
+const tel=document.getElementById("telefonoUtente").value.trim();
+
+let msg="🍕 ORDINE PIZZERIA\n\n";
+
+msg+="👤 "+nome+"\n";
+msg+="📞 "+tel+"\n";
+msg+="🚚 "+modalitaOrdine+"\n";
+
+if(modalitaOrdine==="Consegna a domicilio"){
+
+msg+="📍 "+document.getElementById("indirizzo").value+"\n";
+
+}
+
+msg+="\n";
+
+let totale=0;
 
 ordine.forEach(o=>{
-msg+=o.pizza+"\n";
+
+totale+=o.totale;
+
+msg+=`${o.pizza} (${o.formato}) x${o.quantita}\n`;
+
+o.aggiunte.forEach(a=>{
+msg += "+ " + a + "\n";
 });
 
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
+msg+=`€ ${o.totale.toFixed(2)}\n\n`;
+
+});
+
+msg+="💰 Totale: € "+totale.toFixed(2);
+
+window.open(
+"https://wa.me/?text="+encodeURIComponent(msg)
+);
+
 }
+
+document.getElementById("quantita").addEventListener("input", aggiornaPreview);
+document.getElementById("formatoPizza").addEventListener("change", aggiornaPreview);
 
 </script>
 
