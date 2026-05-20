@@ -14,6 +14,7 @@ margin:0;
 padding:0;
 }
 
+/* HEADER */
 .header{
 background:#4b3621;
 color:white;
@@ -23,12 +24,14 @@ font-size:28px;
 font-weight:bold;
 }
 
+/* CONTAINER */
 .container{
 max-width:800px;
 margin:auto;
 padding:20px;
 }
 
+/* BOX */
 .box{
 background:white;
 padding:20px;
@@ -37,6 +40,7 @@ margin-bottom:20px;
 box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
+/* INPUT */
 input,select,textarea{
 width:100%;
 padding:12px;
@@ -47,6 +51,7 @@ font-size:16px;
 box-sizing:border-box;
 }
 
+/* LABEL */
 label{
 display:block;
 margin-top:14px;
@@ -55,7 +60,10 @@ font-weight:600;
 color:#4b3621;
 }
 
-button{cursor:pointer;}
+/* BUTTON */
+button{
+cursor:pointer;
+}
 
 .main-btn{
 background:#4b3621;
@@ -70,6 +78,53 @@ border-radius:8px;
 background:#2f2215;
 }
 
+/* DELETE */
+.rimuovi-btn{
+background:#c0392b;
+color:white;
+border:none;
+padding:10px;
+border-radius:8px;
+cursor:pointer;
+margin-top:10px;
+}
+
+/* MOBILE */
+@media (max-width:600px){
+.rimuovi-btn{width:100%;}
+.modalita-box{flex-direction:column;}
+}
+
+/* CHIPS */
+#esclusioniChips{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:4px;
+margin-bottom:25px;
+}
+
+.chip{
+padding:8px 12px;
+border:1px solid #ccc;
+border-radius:20px;
+cursor:pointer;
+font-size:14px;
+background:#fff;
+user-select:none;
+}
+
+.chip:hover{
+border-color:#4b3621;
+}
+
+.chip.active{
+background:#4b3621;
+color:white;
+border-color:#4b3621;
+}
+
+/* LISTA PIZZE */
 #listaPizze{
 max-height:320px;
 overflow-y:auto;
@@ -92,9 +147,17 @@ background:#e8f0fe;
 border-left:4px solid #1a73e8;
 }
 
-.pizza-nome{font-weight:bold;color:#4b3621;}
-.pizza-prezzo{color:#1a73e8;font-weight:bold;}
+.pizza-nome{
+font-weight:bold;
+color:#4b3621;
+}
 
+.pizza-prezzo{
+color:#1a73e8;
+font-weight:bold;
+}
+
+/* MODALITA */
 .modalita-box{
 display:flex;
 gap:10px;
@@ -115,55 +178,6 @@ background:#4b3621;
 color:white;
 }
 
-.pizza-ingredienti{
-font-size:13px;
-color:#666;
-margin:4px 0;
-line-height:1.4;
-}
-
-#previewOrdine{
-margin-top:15px;
-padding:12px;
-background:#f7f7f7;
-border-radius:10px;
-font-size:14px;
-line-height:1.4;
-}
-
-.chip{
-padding:8px 12px;
-border:1px solid #ccc;
-border-radius:20px;
-cursor:pointer;
-display:inline-block;
-margin:4px;
-}
-
-.chip.active{
-background:#4b3621;
-color:white;
-}
-
-.aggiunte-box{
-background:#f7f7f7;
-padding:10px;
-border-radius:10px;
-margin-top:10px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.rimuovi-btn{
-background:#c0392b;
-color:white;
-border:none;
-padding:6px 10px;
-border-radius:6px;
-cursor:pointer;
-}
-
 </style>
 </head>
 
@@ -179,10 +193,12 @@ cursor:pointer;
 <h3>Dati cliente</h3>
 
 <label>Nominativo *</label>
-<input type="text" id="nome">
+<input type="text" id="nome" required>
 
 <label>Telefono *</label>
-<input type="text" id="telefonoUtente">
+<input type="text" id="telefonoUtente" required>
+
+<h4 style="text-align:center;">Modalità di consegna</h4>
 
 <div class="modalita-box">
 
@@ -195,7 +211,7 @@ onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna</button>
 </div>
 
 <input type="text" id="indirizzo"
-placeholder="Indirizzo"
+placeholder="Indirizzo (solo consegna a domicilio)"
 style="display:none;">
 
 </div>
@@ -203,34 +219,35 @@ style="display:none;">
 <!-- PIZZE -->
 <div class="box">
 
-<h3>CATEGORIA PIZZE</h3>
+<h3 style="text-align:center;">🍕 CATEGORIA PIZZE 🍕</h3>
+
 <select id="filtroCategoria" onchange="filtraPizze()">
-<option value="Tutte">Tutte</option>
+<option value="Tutte">Tutte le categorie</option>
 </select>
 
-<h3>MENU PIZZE</h3>
+<h3 style="text-align:center;">🍕 MENU PIZZE 🍕</h3>
+
 <div id="listaPizze"></div>
 
-<h4 id="labelEsclusioni" style="display:none;">Esclusioni:</h4>
+<h4 id="labelEsclusioni" style="display:none;">
+Seleziona ingredienti da eliminare:
+</h4>
+
 <div id="esclusioniChips"></div>
 
 <label>Formato</label>
 <select id="formatoPizza"></select>
 
 <label>Quantità</label>
-<input type="number" id="quantita" value="1">
+<input type="number" id="quantita" value="1" min="1">
 
 <h4>Aggiunte</h4>
 <select id="aggiunteSelect"></select>
+<button class="main-btn" onclick="aggiungiExtra()">➕ Aggiungi</button>
 
 <div id="listaAggiunte"></div>
 
 <textarea id="noteAggiunte" style="display:none"></textarea>
-
-<div id="previewOrdine" style="display:none;">
-<b>Anteprima:</b>
-<div id="previewTesto"></div>
-</div>
 
 <button class="main-btn" onclick="aggiungiPizza()">
 Aggiungi all'ordine
@@ -241,8 +258,12 @@ Aggiungi all'ordine
 <!-- ORDINE -->
 <div class="box">
 
-<h3>Riepilogo</h3>
+<h3>🧾 Riepilogo</h3>
 <div id="listaOrdine"></div>
+
+<button class="main-btn" onclick="inviaOrdine()">
+Invia WhatsApp
+</button>
 
 </div>
 
@@ -250,78 +271,125 @@ Aggiungi all'ordine
 
 <script>
 
-const sheetUrl="https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/heads/main/menu.csv";
+const sheetUrl = "https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/heads/main/menu.csv";
 
-let menu={};
-let ordine=[];
-let pizzaSelezionata=null;
-let aggiunteSelezionate=[];
-let tuttePizze=[];
+let menu = {};
+let ordine = [];
+let pizzaSelezionata = null;
+let aggiunteSelezionate = [];
+let modalitaOrdine = "Ritiro";
 
-let modalitaOrdine="Ritiro";
+let tuttePizze = [];
 
-const listaPizze=document.getElementById("listaPizze");
+const listaPizze = document.getElementById("listaPizze");
+
+/* MODALITA */
+function selezionaModalita(tipo){
+
+modalitaOrdine = tipo;
+
+document.getElementById("btnRitiro").classList.remove("active");
+document.getElementById("btnConsegna").classList.remove("active");
+
+document.getElementById("indirizzo").style.display =
+(tipo === "Consegna a domicilio") ? "block" : "none";
+
+document.getElementById("btnRitiro").classList.toggle("active", tipo==="Ritiro");
+document.getElementById("btnConsegna").classList.toggle("active", tipo==="Consegna a domicilio");
+}
 
 /* MENU */
 async function caricaMenu(){
 
-const res=await fetch(sheetUrl);
-const data=await res.text();
+const res = await fetch(sheetUrl);
+const data = await res.text();
 
-const righe=data.split("\n").slice(1);
-const cats=new Set();
+const righe = data.split("\n").slice(1);
+
+const categorieSet = new Set();
 
 righe.forEach(r=>{
 if(!r.trim()) return;
 
-const [cat,nome,ing,pn,pf]=r.split(";");
+const [cat,nome,ing,pn,pf] = r.split(";");
 
-menu[nome]={categoria:cat,ingredienti:ing,pn:+pn,pf:+pf};
+menu[nome]={
+categoria:cat,
+ingredienti:ing,
+pn:parseFloat(pn),
+pf:parseFloat(pf)
+};
 
 tuttePizze.push(nome);
-cats.add(cat);
+categorieSet.add(cat);
 });
 
-caricaCategorie([...cats]);
+caricaCategorie([...categorieSet]);
 renderPizze(tuttePizze);
+caricaAggiunteSelect();
 }
 
-window.onload=caricaMenu;
+window.onload = caricaMenu;
 
+/* CATEGORIE */
 function caricaCategorie(cats){
 const sel=document.getElementById("filtroCategoria");
 cats.forEach(c=>{
-let o=document.createElement("option");
-o.value=c;o.textContent=c;
-sel.appendChild(o);
+let opt=document.createElement("option");
+opt.value=c;
+opt.textContent=c;
+sel.appendChild(opt);
 });
 }
 
+/* FILTRO */
 function filtraPizze(){
 const cat=document.getElementById("filtroCategoria").value;
-renderPizze(cat==="Tutte"?tuttePizze:tuttePizze.filter(p=>menu[p].categoria===cat));
+
+const list = (cat==="Tutte")
+?tuttePizze
+:tuttePizze.filter(p=>menu[p].categoria===cat);
+
+renderPizze(list);
+
+document.getElementById("listaPizze")
+.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 /* RENDER */
-function renderPizze(list){
+function renderPizze(lista){
 
-listaPizze.innerHTML="";
+listaPizze.innerHTML = "";
 
-list.forEach(p=>{
-const div=document.createElement("div");
-div.className="pizza-item";
+lista.forEach(p => {
 
-div.innerHTML=`
+const pfValido = menu[p].pf > 0;
+
+const div = document.createElement("div");
+div.className = "pizza-item";
+
+div.innerHTML = `
 <div class="pizza-nome">${p}</div>
-<div class="pizza-ingredienti">${menu[p].ingredienti}</div>
-<div class="pizza-prezzo">€${menu[p].pn}</div>
+
+<div class="pizza-ingredienti">
+${menu[p].ingredienti}
+</div>
+
+<div class="pizza-prezzo">
+${pfValido
+? `Normale €${menu[p].pn} • Familiare €${menu[p].pf}`
+: `€${menu[p].pn}`}
+</div>
 `;
 
-div.onclick=()=>selezionaPizza(p,div);
-listaPizze.appendChild(div);
-});
-}
+div.onclick = () => selezionaPizza(p, div);
 
+listaPizze.appendChild(div);
+
+});
+
+}
+/* SELEZIONE PIZZA */
 function selezionaPizza(p,el){
 
 pizzaSelezionata=p;
@@ -330,8 +398,14 @@ document.querySelectorAll(".pizza-item").forEach(x=>x.classList.remove("active")
 el.classList.add("active");
 
 generaEsclusioni(p);
+
+document.getElementById("labelEsclusioni").style.display="block";
+
+const f=document.getElementById("formatoPizza");
+f.innerHTML=menu[p].pf?`<option>Normale</option><option>Familiare</option>`:`<option>Normale</option>`;
 }
 
+/* ESCLUSIONI */
 function generaEsclusioni(p){
 
 const div=document.getElementById("esclusioniChips");
@@ -340,41 +414,73 @@ div.innerHTML="";
 menu[p].ingredienti.split(",").forEach(i=>{
 if(!i.trim()) return;
 
-const c=document.createElement("div");
-c.className="chip";
-c.textContent=i;
-c.onclick=()=>c.classList.toggle("active");
-div.appendChild(c);
+const chip=document.createElement("div");
+chip.className="chip";
+chip.textContent=i.trim();
+chip.onclick=()=>chip.classList.toggle("active");
+div.appendChild(chip);
 });
 }
 
-/* AGGIUNGI */
+/* AGGIUNTE */
+const aggiunte=[
+{nome:"Patatine",p:1,pf:2},
+{nome:"Wurstel",p:1,pf:2},
+{nome:"Grana",p:1,pf:2},
+{nome:"Verdure",p:1,pf:2}
+];
+
+function caricaAggiunteSelect(){
+const sel=document.getElementById("aggiunteSelect");
+sel.innerHTML="<option value=''>Seleziona</option>";
+
+aggiunte.forEach(a=>{
+sel.innerHTML+=`<option>${a.nome}</option>`;
+});
+}
+
+function aggiungiExtra(){
+const v=document.getElementById("aggiunteSelect").value;
+if(!v) return;
+aggiunteSelezionate.push(v);
+renderAggiunte();
+}
+
+function renderAggiunte(){
+const div=document.getElementById("listaAggiunte");
+div.innerHTML="";
+
+aggiunteSelezionate.forEach((a,i)=>{
+div.innerHTML+=`
+<div class="aggiunte-box">
+${a}
+<button class="rimuovi-btn" onclick="rimuoviAgg(${i})">❌</button>
+</div>`;
+});
+}
+
+function rimuoviAgg(i){
+aggiunteSelezionate.splice(i,1);
+renderAggiunte();
+}
+
+/* AGGIUNGI ORDINE */
 function aggiungiPizza(){
 
-if(!pizzaSelezionata) return alert("Seleziona pizza");
+if(!pizzaSelezionata) return;
 
-const q=+document.getElementById("quantita").value;
+const nome=document.getElementById("nome").value.trim();
+const tel=document.getElementById("telefonoUtente").value.trim();
 
-let extras=[];
-
-document.querySelectorAll("#esclusioniChips .chip.active")
-.forEach(c=>extras.push("- "+c.textContent));
-
-aggiunteSelezionate.forEach(a=>extras.push("+ "+a));
+if(!nome||!tel){
+alert("Compila nome e telefono");
+return;
+}
 
 ordine.push({
 pizza:pizzaSelezionata,
-quantita:q,
-extras:[...extras]
+quantita:1
 });
-
-/* RESET COMPLETO */
-aggiunteSelezionate=[];
-pizzaSelezionata=null;
-
-document.getElementById("listaAggiunte").innerHTML="";
-document.getElementById("esclusioniChips").innerHTML="";
-document.getElementById("previewOrdine").style.display="none";
 
 aggiorna();
 }
@@ -385,15 +491,20 @@ const div=document.getElementById("listaOrdine");
 div.innerHTML="";
 
 ordine.forEach(o=>{
-div.innerHTML+=`
-<div class="aggiunte-box">
-<div>
-<b>${o.pizza}</b><br>
-x${o.quantita}<br>
-${o.extras.map(e=>e+"<br>").join("")}
-</div>
-</div>`;
+div.innerHTML+=`<div>${o.pizza}</div>`;
 });
+}
+
+/* WHATSAPP */
+function inviaOrdine(){
+
+let msg="🍕 ORDINE\n\n";
+
+ordine.forEach(o=>{
+msg+=o.pizza+"\n";
+});
+
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
 }
 
 </script>
