@@ -440,7 +440,11 @@ generaEsclusioni(p);
 document.getElementById("labelEsclusioni").style.display="block";
 aggiornaPreview();
 const f=document.getElementById("formatoPizza");
-f.innerHTML=menu[p].pf?`<option>Normale</option><option>Familiare</option>`:`<option>Normale</option>`;
+f.innerHTML = menu[p].pf
+? `<option>Normale</option><option>Familiare</option>`
+: `<option>Normale</option>`;
+
+caricaAggiunteSelect();
 }
 
 /* ESCLUSIONI */
@@ -477,15 +481,18 @@ const aggiunte = [
 
 function caricaAggiunteSelect(){
 
-const sel=document.getElementById("aggiunteSelect");
+const sel = document.getElementById("aggiunteSelect");
+const formato = document.getElementById("formatoPizza").value || "Normale";
 
-sel.innerHTML="<option value=''>Seleziona</option>";
+sel.innerHTML = "<option value=''>Seleziona</option>";
 
-aggiunte.forEach(a=>{
+aggiunte.forEach(a => {
+
+const prezzo = (formato === "Familiare") ? a.pf : a.p;
 
 sel.innerHTML += `
 <option value="${a.nome}">
-${a.nome} (+€${a.p} Normale • +€${a.pf} Familiare)
+${a.nome} (+€${prezzo})
 </option>`;
 
 });
@@ -788,7 +795,10 @@ window.open(
 }
 
 document.getElementById("quantita").addEventListener("input", aggiornaPreview);
-document.getElementById("formatoPizza").addEventListener("change", aggiornaPreview);
+document.getElementById("formatoPizza").addEventListener("change", () => {
+aggiornaPreview();
+caricaAggiunteSelect();
+});
 
 </script>
 
