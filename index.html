@@ -488,13 +488,20 @@ let lista = [];
 
 if(statoAggiunte === "base"){
 
-lista = [
-...aggiunte.map(a => ({nome:a.nome, p:a.p, pf:a.pf})),
-{nome:"VERDURE"},
-{nome:"SALUMI"}
-];
+sel.innerHTML = "<option value=''>Seleziona</option>";
 
-} else if(statoAggiunte === "verdure"){
+aggiunte.forEach(a => {
+sel.innerHTML += `<option value="${a.nome}">${a.nome} (+€${a.p})</option>`;
+});
+
+sel.innerHTML += `<option value="VERDURE">VERDURE</option>`;
+sel.innerHTML += `<option value="SALUMI">SALUMI</option>`;
+
+return;
+}
+
+/* VERDURE */
+if(statoAggiunte === "verdure"){
 
 lista = [
 "Zucchine",
@@ -504,7 +511,8 @@ lista = [
 "← Torna indietro"
 ];
 
-} else if(statoAggiunte === "salumi"){
+/* SALUMI */
+}else if(statoAggiunte === "salumi"){
 
 lista = [
 "Prosciutto crudo",
@@ -519,9 +527,7 @@ lista = [
 sel.innerHTML = "<option value=''>Seleziona</option>";
 
 lista.forEach(item => {
-
 sel.innerHTML += `<option value="${item}">${item}</option>`;
-
 });
 
 }
