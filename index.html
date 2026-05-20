@@ -316,8 +316,9 @@ let ordine = [];
 let pizzaSelezionata = null;
 let aggiunteSelezionate = [];
 let modalitaOrdine = "Ritiro";
-
 let tuttePizze = [];
+
+let statoAggiunte = "base";
 
 const listaPizze = document.getElementById("listaPizze");
 
@@ -482,18 +483,44 @@ const aggiunte = [
 function caricaAggiunteSelect(){
 
 const sel = document.getElementById("aggiunteSelect");
-const formato = document.getElementById("formatoPizza").value || "Normale";
+
+let lista = [];
+
+if(statoAggiunte === "base"){
+
+lista = [
+...aggiunte.map(a => ({nome:a.nome, p:a.p, pf:a.pf})),
+{nome:"VERDURE"},
+{nome:"SALUMI"}
+];
+
+} else if(statoAggiunte === "verdure"){
+
+lista = [
+"Zucchine",
+"Melanzane",
+"Peperoni",
+"Funghi",
+"← Torna indietro"
+];
+
+} else if(statoAggiunte === "salumi"){
+
+lista = [
+"Prosciutto crudo",
+"Speck",
+"Salame",
+"Bresaola",
+"← Torna indietro"
+];
+
+}
 
 sel.innerHTML = "<option value=''>Seleziona</option>";
 
-aggiunte.forEach(a => {
+lista.forEach(item => {
 
-const prezzo = (formato === "Familiare") ? a.pf : a.p;
-
-sel.innerHTML += `
-<option value="${a.nome}">
-${a.nome} (+€${prezzo})
-</option>`;
+sel.innerHTML += `<option value="${item}">${item}</option>`;
 
 });
 
@@ -501,32 +528,46 @@ ${a.nome} (+€${prezzo})
 
 function aggiungiExtra(){
 
-const sel=document.getElementById("aggiunteSelect");
-const val=sel.value;
+const sel = document.getElementById("aggiunteSelect");
+const val = sel.value;
 
 if(!val) return;
 
-// evita duplicati
+/* NAVIGAZIONE CATEGORIE */
+
+if(val === "VERDURE"){
+statoAggiunte = "verdure";
+caricaAggiunteSelect();
+return;
+}
+
+if(val === "SALUMI"){
+statoAggiunte = "salumi";
+caricaAggiunteSelect();
+return;
+}
+
+if(val === "← Torna indietro"){
+statoAggiunte = "base";
+caricaAggiunteSelect();
+return;
+}
+
+/* SELEZIONE AGGIUNTA */
+
 if(aggiunteSelezionate.includes(val)){
-sel.value="";
+sel.value = "";
 return;
 }
 
 aggiunteSelezionate.push(val);
 
-// reset select
-sel.value="";
-sel.selectedIndex = 0;
-// gestione note
-if(val==="Verdure" || val==="Salumi"){
-document.getElementById("noteAggiunte").style.display="block";
-}else{
-document.getElementById("noteAggiunte").style.display="none";
-document.getElementById("noteAggiunte").value="";
-}
+sel.value = "";
 
+/* aggiorna UI */
 renderAggiunte();
 aggiornaPreview();
+
 }
 
 function renderAggiunte(){
