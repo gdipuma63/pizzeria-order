@@ -1097,8 +1097,17 @@ const civico = a.house_number || "";
 const citta = a.city || a.town || a.village || "";
 const cap = a.postcode || "";
 
-indirizzoInput.value =
-`${strada} ${civico}, ${cap} ${citta}`.trim();
+let indirizzoCompleto = strada;
+
+if (civico) {
+  indirizzoCompleto += " " + civico;
+}
+
+if (cap || citta) {
+  indirizzoCompleto += ", " + (cap ? cap + " " : "") + citta;
+}
+
+indirizzoInput.value = indirizzoCompleto.trim();
 
 }else{
 
