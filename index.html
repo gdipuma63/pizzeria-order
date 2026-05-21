@@ -105,23 +105,43 @@ margin-top:10px;
 /* MOBILE */
 @media (max-width:600px){
 
-.modalita-box{
-flex-direction:column;
+  .modalita-box{
+    flex-direction:column;
+  }
+
+  #indirizzoBox{
+    flex-direction:column;
+  }
+
+  /* bottone sopra input su mobile */
+  #indirizzoBox .usa-posizione{
+    order: 1;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #indirizzoBox input{
+    order: 2;
+    width: 100%;
+  }
+
+  #indirizzoBox .main-btn{
+    max-width:100%;
+  }
 }
 
-#indirizzoBox{
-flex-direction:column;
-}
-
-#indirizzoBox .main-btn{
-max-width:100%;
-}
-
-}
-
+/* DESKTOP */
 @media (min-width: 601px) {
+
+  /* nasconde il bottone "usa posizione" su desktop */
   #indirizzoBox .usa-posizione {
     display: none !important;
+  }
+
+  /* layout orizzontale stabile su desktop */
+  #indirizzoBox{
+    flex-direction: row;
+    align-items: stretch;
   }
 }
     
