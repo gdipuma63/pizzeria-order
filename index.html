@@ -1019,14 +1019,22 @@ try{
 const res = await fetch(url);
 const data = await res.json();
 
-if(data && data.display_name){
-indirizzoInput.value = data.display_name;
-} else {
-indirizzoInput.value = lat + ", " + lon;
-}
+if(data && data.address){
 
-} catch(e){
+const a = data.address;
+
+const strada = a.road || "";
+const civico = a.house_number || "";
+const citta = a.city || a.town || a.village || "";
+const cap = a.postcode || "";
+
+indirizzoInput.value =
+`${strada} ${civico}, ${cap} ${citta}`.trim();
+
+} else {
+
 indirizzoInput.value = lat + ", " + lon;
+
 }
 
 });
