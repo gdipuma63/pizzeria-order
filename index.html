@@ -256,9 +256,17 @@ onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna a domicilio</b
 
 </div>
 
+<div id="indirizzoBox" style="display:none; gap:8px; flex-direction:column;">
+
 <input type="text" id="indirizzo"
 placeholder="Indirizzo (solo consegna a domicilio)"
-style="display:none;">
+style="width:100%;">
+
+<button type="button" class="main-btn" onclick="rilevaPosizione()">
+🌍 Usa la mia posizione
+</button>
+
+</div>
 
 </div>
 
@@ -341,8 +349,8 @@ modalitaOrdine = tipo;
 document.getElementById("btnRitiro").classList.remove("active");
 document.getElementById("btnConsegna").classList.remove("active");
 
-document.getElementById("indirizzo").style.display =
-(tipo === "Consegna a domicilio") ? "block" : "none";
+document.getElementById("indirizzoBox").style.display =
+(tipo === "Consegna a domicilio") ? "flex" : "none";
 
 /* 👇 AGGIUNTA QUI */
 if (tipo === "Ritiro") {
@@ -940,10 +948,45 @@ window.open(
 
 }
 
+function rilevaPosizione(){
+
+const indirizzoInput = document.getElementById("indirizzo");
+
+if(!navigator.geolocation){
+alert("Geolocalizzazione non supportata");
+return;
+}
+
+navigator.geolocation.getCurrentPosition(async (pos) => {
+
+const lat = pos.coords.latitude;
+const lon = pos.coords.longitude;
+
+const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+
+try{
+const res = await fetch(url);
+const data = await res.json();
+
+if(data && data.display_name){
+indirizzoInput.value = data.display_name;
+} else {
+indirizzoInput.value = lat + ", " + lon;
+}
+
+} catch(e){
+indirizzoInput.value = lat + ", " + lon;
+}
+
+});
+
+}
+    
 document.getElementById("quantita").addEventListener("input", aggiornaPreview);
 document.getElementById("formatoPizza").addEventListener("change", () => {
 aggiornaPreview();
 });
+
 
 </script>
 
