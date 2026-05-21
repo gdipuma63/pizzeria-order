@@ -413,13 +413,14 @@ const categorieSet = new Set();
 righe.forEach(r=>{
 if(!r.trim()) return;
 
-const [cat,nome,ing,pn,pf] = r.split(";");
+const [cat,nomeRaw,ing,pn,pf] = r.split(";");
+const nome = nomeRaw.trim();
 
 menu[nome]={
 categoria:cat,
 ingredienti:ing,
 pn:parseFloat(pn),
-pf: pf ? parseFloat(pf) : 0
+pf: pf && !isNaN(parseFloat(pf)) ? parseFloat(pf) : 0
 };
 
 if (!tuttePizze.includes(nome.trim())) {
