@@ -1151,7 +1151,30 @@ div.remove();
 
 }
 </script>
-    
+<script>
+async function suggerisciIndirizzo(q) {
+  if (q.length < 3) return;
+
+  const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(q)}&addressdetails=1&limit=5`;
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    console.log("Suggerimenti indirizzo:", data);
+  } catch (e) {}
+}
+
+function abilitaSuggerimenti() {
+  const input = document.getElementById("indirizzo");
+
+  input.addEventListener("input", () => {
+    suggerisciIndirizzo(input.value);
+  });
+}
+
+window.addEventListener("load", abilitaSuggerimenti);
+</script>    
 <div id="toast"></div>
 
 </body>
