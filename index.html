@@ -1016,6 +1016,7 @@ const lon = pos.coords.longitude;
 const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
 
 try{
+
 const res = await fetch(url);
 const data = await res.json();
 
@@ -1031,20 +1032,25 @@ const cap = a.postcode || "";
 indirizzoInput.value =
 `${strada} ${civico}, ${cap} ${citta}`.trim();
 
-} else {
+}else{
 
 indirizzoInput.value = lat + ", " + lon;
 
 }
 
+}catch(e){
+
+indirizzoInput.value = lat + ", " + lon;
+
+}
+
+}, () => {
+
+showToast("Impossibile rilevare la posizione", "error");
+
 });
 
 }
-    
-document.getElementById("quantita").addEventListener("input", aggiornaPreview);
-document.getElementById("formatoPizza").addEventListener("change", () => {
-aggiornaPreview();
-});
 
 
 function showToast(message, type = "info") {
