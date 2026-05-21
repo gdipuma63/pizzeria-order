@@ -106,42 +106,50 @@ margin-top:10px;
 @media (max-width:600px){
 
   .modalita-box{
-    flex-direction:column;
+    flex-direction: column;
   }
 
+  /* FORZA layout verticale reale */
   #indirizzoBox{
-    flex-direction:column;
+    display: flex;
+    flex-direction: column !important;
+    align-items: stretch;
+    gap: 10px;
   }
 
-  /* bottone sopra input su mobile */
-  #indirizzoBox .usa-posizione{
-    order: 1;
-    width: 100%;
-    max-width: 100%;
-  }
-
+  /* INPUT sempre piena larghezza */
   #indirizzoBox input{
+    width: 100% !important;
+    margin-bottom: 0 !important;
     order: 2;
-    width: 100%;
+  }
+
+  /* BOTTONE sopra input */
+  #indirizzoBox .usa-posizione{
+    width: 100% !important;
+    max-width: 100% !important;
+    order: 1;
   }
 
   #indirizzoBox .main-btn{
-    max-width:100%;
+    max-width: 100%;
   }
 }
 
 /* DESKTOP */
 @media (min-width: 601px) {
 
-  /* nasconde il bottone "usa posizione" su desktop */
-  #indirizzoBox .usa-posizione {
+  /* NASCONDE bottone geolocalizzazione su desktop */
+  #indirizzoBox .usa-posizione{
     display: none !important;
   }
 
-  /* layout orizzontale stabile su desktop */
+  /* layout orizzontale corretto desktop */
   #indirizzoBox{
+    display: flex;
     flex-direction: row;
     align-items: stretch;
+    gap: 12px;
   }
 }
     
