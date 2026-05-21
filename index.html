@@ -211,6 +211,19 @@ border-radius:10px;
 font-size:14px;
 line-height:1.4;
 }
+.placeholder-lampeggia{
+animation: blinkText 0.8s ease-in-out 4;
+color:#c0392b;
+font-weight:bold;
+}
+
+@keyframes blinkText{
+
+0%{opacity:1;}
+50%{opacity:0.2;}
+100%{opacity:1;}
+
+}
 </style>
 </head>
 
@@ -589,6 +602,9 @@ if(val === "NAV_VERDURE"){
 statoAggiunte = "verdure";
 caricaAggiunteSelect();
 sel.value = "";
+
+lampeggiaPlaceholder();
+
 return;
 }
 
@@ -596,6 +612,9 @@ if(val === "NAV_SALUMI"){
 statoAggiunte = "salumi";
 caricaAggiunteSelect();
 sel.value = "";
+
+lampeggiaPlaceholder();
+
 return;
 }
 
@@ -646,6 +665,24 @@ ${a}
 <button class="rimuovi-btn" onclick="rimuoviAgg(${i})">❌</button>
 </div>`;
 });
+}
+
+function lampeggiaPlaceholder(){
+
+const sel = document.getElementById("aggiunteSelect");
+
+sel.classList.remove("placeholder-lampeggia");
+
+/* reset animazione */
+void sel.offsetWidth;
+
+sel.classList.add("placeholder-lampeggia");
+
+/* rimuove classe dopo animazione */
+setTimeout(()=>{
+sel.classList.remove("placeholder-lampeggia");
+},3000);
+
 }
 
 function aggiornaPreview(){
