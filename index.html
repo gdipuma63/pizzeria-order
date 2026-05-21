@@ -368,7 +368,7 @@ if (!tuttePizze.includes(nome)) {
 categorieSet.add(cat);
 });
 
-caricaCategorie([...categorieSet]);
+caricaCategorie([...categorieSet].sort());
 renderPizze(tuttePizze);
 caricaAggiunteSelect();
 }
