@@ -14,12 +14,12 @@ Le Novità;ZU’ TOTO;Pesto di pistacchi, Mozzarella, Prosciutto cotto o crudo, 
 Le Novità;LUCA (cornice);Bufala, Emmenthal, Ciliegino, Rucola, Speck, Scaglie di grana, Astro balsamico caramellato;8.00;15.00
 Le Novità;NICOLA;Mozzarella, Quattro formaggi, Funghi porcini, Salame piccante, Scaglie di grana;8.00;15.00
 Le Novità;ALESSIA;Mozzarella, Pesto, Tonno, Ciliegino, Scaglie di grana;8.00;15.00
-Pizza Fritta;PASTA CRESCIUTA;Acciughe, Mozzarella (8 pezzi);1.50;
-Pizza Fritta;CIOPPINI SCHETTI;Pomodoro a bruschetta;1.50;
-Pizza Fritta;CIOPPINI MARINATI;Rucola, Sale, Pepe, Formaggio, Olio d’oliva;2.00;
-Pizza Fritta;CALZONE CLASSICO;Bufala, Ciliegino;7.00;14.00
-Pizza Fritta;CALZONE NASCÉ;Bufala, Ciliegino, Crudo, Rucola, Scaglie di grana, Astro caramellato;8.00;15.00
-Pizza Fritta;NAPOLETANA;Bufala, Friarielli;7.00;14.00
+Pizze Fritte;PASTA CRESCIUTA;Acciughe, Mozzarella (8 pezzi);1.50;
+Pizze Fritte;CIOPPINI SCHETTI;Pomodoro a bruschetta;1.50;
+Pizze Fritte;CIOPPINI MARINATI;Rucola, Sale, Pepe, Formaggio, Olio d’oliva;2.00;
+Pizze Fritte;CALZONE CLASSICO;Bufala, Ciliegino;7.00;14.00
+Pizze Fritte;CALZONE NASCÉ;Bufala, Ciliegino, Crudo, Rucola, Scaglie di grana, Astro caramellato;8.00;15.00
+Pizze Fritte;NAPOLETANA;Bufala, Friarielli;7.00;14.00
 Ultimi Arrivi;CRICCU & CROCCU (2 mini calzoni);Prosciutto, Mozzarella, Rucola, Crema ai formaggi, Scaglie di grana;6.00;
 Ultimi Arrivi;PIRREDDU;Mozzarella, Emmenthal, Funghi porcini, Porchetta, Rosmarino;8.00;15.00
 Ultimi Arrivi;‘A NUCI’;Mozzarella, Bacon, Salsiccia, Crema funghi tartufata, Granella di noci;8.00;15.00
@@ -83,7 +83,7 @@ Calzoni e Cannoli;CALZONE 4 GUSTI;Pomodoro, Mozzarella, Prosciutto, Funghi, Wurs
 Calzoni e Cannoli;CANNOLO NAPOLETANO;Pomodoro, Mozzarella di bufala, Scaglie di grana;8.00;
 Calzoni e Cannoli;CANNOLO LIPARI;Mozzarella, Prosciutto, Salame piccante, Crema ai formaggi;8.00;
 Calzoni e Cannoli;CANNOLO SICILIANO;Prosciutto, Funghi, Cipolla, Caciocavallo, Mozzarella;7.00;
-Pizza Dolce;PIZZA DOLCE;Nutella, Granella di mandorle, Pistacchio, Zucchero a velo;6.00;
-Pizza Siciliana;CUDDURUNI;Acciughe, Cipolla, Ciliegino, Pecorino, Mollica bianca, Sale, Pepe, Origano;7.00;
-Pizza Siciliana;SFINCIONE;Acciughe, Cipolla, Tumma locale, Pomodoro, Mollica bianca, Caciocavallo stagionato, Sale, Pepe, Origano;7.00;
-Pizza Siciliana;RIA NATA;Pesto di prezzemolo e mentuccia, Acciughe, Cipolla, Ciliegino, Tumma locale, Cipolla bianca, Caciocavallo stagionato, Sale, Pepe, Origano;7.00;
+Pizze Dolci;PIZZA DOLCE;Nutella, Granella di mandorle, Pistacchio, Zucchero a velo;6.00;
+Pizze Siciliane;CUDDURUNI;Acciughe, Cipolla, Ciliegino, Pecorino, Mollica bianca, Sale, Pepe, Origano;7.00;
+Pizze Siciliane;SFINCIONE;Acciughe, Cipolla, Tumma locale, Pomodoro, Mollica bianca, Caciocavallo stagionato, Sale, Pepe, Origano;7.00;
+Pizze Siciliane;RIA NATA;Pesto di prezzemolo e mentuccia, Acciughe, Cipolla, Ciliegino, Tumma locale, Cipolla bianca, Caciocavallo stagionato, Sale, Pepe, Origano;7.00;
