@@ -419,12 +419,13 @@ menu[nome]={
 categoria:cat,
 ingredienti:ing,
 pn:parseFloat(pn),
-pf:parseFloat(pf)
+pf: pf ? parseFloat(pf) : 0
 };
 
-if (!tuttePizze.includes(nome)) {
-    tuttePizze.push(nome);
+if (!tuttePizze.includes(nome.trim())) {
+    tuttePizze.push(nome.trim());
 }
+
 categorieSet.add(cat);
 });
 
@@ -737,7 +738,9 @@ sel.addEventListener("touchstart", stopBlink);
 function stopBlink(){
 const sel = document.getElementById("aggiunteSelect");
 sel.classList.remove("placeholder-lampeggia");
+
 sel.removeEventListener("mousedown", stopBlink);
+sel.removeEventListener("touchstart", stopBlink);
 }
 
 function aggiornaPreview(){
