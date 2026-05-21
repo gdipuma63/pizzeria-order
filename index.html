@@ -1100,7 +1100,9 @@ const citta = a.city || a.town || a.village || "";
 const cap = a.postcode || "";
 
 indirizzoInput.value =
-`${strada} ${civico}, ${cap} ${citta}`.trim();
+[`${strada} ${civico}`.trim(), `${cap} ${citta}`.trim()]
+.filter(Boolean)
+.join(", ");
 
 }else{
 
