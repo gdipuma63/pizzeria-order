@@ -109,6 +109,14 @@ margin-top:10px;
 flex-direction:column;
 }
 
+#indirizzoBox{
+flex-direction:column;
+}
+
+#indirizzoBox .main-btn{
+max-width:100%;
+}
+
 }
 
 /* CHIPS */
@@ -148,6 +156,7 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 }
+    
 /* LISTA PIZZE */
 #listaPizze{
 max-height:320px;
@@ -269,6 +278,24 @@ background: #27ae60;
 100% {opacity:0; transform: translateY(10px);}
 }
     
+#indirizzoBox{
+display:flex;
+flex-direction:row;
+gap:12px;
+align-items:stretch;
+margin-top:15px;
+}
+#indirizzoBox input{
+flex:1;
+margin-bottom:0;
+}
+
+#indirizzoBox .main-btn{
+flex:0 0 auto;
+max-width:200px;
+margin:0;
+}
+
 </style>
 </head>
 
