@@ -678,11 +678,19 @@ void sel.offsetWidth;
 
 sel.classList.add("placeholder-lampeggia");
 
-/* interrompe lampeggio al click */
-sel.onclick = () => {
-sel.classList.remove("placeholder-lampeggia");
-};
+/* evita duplicazioni di listener */
+sel.removeEventListener("mousedown", stopBlink);
+sel.removeEventListener("touchstart", stopBlink);
 
+sel.addEventListener("mousedown", stopBlink);
+sel.addEventListener("touchstart", stopBlink);
+
+}
+
+function stopBlink(){
+const sel = document.getElementById("aggiunteSelect");
+sel.classList.remove("placeholder-lampeggia");
+sel.removeEventListener("mousedown", stopBlink);
 }
 
 function aggiornaPreview(){
