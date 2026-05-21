@@ -1090,17 +1090,7 @@ try{
 const res = await fetch(url);
 const data = await res.json();
 
-let indirizzoCompleto = "";
-
-/* PRIORITÀ 1: display_name (più completo e affidabile) */
-if (data && data.display_name) {
-
-indirizzoCompleto = data.display_name;
-
-}
-
-/* PRIORITÀ 2: costruzione manuale da address */
-else if (data && data.address) {
+if(data && data.address){
 
 const a = data.address;
 
@@ -1109,25 +1099,14 @@ const civico = a.house_number || "";
 const citta = a.city || a.town || a.village || "";
 const cap = a.postcode || "";
 
-indirizzoCompleto = strada;
+indirizzoInput.value =
+`${strada} ${civico}, ${cap} ${citta}`.trim();
 
-if (civico) {
-  indirizzoCompleto += " " + civico;
-}
+}else{
 
-if (cap || citta) {
-  indirizzoCompleto += ", " + (cap ? cap + " " : "") + citta;
-}
-
-}
-
-/* FALLBACK ESTREMO */
-else {
 indirizzoInput.value = lat + ", " + lon;
-return;
-}
 
-indirizzoInput.value = indirizzoCompleto.trim();
+}
 
 }catch(e){
 
