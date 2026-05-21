@@ -113,24 +113,28 @@ margin-top:10px;
     flex-direction: column;
   }
 
+  /* FORZA layout sempre verticale anche quando JS attiva display:flex */
   #indirizzoBox{
-    flex-direction: column;
+    flex-direction: column !important;
     align-items: stretch;
     gap: 10px;
   }
 
+  /* BOTTONE sopra */
+  #indirizzoBox .usa-posizione{
+    width: 100% !important;
+    max-width: 100% !important;
+    order: 1;
+  }
+
+  /* INPUT sotto */
   #indirizzoBox input{
-    width: 100%;
+    width: 100% !important;
     margin-bottom: 0;
     order: 2;
   }
 
-  #indirizzoBox .usa-posizione{
-    width: 100%;
-    max-width: 100%;
-    order: 1;
-  }
-
+  /* sicurezza su eventuali bottoni globali */
   #indirizzoBox .main-btn{
     max-width: 100%;
   }
