@@ -80,20 +80,17 @@ text-align:center;
 box-sizing:border-box;
 }
 
-/* DESKTOP: nasconde il bottone "Usa la mia posizione" */
-#indirizzoBox .main-btn{
-display:none;
+.main-btn:hover{
+background:#2f2215;
 }
 
-/* MOBILE: mostra bottone geolocalizzazione */
-@media (max-width:600px){
-
-#indirizzoBox .main-btn{
-display:block;
+#aggiunteSelect + button{
+margin-top:10px;
 }
 
+#listaAggiunte + textarea + button{
+margin-top:20px;
 }
-
 /* DELETE */
 .rimuovi-btn{
 background:#c0392b;
@@ -112,14 +109,14 @@ margin-top:10px;
 flex-direction:column;
 }
 
-/* indirizzo input + bottone in colonna su mobile */
 #indirizzoBox{
 flex-direction:column;
 }
 
-/* bottone torna full width su mobile */
 #indirizzoBox .main-btn{
 max-width:100%;
+}
+
 }
 
 /* CHIPS */
@@ -150,7 +147,6 @@ background:#4b3621;
 color:white;
 border-color:#4b3621;
 }
-
 .aggiunte-box{
 background:#f7f7f7;
 padding:10px;
@@ -160,7 +156,7 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 }
-
+    
 /* LISTA PIZZE */
 #listaPizze{
 max-height:320px;
@@ -230,8 +226,6 @@ border-radius:10px;
 font-size:14px;
 line-height:1.4;
 }
-
-/* ANIMAZIONE */
 .placeholder-lampeggia{
 animation: blinkText 0.8s ease-in-out 4;
 color:#c0392b;
@@ -239,12 +233,13 @@ font-weight:bold;
 }
 
 @keyframes blinkText{
+
 0%{opacity:1;}
 50%{opacity:0.2;}
 100%{opacity:1;}
+
 }
 
-/* TOAST */
 #toast {
 position: fixed;
 bottom: 20px;
@@ -268,34 +263,34 @@ text-align: center;
 animation: fadeInOut 3s forwards;
 }
 
-.toast-error{background:#c0392b;}
-.toast-success{background:#27ae60;}
-
-@keyframes fadeInOut{
-0%{opacity:0; transform:translateY(10px);}
-10%{opacity:1; transform:translateY(0);}
-90%{opacity:1;}
-100%{opacity:0; transform:translateY(10px);}
+.toast-error {
+background: #c0392b;
 }
 
-/* ========================= */
-/* INDIRIZZO BOX (FIX FINALE) */
-/* ========================= */
+.toast-success {
+background: #27ae60;
+}
 
+@keyframes fadeInOut {
+0% {opacity:0; transform: translateY(10px);}
+10% {opacity:1; transform: translateY(0);}
+90% {opacity:1;}
+100% {opacity:0; transform: translateY(10px);}
+}
+    
 #indirizzoBox{
 display:flex;
+flex-direction:row;
 gap:12px;
 align-items:stretch;
 margin-top:15px;
 }
 
-/* input prende spazio */
 #indirizzoBox input{
 flex:1;
 margin-bottom:0;
 }
 
-/* bottone compatto */
 #indirizzoBox .main-btn{
 flex:0 0 auto;
 max-width:200px;
