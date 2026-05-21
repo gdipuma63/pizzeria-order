@@ -80,8 +80,18 @@ text-align:center;
 box-sizing:border-box;
 }
 
-.main-btn:hover{
-background:#2f2215;
+/* DESKTOP: nasconde il bottone "Usa la mia posizione" */
+#indirizzoBox .main-btn{
+display:none;
+}
+
+/* MOBILE: mostra bottone geolocalizzazione */
+@media (max-width:600px){
+
+#indirizzoBox .main-btn{
+display:block;
+}
+
 }
 
 /* DELETE */
@@ -110,12 +120,6 @@ flex-direction:column;
 /* bottone torna full width su mobile */
 #indirizzoBox .main-btn{
 max-width:100%;
-}
-
-/* SU MOBILE: mostra bottone geolocalizzazione */
-#indirizzoBox .main-btn{
-display:block;
-}
 }
 
 /* CHIPS */
@@ -296,11 +300,6 @@ margin-bottom:0;
 flex:0 0 auto;
 max-width:200px;
 margin:0;
-}
-
-/* DESKTOP: NASCONDI BOTTONE GEO */
-#indirizzoBox .main-btn{
-display:none;
 }
 
 </style>
