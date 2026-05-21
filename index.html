@@ -503,7 +503,10 @@ renderPizze(tuttePizze);
 caricaAggiunteSelect();
 }
 
-window.onload = caricaMenu;
+window.onload = function () {
+  caricaMenu();
+  selezionaModalita('Ritiro'); // forza stato iniziale corretto
+};
 
 /* CATEGORIE */
 function caricaCategorie(cats){
