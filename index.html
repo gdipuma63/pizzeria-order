@@ -678,10 +678,10 @@ void sel.offsetWidth;
 
 sel.classList.add("placeholder-lampeggia");
 
-/* rimuove classe dopo animazione */
-setTimeout(()=>{
+/* interrompe lampeggio al click */
+sel.onclick = () => {
 sel.classList.remove("placeholder-lampeggia");
-},3000);
+};
 
 }
 
