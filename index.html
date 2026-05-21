@@ -224,6 +224,45 @@ font-weight:bold;
 100%{opacity:1;}
 
 }
+
+#toast {
+position: fixed;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+z-index: 9999;
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+
+.toast-msg {
+background: #4b3621;
+color: white;
+padding: 12px 18px;
+border-radius: 10px;
+box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+font-size: 15px;
+min-width: 220px;
+text-align: center;
+animation: fadeInOut 3s forwards;
+}
+
+.toast-error {
+background: #c0392b;
+}
+
+.toast-success {
+background: #27ae60;
+}
+
+@keyframes fadeInOut {
+0% {opacity:0; transform: translateY(10px);}
+10% {opacity:1; transform: translateY(0);}
+90% {opacity:1;}
+100% {opacity:0; transform: translateY(10px);}
+}
+    
 </style>
 </head>
 
@@ -747,7 +786,7 @@ aggiornaPreview();
 function aggiungiPizza(){
 
 if(!pizzaSelezionata){
-alert("Seleziona una pizza");
+showToast("Seleziona una pizza", "error");
 return;
 }
 
@@ -755,7 +794,7 @@ const nome=document.getElementById("nome").value.trim();
 const tel=document.getElementById("telefonoUtente").value.trim();
 
 if(!nome || !tel){
-alert("Compila nome e telefono");
+showToast("Compila nome e telefono", "error");
 return;
 }
 
@@ -764,7 +803,7 @@ if(modalitaOrdine==="Consegna a domicilio"){
 const indirizzo=document.getElementById("indirizzo").value.trim();
 
 if(!indirizzo){
-alert("Inserisci indirizzo");
+showToast("Inserisci indirizzo", "error");
 return;
 }
 
@@ -810,7 +849,7 @@ aggiunteSelezionate.forEach(a => {
 });
 
 const totale = (base * q) + (extraTotale * q);
-
+    
 ordine.push({
 pizza: pizzaSelezionata,
 quantita: q,
@@ -820,6 +859,8 @@ aggiunte: [...aggiunteSelezionate],
 extras: [...extras]
 });
 
+showToast(`${pizzaSelezionata} aggiunta all'ordine!`, "success");
+    
 aggiorna();
 
 /* RESET COMPLETO FORM PIZZA */
@@ -903,7 +944,7 @@ aggiorna();
 function inviaOrdine(){
 
 if(ordine.length===0){
-alert("Ordine vuoto");
+showToast("Ordine vuoto", "error");
 return;
 }
 
@@ -953,7 +994,7 @@ function rilevaPosizione(){
 const indirizzoInput = document.getElementById("indirizzo");
 
 if(!navigator.geolocation){
-alert("Geolocalizzazione non supportata");
+showToast("Geolocalizzazione non supportata", "error");
 return;
 }
 
@@ -988,7 +1029,29 @@ aggiornaPreview();
 });
 
 
+function showToast(message, type = "info") {
+
+const toast = document.getElementById("toast");
+
+const div = document.createElement("div");
+div.className = "toast-msg";
+
+if (type === "error") div.classList.add("toast-error");
+if (type === "success") div.classList.add("toast-success");
+
+div.textContent = message;
+
+toast.appendChild(div);
+
+// rimuove dopo animazione
+setTimeout(() => {
+div.remove();
+}, 3000);
+
+}
 </script>
+    
+<div id="toast"></div>
 
 </body>
 </html>
