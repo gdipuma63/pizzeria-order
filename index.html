@@ -301,15 +301,15 @@ onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna a domicilio</b
 
 </div>
 
-<div id="indirizzoBox" style="display:none; display:flex; flex-direction:column; gap:16px; margin-top:12px;">
+<div id="indirizzoBox" class="indirizzo-box" style="display:none;">
+    
+    <input type="text" id="indirizzo"
+    placeholder="Indirizzo (solo consegna a domicilio)"
+    class="indirizzo-input">
 
-<input type="text" id="indirizzo"
-placeholder="Indirizzo (solo consegna a domicilio)"
-style="width:100%;">
-
-<button type="button" class="main-btn" onclick="rilevaPosizione()">
-🌍 Usa la mia posizione
-</button>
+    <button type="button" class="main-btn usa-posizione" onclick="rilevaPosizione()">
+    🌍 Usa la mia posizione
+    </button>
 
 </div>
 
