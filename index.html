@@ -369,10 +369,16 @@ margin:0;
 <h3>Dati cliente</h3>
 
 <label>Nominativo *</label>
-<input type="text" id="nome" required>
+<div class="input-clear">
+  <input type="text" id="nome" required oninput="toggleClear(this)">
+  <span class="clear-btn" onclick="clearInput('nome')">✖</span>
+</div>
 
 <label>Telefono *</label>
-<input type="text" id="telefonoUtente" required>
+<div class="input-clear">
+  <input type="text" id="telefonoUtente" required oninput="toggleClear(this)">
+  <span class="clear-btn" onclick="clearInput('telefonoUtente')">✖</span>
+</div>
 
 <h4 style="text-align:center;">Seleziona la modalità di consegna</h4>
 
@@ -1165,6 +1171,22 @@ div.remove();
 }, 3000);
 
 }
+function toggleClear(input){
+  const btn = input.parentElement.querySelector(".clear-btn");
+  if(!btn) return;
+  btn.style.display = input.value.trim() ? "block" : "none";
+}
+
+function clearInput(id){
+  const input = document.getElementById(id);
+  input.value = "";
+
+  const btn = input.parentElement.querySelector(".clear-btn");
+  if(btn) btn.style.display = "none";
+
+  input.focus();
+}
+
 </script>
 <script>
 async function suggerisciIndirizzo(q) {
