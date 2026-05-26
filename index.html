@@ -1167,7 +1167,7 @@ indirizzoInput.value =
 [`${strada} ${civico}`.trim(), `${cap} ${citta}`.trim()]
 .filter(Boolean)
 .join(", ");
-
+toggleClear(indirizzoInput);
 }else{
 
 indirizzoInput.value = lat + ", " + lon;
@@ -1210,8 +1210,8 @@ div.remove();
 
 }
 function toggleClear(input){
-  const btn = input.parentElement.querySelector(".clear-btn");
-  if(!btn) return;
+  const box = input.closest(".input-clear");
+  const btn = box.querySelector(".clear-btn");
   btn.style.display = input.value.trim() ? "block" : "none";
 }
 
