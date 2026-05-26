@@ -427,16 +427,19 @@ onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna a domicilio</b
 </div>
 
 <div id="indirizzoBox">
-    
+
+  <div class="input-clear">
     <input type="text" id="indirizzo"
-    placeholder="Indirizzo (solo consegna a domicilio)"
-    class="indirizzo-input">
-  
-    <div id="suggestions"></div>
-  
-    <button type="button" class="main-btn usa-posizione" onclick="rilevaPosizione()">
+    placeholder="Indirizzo (solo consegna a domicilio)">
+    
+    <span class="clear-btn" onclick="clearInput('indirizzo')">✖</span>
+  </div>
+
+  <div id="suggestions"></div>
+
+  <button type="button" class="main-btn usa-posizione" onclick="rilevaPosizione()">
     🌍 Usa la mia posizione
-    </button>
+  </button>
 
 </div>
 
