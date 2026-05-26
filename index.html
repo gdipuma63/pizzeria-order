@@ -430,7 +430,8 @@ onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna a domicilio</b
 
   <div class="input-clear">
     <input type="text" id="indirizzo"
-    placeholder="Indirizzo (solo consegna a domicilio)">
+    placeholder="Indirizzo (solo consegna a domicilio)"
+    oninput="toggleClear(this)">
     
     <span class="clear-btn" onclick="clearInput('indirizzo')">✖</span>
   </div>
