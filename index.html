@@ -123,6 +123,10 @@ margin-top:10px;
 
 #indirizzoBox{
   display: none;
+  flex-direction: row;
+  gap: 12px;
+  align-items: stretch;
+  margin-top: 15px;
 }
   
 /* MOBILE */
@@ -130,13 +134,6 @@ margin-top:10px;
 
   .modalita-box{
     flex-direction: column;
-  }
-
-  /* FORZA layout sempre verticale anche quando JS attiva display:flex */
-  #indirizzoBox{
-    flex-direction: column !important;
-    align-items: stretch;
-    gap: 10px;
   }
 
   /* BOTTONE sopra */
@@ -445,8 +442,6 @@ onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna a domicilio</b
     
     </div>
   
-    <div id="suggestions"></div>
-  
     <button type="button" class="main-btn usa-posizione" onclick="rilevaPosizione()">
     🌍 Usa la mia posizione
     </button>
@@ -540,6 +535,7 @@ document.getElementById("indirizzoBox").style.display =
 /* 👇 AGGIUNTA QUI */
 if (tipo === "Ritiro") {
     document.getElementById("indirizzo").value = "";
+    document.getElementById("indirizzoBox").style.display = "none";
 }
   
 document.getElementById("btnRitiro").classList.toggle("active", tipo==="Ritiro");
@@ -583,7 +579,9 @@ caricaAggiunteSelect();
 
 window.onload = function () {
   caricaMenu();
-  selezionaModalita('Ritiro'); // forza stato iniziale corretto
+  selezionaModalita('Ritiro');
+
+  document.getElementById("indirizzoBox").style.display = "none";
 };
 
 /* CATEGORIE */
@@ -659,10 +657,9 @@ generaEsclusioni(p);
 document.getElementById("labelEsclusioni").style.display="block";
 aggiornaPreview();
 
-const f=document.getElementById("formatoPizza");
 f.innerHTML = menu[p].pf
-? `<option>Normale</option><option>Familiare</option>`
-: `<option>Normale</option>`;
+? `<option value="Normale">Normale</option><option value="Familiare">Familiare</option>`
+: `<option value="Normale">Normale</option>`;
 
 caricaAggiunteSelect();
 }
@@ -725,7 +722,11 @@ sel.innerHTML = "";
 /* --- BASE --- */
 if(statoAggiunte === "base"){
 
-sel.innerHTML = `<option value=''>Seleziona aggiunta</option>`;
+sel.innerHTML = "";
+
+if(statoAggiunte === "base"){
+  sel.innerHTML += `<option value=''>Seleziona aggiunta</option>`;
+}
 
 /* extra normali */
 aggiunte.forEach(a => {
