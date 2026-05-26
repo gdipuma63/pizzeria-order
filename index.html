@@ -158,6 +158,10 @@ margin-top:10px;
   #indirizzoBox .main-btn{
     max-width: 100%;
   }
+  .clear-btn{
+    transform: translateY(-50%);
+    top: 50%;
+  }
 }
 
 /* DESKTOP */
@@ -353,7 +357,37 @@ flex:0 0 auto;
 max-width:200px;
 margin:0;
 }
+/* CONTENITORE INPUT + X */
+.input-clear{
+  position: relative;
+  display: block;
+  width: 100%;
+}
 
+/* INPUT dentro contenitore */
+.input-clear input{
+  width: 100%;
+  padding-right: 40px; /* spazio per la X */
+  box-sizing: border-box;
+}
+
+/* BOTTONE X */
+.clear-btn{
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  color: #777;
+  display: none;
+  user-select: none;
+}
+
+.clear-btn:hover{
+  color: #c0392b;
+}
 </style>
 </head>
 
