@@ -937,8 +937,18 @@ return;
 const nome=document.getElementById("nome").value.trim();
 const tel=document.getElementById("telefonoUtente").value.trim();
 
-if(!nome || !tel){
-showToast("Compila Nominativo e telefono", "error");
+if(!nome && !tel){
+showToast("Compila Nominativo e Telefono", "error");
+return;
+}
+
+if(!nome){
+showToast("Compila il Nominativo", "error");
+return;
+}
+
+if(!tel){
+showToast("Compila il Telefono", "error");
 return;
 }
 
@@ -947,7 +957,7 @@ if(modalitaOrdine==="Consegna a domicilio"){
 const indirizzo=document.getElementById("indirizzo").value.trim();
 
 if(!indirizzo){
-showToast("Inserisci indirizzo", "error");
+showToast("Compila l'Indirizzo di consegna", "error");
 return;
 }
 
