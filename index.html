@@ -388,6 +388,35 @@ margin:0;
 .clear-btn:hover{
   color: #c0392b;
 }
+
+.qty-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:5px;
+}
+
+.qty-btn{
+  width:40px;
+  height:40px;
+  border:none;
+  border-radius:8px;
+  background:#4b3621;
+  color:white;
+  font-size:20px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.qty-btn:hover{
+  background:#2f2215;
+}
+
+#quantita{
+  text-align:center;
+  max-width:80px;
+}
+
 </style>
 </head>
 
@@ -469,7 +498,16 @@ Seleziona ingredienti da eliminare:
 <select id="formatoPizza"></select>
 
 <label>Quantità</label>
-<input type="number" id="quantita" value="1" min="1">
+
+<div class="qty-box">
+
+  <button type="button" id="btnMinus" class="qty-btn" onclick="modificaQuantita(-1)">−</button>
+
+  <input type="number" id="quantita" value="1" min="1" oninput="aggiornaBottoniQty()">
+
+  <button type="button" class="qty-btn" onclick="modificaQuantita(1)">+</button>
+
+</div>
 
 <h4>Seleziona ingredienti da aggiungere:</h4>
 
@@ -574,7 +612,8 @@ caricaAggiunteSelect();
 
 window.onload = function () {
   caricaMenu();
-  selezionaModalita('Ritiro'); // forza stato iniziale corretto
+  selezionaModalita('Ritiro');
+  aggiornaBottoniQty();
 };
 
 /* CATEGORIE */
@@ -1248,7 +1287,32 @@ function clearInput(id){
 
   input.focus();
 }
+  
+function modificaQuantita(val){
+  const input = document.getElementById("quantita");
 
+  let q = parseInt(input.value) || 1;
+
+  q += val;
+
+  if(q < 1) q = 1;
+
+  input.value = q;
+
+  aggiornaBottoniQty();
+}
+
+function aggiornaBottoniQty(){
+  const q = parseInt(document.getElementById("quantita").value) || 1;
+  const btnMinus = document.getElementById("btnMinus");
+
+  if(q <= 1){
+    btnMinus.style.display = "none";
+  } else {
+    btnMinus.style.display = "inline-block";
+  }
+}
+  
 </script>
 <script>
 async function suggerisciIndirizzo(q) {
