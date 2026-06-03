@@ -944,11 +944,13 @@ return;
 
 if(!nome){
 showToast("Compila il Nominativo", "error");
+vaiAlCampo("nome");
 return;
 }
 
 if(!tel){
 showToast("Compila il Telefono", "error");
+vaiAlCampo("telefonoUtente");
 return;
 }
 
@@ -958,6 +960,7 @@ const indirizzo=document.getElementById("indirizzo").value.trim();
 
 if(!indirizzo){
 showToast("Compila l'Indirizzo di consegna", "error");
+vaiAlCampo("indirizzo");
 return;
 }
 
@@ -1219,6 +1222,22 @@ div.remove();
 }, 3000);
 
 }
+
+function vaiAlCampo(id){
+
+  const campo = document.getElementById(id);
+
+  campo.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
+  setTimeout(() => {
+    campo.focus();
+  }, 400);
+
+}
+  
 function toggleClear(input){
   const box = input.closest(".input-clear");
   const btn = box.querySelector(".clear-btn");
