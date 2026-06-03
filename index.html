@@ -429,6 +429,30 @@ margin:0;
   margin:0;
   box-sizing:border-box;
 }
+.row-form{
+  display:flex;
+  gap:15px;
+  align-items:flex-start;
+  margin-top:10px;
+}
+
+/* ogni blocco prende metà spazio */
+.row-form .field{
+  flex:1;
+}
+
+/* mantiene coerenza label */
+.row-form label{
+  display:block;
+  margin-bottom:8px;
+}
+
+/* per mobile torna verticale */
+@media (max-width:600px){
+  .row-form{
+    flex-direction:column;
+  }
+}
 
 </style>
 </head>
@@ -507,18 +531,25 @@ Seleziona ingredienti da eliminare:
 
 <div id="esclusioniChips"></div>
 
-<label>Formato</label>
-<select id="formatoPizza"></select>
+<div class="row-form">
 
-<label>Quantità</label>
+  <div class="field">
+    <label>Formato</label>
+    <select id="formatoPizza"></select>
+  </div>
 
-<div class="qty-box">
+  <div class="field">
+    <label>Quantità</label>
 
-  <button type="button" id="btnMinus" class="qty-btn" onclick="modificaQuantita(-1)">−</button>
+    <div class="qty-box">
+      <button type="button" id="btnMinus" class="qty-btn" onclick="modificaQuantita(-1)">−</button>
 
-  <input type="number" id="quantita" value="1" min="1" oninput="aggiornaBottoniQty()">
+      <input type="number" id="quantita" value="1" min="1" oninput="aggiornaBottoniQty()">
 
-  <button type="button" class="qty-btn" onclick="modificaQuantita(1)">+</button>
+      <button type="button" class="qty-btn" onclick="modificaQuantita(1)">+</button>
+    </div>
+
+  </div>
 
 </div>
 
