@@ -945,7 +945,13 @@ if(!tel) errori.push("Telefono");
 
 if(errori.length === 2){
   showToast("Compila Nominativo e Telefono", "error");
-  return;
+
+/* scroll sul primo campo obbligatorio */
+setTimeout(() => {
+  vaiAlCampo("nome");
+}, 100);
+
+return;
 }
 
 if(errori.length === 1){
