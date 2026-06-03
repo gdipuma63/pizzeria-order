@@ -930,59 +930,58 @@ aggiornaPreview();
 function aggiungiPizza(){
 
 if(!pizzaSelezionata){
-showToast("Seleziona una pizza", "error");
-return;
+  showToast("Seleziona una pizza", "error");
+  return;
 }
 
-const nome=document.getElementById("nome").value.trim();
-const tel=document.getElementById("telefonoUtente").value.trim();
+const nome = document.getElementById("nome").value.trim();
+const tel = document.getElementById("telefonoUtente").value.trim();
 
-if(!nome && !tel){
-showToast("Compila Nominativo e Telefono", "error");
-return;
+let errori = [];
+
+/* controlli multipli intelligenti */
+if(!nome) errori.push("Nominativo");
+if(!tel) errori.push("Telefono");
+
+if(errori.length === 2){
+  showToast("Compila Nominativo e Telefono", "error");
+  return;
 }
 
-if(!nome){
-showToast("Compila il Nominativo", "error");
-vaiAlCampo("nome");
-return;
+if(errori.length === 1){
+  showToast("Compila il campo: " + errori[0], "error");
+  vaiAlCampo(errori[0].toLowerCase() === "telefono" ? "telefonoUtente" : "nome");
+  return;
 }
 
-if(!tel){
-showToast("Compila il Telefono", "error");
-vaiAlCampo("telefonoUtente");
-return;
+/* indirizzo solo se consegna */
+if(modalitaOrdine === "Consegna a domicilio"){
+
+  const indirizzo = document.getElementById("indirizzo").value.trim();
+
+  if(!indirizzo){
+    showToast("Compila l'Indirizzo di consegna", "error");
+    vaiAlCampo("indirizzo");
+    return;
+  }
 }
 
-if(modalitaOrdine==="Consegna a domicilio"){
+const q = parseInt(document.getElementById("quantita").value);
+const formato = document.getElementById("formatoPizza").value;
 
-const indirizzo=document.getElementById("indirizzo").value.trim();
+const base = (formato === "Familiare")
+  ? menu[pizzaSelezionata].pf
+  : menu[pizzaSelezionata].pn;
 
-if(!indirizzo){
-showToast("Compila l'Indirizzo di consegna", "error");
-vaiAlCampo("indirizzo");
-return;
-}
-
-}
-
-const q=parseInt(document.getElementById("quantita").value);
-
-const formato=document.getElementById("formatoPizza").value;
-
-const base=(formato==="Familiare")
-? menu[pizzaSelezionata].pf
-: menu[pizzaSelezionata].pn;
-
-let extras=[];
+let extras = [];
 
 document.querySelectorAll("#esclusioniChips .chip.active")
-.forEach(c=>{
-extras.push("- "+c.textContent);
+.forEach(c => {
+  extras.push("- " + c.textContent);
 });
 
-aggiunteSelezionate.forEach(a=>{
-extras.push("+ "+a);
+aggiunteSelezionate.forEach(a => {
+  extras.push("+ " + a);
 });
 
 const tutteLeAggiunte = [
@@ -1006,50 +1005,40 @@ aggiunteSelezionate.forEach(a => {
 });
 
 const totale = (base * q) + (extraTotale * q);
-    
+
 ordine.push({
-pizza: pizzaSelezionata,
-quantita: q,
-formato: formato,
-totale: totale,
-aggiunte: [...aggiunteSelezionate],
-extras: [...extras]
+  pizza: pizzaSelezionata,
+  quantita: q,
+  formato: formato,
+  totale: totale,
+  aggiunte: [...aggiunteSelezionate],
+  extras: [...extras]
 });
 
 showToast(`${pizzaSelezionata} aggiunta all'ordine!`, "success");
-    
+
 aggiorna();
 
 /* RESET COMPLETO FORM PIZZA */
 
 aggiunteSelezionate = [];
 
-// reset quantità
 document.getElementById("quantita").value = 1;
-
-// reset select aggiunte
 document.getElementById("aggiunteSelect").selectedIndex = 0;
-
-// reset lista aggiunte
 document.getElementById("listaAggiunte").innerHTML = "";
 
-// reset esclusioni
 document.getElementById("esclusioniChips").innerHTML = "";
 document.getElementById("labelEsclusioni").style.display = "none";
 
-// reset anteprima
 document.getElementById("previewTesto").innerHTML = "";
 document.getElementById("previewOrdine").style.display = "none";
 
-// deseleziona pizza
 document.querySelectorAll(".pizza-item")
 .forEach(x => x.classList.remove("active"));
 
 pizzaSelezionata = null;
 
-// reset formato
 document.getElementById("formatoPizza").selectedIndex = 0;
-
 }
 
 function aggiorna(){
