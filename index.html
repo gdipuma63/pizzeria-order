@@ -534,7 +534,7 @@ Seleziona ingredienti da eliminare:
 
 <h4>Seleziona ingredienti da aggiungere:</h4>
 
-<select id="aggiunteSelect" onchange="aggiungiExtra()"></select>
+<select id="aggiunteSelect" onchange="aggiungiExtra()" disabled></select>
 
 <div id="listaAggiunte"></div>
 
@@ -698,25 +698,41 @@ listaPizze.appendChild(div);
 
 }
 /* SELEZIONE PIZZA */
-function selezionaPizza(p,el){
+function selezionaPizza(p, el) {
 
-pizzaSelezionata=p;
+pizzaSelezionata = p;
 
-statoAggiunte = "base"; // 🔴 FIX FONDAMENTALE
+/* reset stato aggiunte */
+statoAggiunte = "base";
+aggiunteSelezionate = [];
 
-document.querySelectorAll(".pizza-item").forEach(x=>x.classList.remove("active"));
+/* abilita combo aggiunte */
+const selAggiunte = document.getElementById("aggiunteSelect");
+selAggiunte.disabled = false;
+selAggiunte.selectedIndex = 0;
+
+/* reset UI aggiunte */
+document.getElementById("listaAggiunte").innerHTML = "";
+
+/* selezione visiva pizza */
+document.querySelectorAll(".pizza-item")
+.forEach(x => x.classList.remove("active"));
 el.classList.add("active");
 
+/* esclusioni */
 generaEsclusioni(p);
+document.getElementById("labelEsclusioni").style.display = "block";
 
-document.getElementById("labelEsclusioni").style.display="block";
+/* preview */
 aggiornaPreview();
 
-const f=document.getElementById("formatoPizza");
+/* formato */
+const f = document.getElementById("formatoPizza");
 f.innerHTML = menu[p].pf
-? `<option>Normale</option><option>Familiare</option>`
-: `<option>Normale</option>`;
+  ? `<option>Normale</option><option>Familiare</option>`
+  : `<option>Normale</option>`;
 
+/* aggiunte */
 caricaAggiunteSelect();
 }
 
@@ -1091,8 +1107,14 @@ aggiorna();
 
 aggiunteSelezionate = [];
 
+/* reset quantità */
 document.getElementById("quantita").value = 1;
-document.getElementById("aggiunteSelect").selectedIndex = 0;
+
+/* DISABILITA aggiunte fino a nuova pizza */
+const selAgg = document.getElementById("aggiunteSelect");
+selAgg.selectedIndex = 0;
+selAgg.disabled = true;
+
 document.getElementById("listaAggiunte").innerHTML = "";
 
 document.getElementById("esclusioniChips").innerHTML = "";
@@ -1106,6 +1128,7 @@ document.querySelectorAll(".pizza-item")
 
 pizzaSelezionata = null;
 
+/* reset formato */
 document.getElementById("formatoPizza").selectedIndex = 0;
 }
 
