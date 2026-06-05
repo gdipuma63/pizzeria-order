@@ -551,6 +551,19 @@ margin:0;
   0% { transform: scale(0.98); opacity:0.6; }
   100% { transform: scale(1); opacity:1; }
 }
+.menu-hint{
+  text-align:center;
+  margin-top:6px;
+  margin-bottom:10px;
+}
+
+.hint-text{
+  font-size:12px;
+  font-style: italic;
+  color:#8a7b6a;
+  letter-spacing:0.3px;
+  opacity:0.9;
+}
 
 </style>
 </head>
@@ -623,7 +636,10 @@ onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna a domicilio</b
 </select>
 
 <h3 style="text-align:center;">🍕 MENU PIZZE 🍕</h3>
-<div class="menu-hint">Scorri per vedere tutte le pizze ↓</div>
+
+<div class="menu-hint">
+  <span class="hint-text">(scorri per vedere tutte le pizze)</span>
+</div>
 
 <div id="listaPizze"></div>
 
