@@ -549,7 +549,43 @@ margin:0;
   0% { transform: scale(0.98); opacity:0.6; }
   100% { transform: scale(1); opacity:1; }
 }
-  
+
+.lista-scroll-wrapper{
+position: relative;
+}
+
+/* FRECCE */
+.scroll-arrow{
+text-align:center;
+cursor:pointer;
+font-size:18px;
+font-weight:bold;
+color:#4b3621;
+padding:6px;
+user-select:none;
+opacity:0.5;
+transition:0.2s;
+
+position: sticky;
+z-index: 10;
+}
+
+.scroll-arrow:hover{
+opacity:1;
+transform: scale(1.15);
+}
+
+/* sopra */
+.scroll-arrow.up{
+top:0;
+background: linear-gradient(180deg, #fff 60%, transparent);
+}
+
+/* sotto */
+.scroll-arrow.down{
+bottom:0;
+background: linear-gradient(0deg, #fff 60%, transparent);
+}  
 </style>
 </head>
 
@@ -622,7 +658,15 @@ onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna a domicilio</b
 
 <h3 style="text-align:center;">🍕 MENU PIZZE 🍕</h3>
 
-<div id="listaPizze"></div>
+<div class="lista-scroll-wrapper">
+
+  <div class="scroll-arrow up" onclick="scrollPizze(-120)">▲</div>
+
+  <div id="listaPizze"></div>
+
+  <div class="scroll-arrow down" onclick="scrollPizze(120)">▼</div>
+
+</div>
 
 <h4 id="labelEsclusioni" style="display:none;">
 Seleziona ingredienti da eliminare:
@@ -1446,6 +1490,14 @@ div.remove();
 
 function vaiAlCampo(id){
 
+function scrollPizze(amount){
+  const el = document.getElementById("listaPizze");
+
+  el.scrollBy({
+    top: amount,
+    behavior: "smooth"
+  });
+}
   const campo = document.getElementById(id);
 
   campo.scrollIntoView({
@@ -1499,7 +1551,7 @@ function aggiornaBottoniQty(){
     btnMinus.style.display = "inline-block";
   }
 }
-  
+
 </script>
 <script>
 async function suggerisciIndirizzo(q) {
