@@ -1077,7 +1077,7 @@ if(modalitaOrdine === "Consegna a domicilio"){
   }
 }
 
-const q = parseInt(document.getElementById("quantita").value);
+const q = Math.max(1, parseInt(document.getElementById("quantita").value) || 1);
 const formato = document.getElementById("formatoPizza").value;
 
 const base = (formato === "Familiare")
@@ -1157,7 +1157,19 @@ pizzaSelezionata = null;
 
 /* reset formato */
 document.getElementById("formatoPizza").selectedIndex = 0;
-}
+
+/* SCROLL DOPO AGGIUNTA */
+setTimeout(() => {
+  const el = document.getElementById("listaPizze");
+  el.style.transition = "transform 0.3s";
+  el.style.transform = "scale(1.01)";
+
+  setTimeout(() => {
+    el.style.transform = "scale(1)";
+  }, 300);
+
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+}, 350);
 
 function aggiorna(){
 
