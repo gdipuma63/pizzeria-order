@@ -253,7 +253,7 @@ max-height:320px;
 overflow-y:auto;
 overflow-x:hidden;
 
-border:1px solid #ddd;
+border:1px solid rgba(75, 54, 33, 0.15);
 border-radius:16px;
 margin-top:10px;
 
@@ -553,42 +553,6 @@ margin:0;
   100% { transform: scale(1); opacity:1; }
 }
 
-.lista-scroll-wrapper{
-position: relative;
-}
-
-/* FRECCE */
-.scroll-arrow{
-text-align:center;
-cursor:pointer;
-font-size:18px;
-font-weight:bold;
-color:#4b3621;
-padding:6px;
-user-select:none;
-opacity:0.5;
-transition:0.2s;
-
-position: sticky;
-z-index: 10;
-}
-
-.scroll-arrow:hover{
-opacity:1;
-transform: scale(1.15);
-}
-
-/* sopra */
-.scroll-arrow.up{
-top:0;
-background: linear-gradient(180deg, #fff 60%, transparent);
-}
-
-/* sotto */
-.scroll-arrow.down{
-bottom:0;
-background: linear-gradient(0deg, #fff 60%, transparent);
-}  
 </style>
 </head>
 
@@ -662,15 +626,7 @@ onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna a domicilio</b
 <h3 style="text-align:center;">🍕 MENU PIZZE 🍕</h3>
 <div class="menu-hint">Scorri per vedere tutte le pizze ↓</div>
 
-<div class="lista-scroll-wrapper">
-
-  <div class="scroll-arrow up" onclick="scrollPizze(-120)">▲</div>
-
-  <div id="listaPizze"></div>
-
-  <div class="scroll-arrow down" onclick="scrollPizze(120)">▼</div>
-
-</div>
+<div id="listaPizze"></div>
 
 <h4 id="labelEsclusioni" style="display:none;">
 Seleziona ingredienti da eliminare:
