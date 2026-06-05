@@ -477,7 +477,47 @@ margin:0;
   display: block;
   width: 100%;
 }
+/* ===== MENU AGGIUNTE MODERNO ===== */
 
+#aggiunteSelect{
+  appearance: none;
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px;
+  border: 1px solid #ddd;
+  transition: all .25s ease;
+  font-weight: 500;
+}
+
+/* effetto focus “app” */
+#aggiunteSelect:focus{
+  border-color:#ff9800;
+  box-shadow: 0 0 0 4px rgba(255,152,0,0.15);
+  transform: translateY(-1px);
+}
+
+/* opzioni più moderne */
+#aggiunteSelect option{
+  padding: 10px;
+}
+
+/* separatori categoria */
+#aggiunteSelect option[disabled]{
+  color:#999;
+  font-weight:600;
+  background:#f7f7f7;
+}
+
+/* animazione quando cambia categoria */
+.menu-flash{
+  animation: flashAdd 0.35s ease;
+}
+
+@keyframes flashAdd{
+  0% { transform: scale(0.98); opacity:0.6; }
+  100% { transform: scale(1); opacity:1; }
+}
+  
 </style>
 </head>
 
@@ -835,63 +875,78 @@ sel.innerHTML = "";
 /* --- BASE --- */
 if(statoAggiunte === "base"){
 
-sel.innerHTML = `<option value=''>Seleziona aggiunta</option>`;
+let html = [];
+
+/* placeholder */
+html.push(`<option value=''>Seleziona aggiunta</option>`);
 
 /* extra normali */
 aggiunte.forEach(a => {
-sel.innerHTML += `
-<option value="EXTRA_${a.nome}">
-${a.nome} (+€${a.p})
-</option>`;
+  html.push(`
+    <option value="EXTRA_${a.nome}">
+      ${a.nome} (+€${a.p})
+    </option>
+  `);
 });
 
-sel.innerHTML += `<option disabled>────────────</option>`;
+/* separatore visivo */
+html.push(`<option disabled>────────────</option>`);
 
-/* NAV ma con aspetto "normale" */
-sel.innerHTML += `
-<option value="NAV_VERDURE">
-Verdure (+€1)
-</option>`;
+/* NAV categorie */
+html.push(`
+  <option value="NAV_VERDURE">🥦 Verdure (+€1)</option>
+`);
 
-sel.innerHTML += `
-<option value="NAV_SALUMI">
-Salumi (+€1.5)
-</option>`;
+html.push(`
+  <option value="NAV_SALUMI">🥓 Salumi (+€1.5)</option>
+`);
 
+sel.innerHTML = html.join("");
 return;
 }
 
 /* --- VERDURE --- */
 if(statoAggiunte === "verdure"){
 
-sel.innerHTML = `<option value=''>Seleziona verdura</option>`;
+let html = [];
+
+html.push(`<option value=''>Specifica il tipo di verdura</option>`);
 
 verdure.forEach(v=>{
-sel.innerHTML += `
-<option value="ADD_${v.nome}">
-${v.nome} (+€${v.p})
-</option>`;
+  html.push(`
+    <option value="ADD_${v.nome}">
+      ${v.nome} (+€${v.p})
+    </option>
+  `);
 });
 
-sel.innerHTML += `<option value="BACK">← Torna alle aggiunte</option>`;
+html.push(`<option value="BACK">← Torna alle aggiunte</option>`);
 
+sel.innerHTML = html.join("");
 return;
 }
 
 /* --- SALUMI --- */
 if(statoAggiunte === "salumi"){
 
-sel.innerHTML = `<option value=''>Seleziona salume</option>`;
+let html = [];
+
+html.push(`<option value=''>Specifica il tipo di salume</option>`);
 
 salumi.forEach(s=>{
-sel.innerHTML += `
-<option value="ADD_${s.nome}">
-${s.nome} (+€${s.p})
-</option>`;
+  html.push(`
+    <option value="ADD_${s.nome}">
+      ${s.nome} (+€${s.p})
+    </option>
+  `);
 });
 
-sel.innerHTML += `<option value="BACK">← Torna alle aggiunte</option>`;
+html.push(`<option value="BACK">← Torna alle aggiunte</option>`);
+
+sel.innerHTML = html.join("");
+return;
 }
+
 }
 
 function aggiungiExtra(){
