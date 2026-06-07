@@ -570,6 +570,28 @@ margin:0;
   opacity:0.9;
 }
 
+.btn-remove-ordine{
+  background: linear-gradient(135deg, #ff4d4d, #d90000);
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  align-self: center;
+}
+
+.btn-remove-ordine:hover{
+  transform: scale(1.08);
+  background: linear-gradient(135deg, #ff1a1a, #b30000);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
 </style>
 </head>
 
@@ -1328,9 +1350,9 @@ ${o.extras ? o.extras.map(e=>e+"<br>").join("") : ""}
 
 </div>
 
-<button class="rimuovi-btn"
+<button class="btn-remove-ordine"
 onclick="rimuoviOrdine(${i})">
-❌
+🗑 Rimuovi
 </button>
 
 </div>
