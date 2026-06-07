@@ -511,6 +511,11 @@ margin:0;
   display: block;
   width: 100%;
 }
+
+#menuPizzeTitle{
+  scroll-margin-top: 100px;
+}
+  
 /* ===== MENU AGGIUNTE MODERNO ===== */
 
 #aggiunteSelect{
@@ -635,7 +640,9 @@ onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna a domicilio</b
 <option value="Tutte">Tutte le categorie</option>
 </select>
 
-<h3 style="text-align:center;">🍕 MENU PIZZE 🍕</h3>
+<h3 id="menuPizzeTitle" style="text-align:center;">
+🍕 MENU PIZZE 🍕
+</h3>
 
 <div class="menu-hint">
   <span class="hint-text">(scorri per vedere tutte le pizze)</span>
@@ -784,16 +791,21 @@ sel.appendChild(opt);
 
 /* FILTRO */
 function filtraPizze(){
-const cat=document.getElementById("filtroCategoria").value;
 
-const list = (cat==="Tutte")
-?tuttePizze
-:tuttePizze.filter(p=>menu[p].categoria===cat);
+const cat = document.getElementById("filtroCategoria").value;
+
+const list = (cat === "Tutte")
+  ? tuttePizze
+  : tuttePizze.filter(p => menu[p].categoria === cat);
 
 renderPizze(list);
 
-document.getElementById("listaPizze")
-.scrollIntoView({behavior:"smooth",block:"start"});
+document.getElementById("menuPizzeTitle")
+  .scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
 }
 
 /* RENDER */
