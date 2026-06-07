@@ -320,8 +320,9 @@ color:#4b3621;
 }
 
 .pizza-prezzo{
-color:#1a73e8;
-font-weight:bold;
+  color:#1a73e8;
+  font-weight:bold;
+  line-height:1.4;
 }
 
 /* MODALITA */
@@ -868,7 +869,7 @@ ${menu[p].ingredienti}
 
 <div class="pizza-prezzo">
 ${pfValido
-? `Normale €${menu[p].pn} • Familiare €${menu[p].pf}`
+? `Normale €${menu[p].pn}<br>Familiare €${menu[p].pf}`
 : `€${menu[p].pn}`}
 </div>
 `;
