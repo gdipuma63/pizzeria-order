@@ -591,7 +591,17 @@ margin:0;
   background: linear-gradient(135deg, #ff1a1a, #b30000);
   box-shadow: 0 6px 15px rgba(0,0,0,0.25);
 }
+.hint-flash{
+  animation: hintBlink 1s ease-in-out 2;
+  color:#c0392b;
+  font-weight:600;
+}
 
+@keyframes hintBlink{
+  0% { opacity: 1; }
+  50% { opacity: 0.2; }
+  100% { opacity: 1; }
+}
 </style>
 </head>
 
@@ -827,6 +837,12 @@ document.getElementById("menuPizzeTitle")
     behavior: "smooth",
     block: "start"
   });
+
+const hint = document.querySelector(".hint-text");
+
+hint.classList.remove("hint-flash");
+void hint.offsetWidth;
+hint.classList.add("hint-flash");
 
 }
 
