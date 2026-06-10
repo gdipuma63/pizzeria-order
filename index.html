@@ -1340,7 +1340,12 @@ setTimeout(() => {
     el.style.transform = "scale(1)";
   }, 300);
 
-  el.scrollIntoView({ behavior: "smooth", block: "center" });
+  document.getElementById("filtroCategoria")
+    .scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
 }, 350);
 
 }
