@@ -8,12 +8,14 @@
     <style>
         body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
         .ordine-card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .stato-badge { font-weight: bold; padding: 5px 10px; border-radius: 5px; }
+        .stato-badge { font-weight: bold; padding: 5px 10px; border-radius: 5px; display: inline-block; }
         
         /* Colori badge */
         .Ricevuto { background: #ffeeba; }
+        .In-attesa-conferma { background: #ffcc80; }
+        .Ordine-Inserito { background: #c8e6c9; }
         .In-Preparazione { background: #b8daff; }
-        .In-Cottura { background: #ffc107; } /* Giallo acceso per la cottura */
+        .In-Cottura { background: #ffc107; }
         .Pronto { background: #c3e6cb; }
         
         button { margin: 5px; padding: 8px; cursor: pointer; }
@@ -34,20 +36,25 @@
     db.ref('ordini').on('value', snapshot => {
         const container = document.getElementById('listaOrdini');
         container.innerHTML = '';
+        
         snapshot.forEach(child => {
             const id = child.key;
             const o = child.val();
             
+            // Sicurezza: se lo stato manca, usiamo "Ricevuto"
+            const statoDisplay = o.stato || "Ricevuto";
+            const classeStato = statoDisplay.replace(/\s+/g, '-');
+            
             const card = document.createElement('div');
             card.className = 'ordine-card';
-            // Nota: .replace(' ', '-') serve a rendere la classe CSS valida anche per "In Preparazione" e "In Cottura"
             card.innerHTML = `
-                <h3>${o.cliente} (${o.modalita})</h3>
-                <p>Tel: ${o.telefono}</p>
-                <p>Stato: <span class="stato-badge ${o.stato.replace(/\s+/g, '-')}">${o.stato}</span></p>
+                <h3>${o.cliente || 'Cliente'} (${o.modalita || 'N/A'})</h3>
+                <p>Tel: ${o.telefono || 'N/D'}</p>
+                <p>Stato: <span class="stato-badge ${classeStato}">${statoDisplay}</span></p>
                 <p>Orario previsto: <strong>${o.orario_previsto || 'Da definire'}</strong></p>
-                <input type="number" id="minuti_${id}" placeholder="Minuti attesa" style="width: 100px;">
-                <button onclick="confermaOrario('${id}', ${o.timestamp_conferma})">Conferma Orario</button>
+                
+                <input type="number" id="minuti_${id}" placeholder="Minuti" style="width: 60px;">
+                <button onclick="confermaOrario('${id}', ${o.timestamp_conferma || Date.now()})">Conferma Orario</button>
                 <br>
                 <button onclick="aggiornaStato('${id}', 'In Preparazione')">In Preparazione</button>
                 <button onclick="aggiornaStato('${id}', 'In Cottura')">In Cottura</button>
