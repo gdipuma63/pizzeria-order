@@ -11,9 +11,9 @@
         .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 500px; margin: auto; border: 2px solid #ff9800; }
         .box { margin: 20px 0; padding: 25px; border: 1px solid #eee; border-radius: 15px; background: #fffcf9; }
         
-        /* PULSANTI RESPONSIVE */
+        /* PULSANTI RESPONSIVE E UNIFORMI */
         .btn-container { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-        .btn { padding: 15px; border: none; border-radius: 10px; cursor: pointer; color: white; font-weight: bold; font-size: 16px; width: 100%; transition: transform 0.2s; }
+        .btn { padding: 15px; border: none; border-radius: 10px; cursor: pointer; color: white; font-weight: bold; font-size: 16px; width: 100%; box-sizing: border-box; transition: transform 0.2s; }
         .btn:hover { transform: scale(1.02); }
         .btn-conferma { background-color: #27ae60; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
         .btn-annulla { background-color: #e74c3c; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); }
@@ -78,7 +78,6 @@
                 html += `<p class="orario-label">🕒 Orario stimato: <b>${data.orario_previsto}</b></p>`;
             }
 
-            // GESTIONE STATI
             if (!data.stato || data.stato === "Ricevuto") {
                 html += `<p>Ordine ricevuto! La pizzeria sta elaborando la richiesta.</p>`;
             } else if (data.stato === "In attesa conferma" && !data.conferma_cliente) {
@@ -130,8 +129,10 @@
             db.ref(`ordini/${orderId}`).update({ conferma_cliente: true, stato: "Ordine Inserito" });
         } else {
             if (confirm("Vuoi davvero annullare l'ordine?")) {
-                db.ref(`ordini/${orderId}`).update({ stato: "Annullato" });
-                setTimeout(() => { window.location.href = "index.html"; }, 2000);
+                // Rimuove l'ordine dal database così sparisce da gestione.html
+                db.ref(`ordini/${orderId}`).remove();
+                alert("Ordine annullato.");
+                window.location.href = "index.html";
             }
         }
     }
