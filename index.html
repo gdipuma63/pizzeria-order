@@ -261,8 +261,6 @@ position: relative;
 background: #fff;
 
 box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
-
-/* 👇 AGGIUNGILO QUI */
 scrollbar-gutter: stable;
 }
 
@@ -609,6 +607,8 @@ margin:0;
 
 <body>
 
+<div id="toast"></div>
+
 <div class="header">
   Ordina la tua pizza online
   <div class="subheader">Componi il tuo ordine in pochi secondi</div>
@@ -616,7 +616,6 @@ margin:0;
 
 <div class="container">
 
-<!-- CLIENTE -->
 <div class="box">
 
 <h3>Dati cliente</h3>
@@ -665,7 +664,6 @@ onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna a domicilio</b
 
 </div>
 
-<!-- PIZZE -->
 <div class="box">
 
 <h3 style="text-align:center;">CATEGORIA PIZZE</h3>
@@ -722,7 +720,6 @@ Aggiungi all'ordine
 
 </div>
 
-<!-- ORDINE -->
 <div class="box">
 
 <h3>🧾 Riepilogo Ordine</h3>
@@ -762,7 +759,6 @@ document.getElementById("btnConsegna").classList.remove("active");
 document.getElementById("indirizzoBox").style.display =
 (tipo === "Consegna a domicilio") ? "flex" : "none";
 
-/* 👇 AGGIUNTA QUI */
 if (tipo === "Ritiro") {
     document.getElementById("indirizzo").value = "";
 }
@@ -886,37 +882,29 @@ function selezionaPizza(p, el) {
 
 pizzaSelezionata = p;
 
-/* reset stato aggiunte */
 statoAggiunte = "base";
 aggiunteSelezionate = [];
 
-/* abilita combo aggiunte */
 const selAggiunte = document.getElementById("aggiunteSelect");
 selAggiunte.disabled = false;
 selAggiunte.selectedIndex = 0;
 
-/* reset UI aggiunte */
 document.getElementById("listaAggiunte").innerHTML = "";
 
-/* selezione visiva pizza */
 document.querySelectorAll(".pizza-item")
 .forEach(x => x.classList.remove("active"));
 el.classList.add("active");
 
-/* esclusioni */
 generaEsclusioni(p);
 document.getElementById("labelEsclusioni").style.display = "block";
 
-/* preview */
 aggiornaPreview();
 
-/* formato */
 const f = document.getElementById("formatoPizza");
 f.innerHTML = menu[p].pf
   ? `<option>Normale</option><option>Familiare</option>`
   : `<option>Normale</option>`;
 
-/* aggiunte */
 caricaAggiunteSelect();
 }
 
@@ -941,9 +929,7 @@ div.appendChild(chip);
 }
 
 /* AGGIUNTE */
-  
 const aggiunte = [
-/* EXTRA BASE */
 {nome:"Patatine",p:1,pf:2},
 {nome:"Wurstel",p:1,pf:2},
 {nome:"Grana",p:1,pf:2},
@@ -951,7 +937,6 @@ const aggiunte = [
 ];
 
 const verdure = [
-/* VERDURE */
 {nome:"Zucchine",p:1,pf:2},
 {nome:"Melanzane",p:1,pf:2},
 {nome:"Peperoni",p:1,pf:2},
@@ -960,14 +945,12 @@ const verdure = [
 ];
 
 const salumi = [
-/* SALUMI */
 {nome:"Prosciutto",p:1.5,pf:3},
 {nome:"Prosciutto crudo",p:1.5,pf:3},
 {nome:"Speck",p:1.5,pf:3},
 {nome:"Salame",p:1.5,pf:3},
 {nome:"Salame piccante",p:1.5,pf:3},
 {nome:"Bresaola",p:2,pf:3.5}
-
 ];
 
 function caricaAggiunteSelect(){
@@ -975,102 +958,53 @@ function caricaAggiunteSelect(){
 const sel = document.getElementById("aggiunteSelect");
 sel.innerHTML = "";
 
-/* --- BASE --- */
 if(statoAggiunte === "base"){
-
 let html = [];
-
-/* placeholder */
 html.push(`<option value=''>Seleziona aggiunta</option>`);
-
-/* extra normali */
 aggiunte.forEach(a => {
-  html.push(`
-    <option value="EXTRA_${a.nome}">
-      ${a.nome} (+€${a.p})
-    </option>
-  `);
+  html.push(`<option value="EXTRA_${a.nome}">${a.nome} (+€${a.p})</option>`);
 });
-
-/* separatore visivo */
 html.push(`<option disabled>────────────</option>`);
-
-/* NAV categorie */
-html.push(`
-  <option value="NAV_VERDURE">🥦 Verdure (+€1)</option>
-`);
-
-html.push(`
-  <option value="NAV_SALUMI">🥓 Salumi (+€1.5)</option>
-`);
-
+html.push(`<option value="NAV_VERDURE">🥦 Verdure (+€1)</option>`);
+html.push(`<option value="NAV_SALUMI">🥓 Salumi (+€1.5)</option>`);
 sel.innerHTML = html.join("");
 return;
 }
 
-/* --- VERDURE --- */
 if(statoAggiunte === "verdure"){
-
 let html = [];
-
 html.push(`<option value=''>Specifica il tipo di verdura</option>`);
-
 verdure.forEach(v=>{
-  html.push(`
-    <option value="ADD_${v.nome}">
-      ${v.nome} (+€${v.p})
-    </option>
-  `);
+  html.push(`<option value="ADD_${v.nome}">${v.nome} (+€${v.p})</option>`);
 });
-
 html.push(`<option value="BACK">← Torna alle aggiunte</option>`);
-
 sel.innerHTML = html.join("");
 return;
 }
 
-/* --- SALUMI --- */
 if(statoAggiunte === "salumi"){
-
 let html = [];
-
 html.push(`<option value=''>Specifica il tipo di salume</option>`);
-
 salumi.forEach(s=>{
-  html.push(`
-    <option value="ADD_${s.nome}">
-      ${s.nome} (+€${s.p})
-    </option>
-  `);
+  html.push(`<option value="ADD_${s.nome}">${s.nome} (+€${s.p})</option>`);
 });
-
 html.push(`<option value="BACK">← Torna alle aggiunte</option>`);
-
 sel.innerHTML = html.join("");
 return;
 }
-
 }
 
 function aggiungiExtra(){
-
 const sel = document.getElementById("aggiunteSelect");
 const val = sel.value;
   
-/* 🔍 DEBUG STEP 3 */
-console.log("STATO AGGIUNTE:", statoAggiunte);
-console.log("VALORE SELEZIONATO:", val);
-  
 if(!val) return;
 
-/* --- NAVIGAZIONE CATEGORIE --- */
 if(val === "NAV_VERDURE"){
 statoAggiunte = "verdure";
 caricaAggiunteSelect();
 sel.value = "";
-
 lampeggiaPlaceholder();
-
 return;
 }
 
@@ -1078,9 +1012,7 @@ if(val === "NAV_SALUMI"){
 statoAggiunte = "salumi";
 caricaAggiunteSelect();
 sel.value = "";
-
 lampeggiaPlaceholder();
-
 return;
 }
 
@@ -1091,28 +1023,11 @@ sel.value = "";
 return;
 }
 
-/* --- AGGIUNTE BASE (EXTRA_) --- */
-if(val.startsWith("EXTRA_")){
-const item = val.replace("EXTRA_","");
-
+if(val.startsWith("EXTRA_") || val.startsWith("ADD_")){
+const item = val.replace("EXTRA_","").replace("ADD_","");
 if(!aggiunteSelezionate.includes(item)){
 aggiunteSelezionate.push(item);
 }
-
-sel.value = "";
-renderAggiunte();
-aggiornaPreview();
-return;
-}
-
-/* --- VERDURE / SALUMI (ADD_) --- */
-if(val.startsWith("ADD_")){
-const item = val.replace("ADD_","");
-
-if(!aggiunteSelezionate.includes(item)){
-aggiunteSelezionate.push(item);
-}
-
 sel.value = "";
 renderAggiunte();
 aggiornaPreview();
@@ -1123,7 +1038,6 @@ return;
 function renderAggiunte(){
 const div=document.getElementById("listaAggiunte");
 div.innerHTML="";
-
 aggiunteSelezionate.forEach((a,i)=>{
 div.innerHTML+=`
 <div class="aggiunte-box">
@@ -1134,50 +1048,32 @@ ${a}
 }
 
 function lampeggiaPlaceholder(){
-
 const sel = document.getElementById("aggiunteSelect");
-
 sel.classList.remove("placeholder-lampeggia");
-
-/* reset animazione */
 void sel.offsetWidth;
-
 sel.classList.add("placeholder-lampeggia");
-
-/* evita duplicazioni di listener */
 sel.removeEventListener("mousedown", stopBlink);
 sel.removeEventListener("touchstart", stopBlink);
-
 sel.addEventListener("mousedown", stopBlink);
 sel.addEventListener("touchstart", stopBlink);
-
 }
 
 function stopBlink(){
 const sel = document.getElementById("aggiunteSelect");
 sel.classList.remove("placeholder-lampeggia");
-
 sel.removeEventListener("mousedown", stopBlink);
 sel.removeEventListener("touchstart", stopBlink);
 }
 
 function aggiornaPreview(){
-
 if(!pizzaSelezionata){
 document.getElementById("previewOrdine").style.display="none";
 return;
 }
-
 const formato=document.getElementById("formatoPizza").value;
 const q=document.getElementById("quantita").value;
+let testo=`🍕 ${pizzaSelezionata}<br>📦 ${formato}<br>🔢 Quantità: ${q}<br>`;
 
-let testo="";
-
-testo+=`🍕 ${pizzaSelezionata}<br>`;
-testo+=`📦 ${formato}<br>`;
-testo+=`🔢 Quantità: ${q}<br>`;
-
-// esclusioni
 const excl=[];
 document.querySelectorAll("#esclusioniChips .chip.active")
 .forEach(c=>excl.push("- "+c.textContent));
@@ -1187,7 +1083,6 @@ testo+=`<br><b>❌ Esclusioni:</b><br>`;
 excl.forEach(e=>testo+=e+"<br>");
 }
 
-// aggiunte
 if(aggiunteSelezionate.length){
 testo+=`<br><b>➕ Aggiunte:</b><br>`;
 aggiunteSelezionate.forEach(a=>testo+="+ "+a+"<br>");
@@ -1203,9 +1098,8 @@ renderAggiunte();
 aggiornaPreview();
 }
 
-/* AGGIUNGI ORDINE */
+/* AGGIUNTI ORDINE */
 function aggiungiPizza(){
-
 if(!pizzaSelezionata){
   showToast("Seleziona una pizza", "error");
   return;
@@ -1215,20 +1109,13 @@ const nome = document.getElementById("nome").value.trim();
 const tel = document.getElementById("telefonoUtente").value.trim();
 
 let errori = [];
-
-/* controlli multipli intelligenti */
 if(!nome) errori.push("Nominativo");
 if(!tel) errori.push("Telefono");
 
 if(errori.length === 2){
   showToast("Compila Nominativo e Telefono", "error");
-
-/* scroll sul primo campo obbligatorio */
-setTimeout(() => {
-  vaiAlCampo("nome");
-}, 100);
-
-return;
+  setTimeout(() => { vaiAlCampo("nome"); }, 100);
+  return;
 }
 
 if(errori.length === 1){
@@ -1237,11 +1124,8 @@ if(errori.length === 1){
   return;
 }
 
-/* indirizzo solo se consegna */
 if(modalitaOrdine === "Consegna a domicilio"){
-
   const indirizzo = document.getElementById("indirizzo").value.trim();
-
   if(!indirizzo){
     showToast("Compila l'Indirizzo di consegna", "error");
     vaiAlCampo("indirizzo");
@@ -1252,14 +1136,10 @@ if(modalitaOrdine === "Consegna a domicilio"){
 const q = Math.max(1, parseInt(document.getElementById("quantita").value) || 1);
 const formato = document.getElementById("formatoPizza").value;
 
-const base = (formato === "Familiare")
-  ? menu[pizzaSelezionata].pf
-  : menu[pizzaSelezionata].pn;
-
+const base = (formato === "Familiare") ? menu[pizzaSelezionata].pf : menu[pizzaSelezionata].pn;
 let extras = [];
 
-document.querySelectorAll("#esclusioniChips .chip.active")
-.forEach(c => {
+document.querySelectorAll("#esclusioniChips .chip.active").forEach(c => {
   extras.push("- " + c.textContent);
 });
 
@@ -1267,24 +1147,13 @@ aggiunteSelezionate.forEach(a => {
   extras.push("+ " + a);
 });
 
-const tutteLeAggiunte = [
-  ...aggiunte,
-  ...verdure,
-  ...salumi
-];
-
+const tutteLeAggiunte = [...aggiunte, ...verdure, ...salumi];
 let extraTotale = 0;
 
 aggiunteSelezionate.forEach(a => {
-
   const add = tutteLeAggiunte.find(x => x.nome === a);
-
   if (!add) return;
-
-  extraTotale += (formato === "Familiare")
-    ? add.pf
-    : add.p;
-
+  extraTotale += (formato === "Familiare") ? add.pf : add.p;
 });
 
 const totale = (base * q) + (extraTotale * q);
@@ -1299,248 +1168,106 @@ ordine.push({
 });
 
 showToast(`${pizzaSelezionata} aggiunta all'ordine!`, "success");
-
 aggiorna();
 
 /* RESET COMPLETO FORM PIZZA */
-
 aggiunteSelezionate = [];
-
-/* reset quantità */
 document.getElementById("quantita").value = 1;
-
-/* DISABILITA aggiunte fino a nuova pizza */
 const selAgg = document.getElementById("aggiunteSelect");
 selAgg.selectedIndex = 0;
 selAgg.disabled = true;
 
 document.getElementById("listaAggiunte").innerHTML = "";
-
 document.getElementById("esclusioniChips").innerHTML = "";
 document.getElementById("labelEsclusioni").style.display = "none";
-
 document.getElementById("previewTesto").innerHTML = "";
 document.getElementById("previewOrdine").style.display = "none";
-
-document.querySelectorAll(".pizza-item")
-.forEach(x => x.classList.remove("active"));
+document.querySelectorAll(".pizza-item").forEach(x => x.classList.remove("active"));
 
 pizzaSelezionata = null;
-
-/* reset formato */
 document.getElementById("formatoPizza").selectedIndex = 0;
 
-/* SCROLL DOPO AGGIUNTA */
 setTimeout(() => {
   const el = document.getElementById("listaPizze");
   el.style.transition = "transform 0.3s";
   el.style.transform = "scale(1.01)";
-
-  setTimeout(() => {
-    el.style.transform = "scale(1)";
-  }, 300);
-
-  document.getElementById("filtroCategoria")
-    .scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
-
+  setTimeout(() => { el.style.transform = "scale(1)"; }, 300);
+  document.getElementById("filtroCategoria").scrollIntoView({ behavior: "smooth", block: "center" });
 }, 350);
-
 }
+
 function aggiorna(){
-
 const div=document.getElementById("listaOrdine");
-
 div.innerHTML="";
-
 let totale=0;
 
 ordine.forEach((o,i)=>{
-
 totale+=o.totale;
-
 div.innerHTML+=`
 <div class="aggiunte-box">
-
 <div>
-<b>${o.pizza}</b><br>
-${o.formato} x${o.quantita}<br>
-€ ${o.totale.toFixed(2)}<br>
-
+<b>${o.pizza}</b><br>${o.formato} x${o.quantita}<br>€ ${o.totale.toFixed(2)}<br>
 ${o.extras ? o.extras.map(e=>e+"<br>").join("") : ""}
-
 </div>
-
-<button class="btn-remove-ordine"
-onclick="rimuoviOrdine(${i})">
-🗑 Rimuovi
-</button>
-
-</div>
-`;
-
+<button class="btn-remove-ordine" onclick="rimuoviOrdine(${i})">🗑 Rimuovi</button>
+</div>`;
 });
 
 div.innerHTML+=`<h3>Totale € ${totale.toFixed(2)}</h3>`;
-
 }
 
 function rimuoviOrdine(i){
-
 ordine.splice(i,1);
-
 aggiorna();
-
-}
-/* WHATSAPP */
-function inviaOrdine(){
-
-if(ordine.length===0){
-showToast("Ordine vuoto", "error");
-return;
-}
-
-const nome=document.getElementById("nome").value.trim();
-const tel=document.getElementById("telefonoUtente").value.trim();
-
-let msg="🍕 ORDINE PIZZERIA\n\n";
-
-msg+="👤 "+nome+"\n";
-msg+="📞 "+tel+"\n";
-msg+="🚚 "+modalitaOrdine+"\n";
-
-if(modalitaOrdine==="Consegna a domicilio"){
-
-msg+="📍 "+document.getElementById("indirizzo").value+"\n";
-
-}
-
-msg+="\n";
-
-let totale=0;
-
-ordine.forEach(o=>{
-
-totale+=o.totale;
-
-msg+=`${o.pizza} (${o.formato}) x${o.quantita}\n`;
-
-o.aggiunte.forEach(a=>{
-msg += "+ " + a + "\n";
-});
-
-msg+=`€ ${o.totale.toFixed(2)}\n\n`;
-
-});
-
-msg+="💰 Totale: € "+totale.toFixed(2);
-
-window.open(
-"https://wa.me/?text="+encodeURIComponent(msg)
-);
-
 }
 
 function rilevaPosizione(){
-
 const indirizzoInput = document.getElementById("indirizzo");
-
 if(!navigator.geolocation){
 showToast("Geolocalizzazione non supportata", "error");
 return;
 }
-
 navigator.geolocation.getCurrentPosition(async (pos) => {
-
 const lat = pos.coords.latitude;
 const lon = pos.coords.longitude;
-
 const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
-
 try{
-
 const res = await fetch(url);
 const data = await res.json();
-
 if(data && data.address){
-
 const a = data.address;
-
 const strada = a.road || "";
 const civico = a.house_number || "";
 const citta = a.city || a.town || a.village || "";
 const cap = a.postcode || "";
-
-indirizzoInput.value =
-[`${strada} ${civico}`.trim(), `${cap} ${citta}`.trim()]
-.filter(Boolean)
-.join(", ");
+indirizzoInput.value = [`${strada} ${civico}`.trim(), `${cap} ${citta}`.trim()].filter(Boolean).join(", ");
 toggleClear(indirizzoInput);
 }else{
-
 indirizzoInput.value = lat + ", " + lon;
-
 }
-
 }catch(e){
-
 indirizzoInput.value = lat + ", " + lon;
-
 }
-
 }, () => {
-
 showToast("Impossibile rilevare la posizione", "error");
-
 });
-
 }
-
 
 function showToast(message, type = "info") {
-
 const toast = document.getElementById("toast");
-
 const div = document.createElement("div");
 div.className = "toast-msg";
-
 if (type === "error") div.classList.add("toast-error");
 if (type === "success") div.classList.add("toast-success");
-
 div.textContent = message;
-
 toast.appendChild(div);
-
-// rimuove dopo animazione
-setTimeout(() => {
-div.remove();
-}, 3000);
-
+setTimeout(() => { div.remove(); }, 3000);
 }
 
 function vaiAlCampo(id){
-
-function scrollPizze(amount){
-  const el = document.getElementById("listaPizze");
-
-  el.scrollBy({
-    top: amount,
-    behavior: "smooth"
-  });
-}
   const campo = document.getElementById(id);
-
-  campo.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
-
-  setTimeout(() => {
-    campo.focus();
-  }, 400);
-
+  campo.scrollIntoView({ behavior: "smooth", block: "center" });
+  setTimeout(() => { campo.focus(); }, 400);
 }
   
 function toggleClear(input){
@@ -1549,34 +1276,29 @@ function toggleClear(input){
   btn.style.display = input.value.trim() ? "block" : "none";
 }
 
-function clearInput(id){
-  const input = document.getElementById(id);
-  input.value = "";
+document.addEventListener("click", function(e) {
+  if(e.target && e.target.classList.contains("clear-btn")) {
+    const input = e.target.parentElement.querySelector("input");
+    if(input) {
+      input.value = "";
+      e.target.style.display = "none";
+      input.focus();
+    }
+  }
+});
 
-  const btn = input.parentElement.querySelector(".clear-btn");
-  if(btn) btn.style.display = "none";
-
-  input.focus();
-}
-  
 function modificaQuantita(val){
   const input = document.getElementById("quantita");
-
   let q = parseInt(input.value) || 1;
-
   q += val;
-
   if(q < 1) q = 1;
-
   input.value = q;
-
   aggiornaBottoniQty();
 }
 
 function aggiornaBottoniQty(){
   const q = parseInt(document.getElementById("quantita").value) || 1;
   const btnMinus = document.getElementById("btnMinus");
-
   if(q <= 1){
     btnMinus.style.display = "none";
   } else {
@@ -1584,32 +1306,102 @@ function aggiornaBottoniQty(){
   }
 }
 
-</script>
-<script>
 async function suggerisciIndirizzo(q) {
   if (q.length < 3) return;
-
   const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(q)}&addressdetails=1&limit=5`;
-
   try {
     const res = await fetch(url);
     const data = await res.json();
-
     console.log("Suggerimenti indirizzo:", data);
   } catch (e) {}
 }
 
 function abilitaSuggerimenti() {
   const input = document.getElementById("indirizzo");
+  if(input) {
+    input.addEventListener("input", () => {
+      suggerisciIndirizzo(input.value);
+    });
+  }
+}
+window.addEventListener("DOMContentLoaded", abilitaSuggerimenti);
+</script>
 
-  input.addEventListener("input", () => {
-    suggerisciIndirizzo(input.value);
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// Configurazione Firebase recuperata dalla tua console
+const firebaseConfig = {
+  apiKey: "AIzaSyAqYM5vuSvyvBwD4LLTMuRZzrU5KT3r8o",
+  authDomain: "gestioneordini-25dba.firebaseapp.com",
+  projectId: "gestioneordini-25dba",
+  storageBucket: "gestioneordini-25dba.appspot.com",
+  messagingSenderId: "31060825926",
+  appId: "1:31060825926:web:c915906d28c66251aa1e47"
+};
+
+// Inizializzazione di Firebase e Firestore
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Funzione legata al click sul pulsante di invio ordine
+async function inviaOrdineAFirebase() {
+  // Controllo di sicurezza: se la lista è vuota mostra l'avviso e blocca tutto
+  if (ordine.length === 0) {
+    showToast("Aggiungi almeno una pizza per ordinare!", "error");
+    return;
+  }
+
+  const nomeCliente = document.getElementById("nome").value.trim();
+  const telefonoCliente = document.getElementById("telefonoUtente").value.trim();
+  const indirizzoConsegna = document.getElementById("indirizzo").value.trim();
+
+  // Calcolo del totale finale complessivo dell'ordine
+  let totaleComplessivo = 0;
+  ordine.forEach(o => {
+    totaleComplessivo += o.totale;
   });
+
+  // Struttura dell'oggetto ordine da salvare su Cloud Firestore
+  const datiOrdine = {
+    cliente: nomeCliente,
+    telefono: telefonoCliente,
+    modalita: modalitaOrdine, // "Ritiro" o "Consegna a domicilio"
+    indirizzo: modalitaOrdine === "Consegna a domicilio" ? indirizzoConsegna : "",
+    pizze: ordine, // Array contenente la lista delle pizze scelte con aggiunte ed esclusioni
+    totale: totaleComplessivo,
+    stato: "in_attesa", // Stato di partenza dell'ordine per la pizzeria
+    orario: serverTimestamp() // timestamp del server di Firebase
+  };
+
+  try {
+    // Salvataggio effettivo nel database nella collezione "ordini"
+    const docRef = await addDoc(collection(db, "ordini"), datiOrdine);
+    
+    // Mostra il messaggio di successo visivo
+    showToast("Ordine inviato con successo!", "success");
+
+    // Svuota l'ordine locale dopo il salvataggio
+    ordine = [];
+    aggiorna();
+
+    // Reindirizza il cliente alla pagina di tracciamento passando l'ID univoco dell'ordine appena creato
+    setTimeout(() => {
+      window.location.href = `stato-ordine.html?id=${docRef.id}`;
+    }, 1200);
+
+  } catch (error) {
+    console.error("Errore nel salvataggio su Firebase:", error);
+    showToast("Errore di rete durante l'invio dell'ordine.", "error");
+  }
 }
 
-window.addEventListener("load", abilitaSuggerimenti);
-</script>    
-<div id="toast"></div>
+// Agganciamo la funzione di invio al click sul pulsante HTML appena la pagina è pronta
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("btnInviaOrdine").onclick = inviaOrdineAFirebase;
+});
+</script>
 
 </body>
 </html>
