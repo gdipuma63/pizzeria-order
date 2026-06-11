@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestione Pizzeria</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
+        .ordine-card { background: white; padding: 15px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .stato-badge { font-weight: bold; padding: 5px 10px; border-radius: 5px; }
+        .Ricevuto { background: #ffeeba; }
+        .In-Preparazione { background: #b8daff; }
+        .Pronto { background: #c3e6cb; }
+        button { margin: 5px; padding: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<h1>Centro di Comando Pizzeria</h1>
+<div id="listaOrdini"></div>
+
+<script>
+    const firebaseConfig = {
+        databaseURL: "https://gestioneordini-25dba-default-rtdb.europe-west1.firebasedatabase.app/"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    db.ref('ordini').on('value', snapshot => {
+        const container = document.getElementById('listaOrdini');
+        container.innerHTML = '';
+        snapshot.forEach(child => {
+            const id = child.key;
+            const o = child.val();
+            
+            const card = document.createElement('div');
+            card.className = 'ordine-card';
+            card.innerHTML = `
+                <h3>${o.cliente} (${o.modalita})</h3>
+                <p>Tel: ${o.telefono}</p>
+                <p>Stato: <span class="stato-badge ${o.stato.replace(' ', '-')}">${o.stato}</span></p>
+                <p>Orario previsto: <strong>${o.orario_previsto || 'Da definire'}</strong></p>
+                <input type="number" id="minuti_${id}" placeholder="Minuti attesa">
+                <button onclick="confermaOrario('${id}', ${o.timestamp_conferma})">Conferma Orario</button>
+                <button onclick="aggiornaStato('${id}', 'In Preparazione')">In Preparazione</button>
+                <button onclick="aggiornaStato('${id}', 'Pronto')">Pronto</button>
+                <button onclick="eliminaOrdine('${id}')" style="background:red; color:white;">Elimina</button>
+            `;
+            container.appendChild(card);
+        });
+    });
+
+    function confermaOrario(id, timestampConferma) {
+        const minuti = document.getElementById(`minuti_${id}`).value;
+        if (!minuti) return alert("Inserisci i minuti!");
+        
+        const dataConsegna = new Date(timestampConferma + (minuti * 60000));
+        const orario = dataConsegna.getHours() + ":" + dataConsegna.getMinutes().toString().padStart(2, '0');
+        
+        db.ref(`ordini/${id}`).update({
+            tempo_attesa: minuti,
+            orario_previsto: orario,
+            stato: "In attesa conferma"
+        });
+    }
+
+    function aggiornaStato(id, nuovoStato) {
+        db.ref(`ordini/${id}`).update({ stato: nuovoStato });
+    }
+
+    function eliminaOrdine(id) {
+        if (confirm("Vuoi davvero eliminare questo ordine?")) {
+            db.ref(`ordini/${id}`).remove();
+        }
+    }
+</script>
+</body>
+</html>
