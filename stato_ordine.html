@@ -15,7 +15,6 @@
         .btn-conferma { background-color: #27ae60; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
         .btn-annulla { background-color: #e74c3c; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); }
         
-        /* EFFETTO LAMPEGGIANTE PER ORDINE PRONTO */
         .pronto-animation {
             font-size: 22px;
             font-weight: 800;
@@ -70,7 +69,7 @@
             }
 
             let html = `<div class="stato-label">Stato attuale</div>`;
-            html += `<h2 style="margin: 0 0 20px 0; color: #ff9800;">${data.stato}</h2>`;
+            html += `<h2 style="margin: 0 0 20px 0; color: #ff9800;">${data.stato || 'Ricevuto'}</h2>`;
 
             // MOSTRA ORARIO SOLO SE NON È PRONTO
             if (data.orario_previsto && data.stato !== "Pronto") {
@@ -78,12 +77,14 @@
             }
 
             // LOGICA DIALOGO E STATI DINAMICI
-            if (data.stato === "In attesa conferma" && !data.conferma_cliente) {
+            if (!data.stato || data.stato === "Ricevuto") {
+                html += `<p>Ordine ricevuto! La pizzeria sta elaborando la richiesta.</p>`;
+            } else if (data.stato === "In attesa conferma" && !data.conferma_cliente) {
                 html += `
                     <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 10px;">
-                        <p>La pizzeria propone le <b>${data.orario_previsto}</b>. Accetti?</p>
-                        <button class="btn btn-conferma" onclick="rispondi(true)">SI, VA BENE</button>
-                        <button class="btn btn-annulla" onclick="rispondi(false)">NO, ANNULLA</button>
+                        <p><b>Confermi l'ordine?</b></p>
+                        <button class="btn btn-conferma" onclick="rispondi(true)">SI, CONFERMO</button>
+                        <button class="btn btn-annulla" onclick="rispondi(false)">ANNULLA</button>
                     </div>
                 `;
             } else if (data.stato === "Ordine Inserito") {
@@ -91,7 +92,6 @@
             } else if (data.stato === "In Preparazione") {
                 html += `<p style="color: #d35400; font-weight: bold;">🔥 Le tue pizze sono in forno!</p>`;
             } else if (data.stato === "Pronto") {
-                // LOGICA IBRIDA RITIRO/CONSEGNA
                 if (!data.conferma_finale) {
                     let messaggioPronto = (data.modalita === "Ritiro") 
                         ? "🍕 IL TUO ORDINE È PRONTO!<br><small>Ti aspettiamo in pizzeria.</small>" 
@@ -106,7 +106,6 @@
                         </button>
                     `;
                 } else {
-                    // MESSAGGIO DI RINGRAZIAMENTO E TIMER REINDIRIZZAMENTO
                     html += `
                         <div class="pronto-animation">GRAZIE DI CUORE!</div>
                         <p>Ti auguriamo buon appetito.</p>
