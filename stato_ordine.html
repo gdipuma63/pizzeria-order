@@ -45,6 +45,20 @@
             padding: 0 10px;
             word-wrap: break-word;
         }
+
+        /* AGGIUNTE PER IL RIEPILOGO */
+        .riepilogo-box {
+            background: #fff;
+            border: 1px solid #ff9800;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 14px;
+            color: #4b3621;
+        }
+        .riepilogo-box h4 { margin: 0 0 10px 0; color: #ff9800; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .riga-pizza { display: flex; justify-content: space-between; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -87,7 +101,6 @@
             }
 
             // GESTIONE STATI
-            // MODIFICA: Aggiunto <br> prima di "Attendi"
             if (!data.stato || data.stato === "Ricevuto") {
                 html += `<p>La pizzeria sta elaborando la tua richiesta.<br>Attendi un istante...</p>`;
             } else if (data.stato === "In attesa conferma" && !data.conferma_cliente) {
@@ -130,6 +143,29 @@
                 html += `<p style="color: #c0392b;">❌ Ordine annullato.</p>`;
             }
 
+            // AGGIUNTA RIEPILOGO PIZZE
+            if (data.pizze) {
+                let listaPizze = "";
+                data.pizze.forEach(item => {
+                    listaPizze += `
+                        <div class="riga-pizza">
+                            <span>${item.quantita}x ${item.pizza} (${item.formato})</span>
+                        </div>`;
+                });
+
+                html += `
+                    <div class="riepilogo-box">
+                        <h4>🍕 Riepilogo Ordine</h4>
+                        ${listaPizze}
+                        <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
+                        <div class="riga-pizza" style="font-weight: bold;">
+                            <span>Totale:</span>
+                            <span>€${data.totale}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
             contenuto.innerHTML = html;
         });
     }
@@ -139,8 +175,6 @@
             db.ref(`ordini/${orderId}`).update({ conferma_cliente: true, stato: "Ordine Inserito" });
         } else {
             if (confirm("Vuoi davvero annullare l'ordine?")) {
-                // Questa riga rimuove l'ordine definitivamente dal database 
-                // per TUTTE le modalità (Ritiro e Consegna)
                 db.ref(`ordini/${orderId}`).remove()
                     .then(() => {
                         alert("Ordine annullato correttamente.");
