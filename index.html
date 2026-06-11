@@ -694,7 +694,7 @@ margin:0;
 <div class="box">
 <h3>🧾 Riepilogo Ordine</h3>
 <div id="listaOrdine"></div>
-<button class="btn-whatsapp" id="btnInviaOrdine" onclick="inviaOrdine()">🚀 Conferma e Invia Ordine</button>
+<button class="btn-whatsapp" id="btn" onclick="()">🚀 Conferma e Invia Ordine</button>
 </div>
 
 </div>
@@ -1156,60 +1156,64 @@ aggiorna();
 
 /* INVIA ORDINE SOLO SU DATABASE FIREBASE REST API (EUROPA) */
 function inviaOrdine(){
-if(ordine.length===0){
-  showToast("L'ordine è vuoto!", "error");
-  return;
-}
+    if(ordine.length===0){
+        showToast("L'ordine è vuoto!", "error");
+        return;
+    }
 
-const nome=document.getElementById("nome").value.trim();
-const tel=document.getElementById("telefonoUtente").value.trim();
+    const nome = document.getElementById("nome").value.trim();
+    const tel = document.getElementById("telefonoUtente").value.trim();
 
-let totaleComplessivo=0;
-ordine.forEach(o=>{
-  totaleComplessivo+=o.totale;
-});
+    let totaleComplessivo = 0;
+    ordine.forEach(o => {
+        totaleComplessivo += o.totale;
+    });
 
-// Preparazione dei dati da salvare sul Database
-const datiOrdine = {
-  cliente: nome,
-  telefono: tel,
-  modalita: modalitaOrdine,
-  indirizzo: modalitaOrdine === "Consegna a domicilio" ? document.getElementById("indirizzo").value.trim() : "",
-  pizze: ordine,
-  totale: totaleComplessivo,
-  data_ordine: new Date().toLocaleString("it-IT"),
-  stato: "Ricevuto" // Stato iniziale per cliente e operatore
-};
+    // --- AGGIORNAMENTO DATI ---
+    // Salviamo l'orario preciso in cui l'ordine viene inviato
+    const dataCorrente = new Date();
 
-// URL esatta e definitiva del tuo Realtime Database in Europa
-const firebaseProjectUrl = "https://gestioneordini-25dba-default-rtdb.europe-west1.firebasedatabase.app/ordini.json";
+    const datiOrdine = {
+        cliente: nome,
+        telefono: tel,
+        modalita: modalitaOrdine,
+        indirizzo: modalitaOrdine === "Consegna a domicilio" ? document.getElementById("indirizzo").value.trim() : "",
+        pizze: ordine,
+        totale: totaleComplessivo,
+        data_ordine: dataCorrente.toLocaleString("it-IT"),
+        // Questo serve per il calcolo matematico nella pagina di gestione
+        timestamp_conferma: dataCorrente.getTime(), 
+        stato: "Ricevuto",
+        tempo_attesa: 0,       // Inizialmente 0, verrà aggiornato dall'operatore
+        orario_previsto: ""    // Rimarrà vuoto finché l'operatore non conferma
+    };
 
-showToast("Invio ordine in corso...", "info");
+    const firebaseProjectUrl = "https://gestioneordini-25dba-default-rtdb.europe-west1.firebasedatabase.app/ordini.json";
 
-fetch(firebaseProjectUrl, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(datiOrdine)
-})
-.then(response => response.json())
-.then(data => {
-  if(data && data.name) {
-    showToast("Ordine inviato con successo!", "success");
-    
-    // Reindirizza il cliente alla pagina dello stato dell'ordine dopo 1,5 secondi
-    setTimeout(() => {
-      window.location.href = `stato_ordine.html?id=${data.name}`;
-    }, 1500);
-  } else {
-    showToast("Errore di risposta dal database", "error");
-  }
-})
-.catch(error => {
-  console.error("Errore Firebase:", error);
-  showToast("Errore di connessione al database", "error");
-});
+    showToast("Invio ordine in corso...", "info");
+
+    fetch(firebaseProjectUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(datiOrdine)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data && data.name) {
+            showToast("Ordine inviato con successo!", "success");
+            setTimeout(() => {
+                window.location.href = `stato_ordine.html?id=${data.name}`;
+            }, 1500);
+        } else {
+            showToast("Errore di risposta dal database", "error");
+        }
+    })
+    .catch(error => {
+        console.error("Errore Firebase:", error);
+        showToast("Errore di connessione al database", "error");
+    });
 }
 
 /* LOCALIZZAZIONE GPS */
