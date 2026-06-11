@@ -10,8 +10,11 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f1e7; padding: 20px; text-align: center; color: #4b3621; }
         .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 500px; margin: auto; border: 2px solid #ff9800; }
         .box { margin: 20px 0; padding: 25px; border: 1px solid #eee; border-radius: 15px; background: #fffcf9; }
-        .btn { padding: 12px 25px; border: none; border-radius: 10px; cursor: pointer; margin: 8px; color: white; font-weight: bold; font-size: 16px; transition: transform 0.2s; }
-        .btn:hover { transform: scale(1.05); }
+        
+        /* PULSANTI RESPONSIVE */
+        .btn-container { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .btn { padding: 15px; border: none; border-radius: 10px; cursor: pointer; color: white; font-weight: bold; font-size: 16px; width: 100%; transition: transform 0.2s; }
+        .btn:hover { transform: scale(1.02); }
         .btn-conferma { background-color: #27ae60; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
         .btn-annulla { background-color: #e74c3c; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); }
         
@@ -71,20 +74,21 @@
             let html = `<div class="stato-label">Stato attuale</div>`;
             html += `<h2 style="margin: 0 0 20px 0; color: #ff9800;">${data.stato || 'Ricevuto'}</h2>`;
 
-            // MOSTRA ORARIO SOLO SE NON È PRONTO
             if (data.orario_previsto && data.stato !== "Pronto") {
                 html += `<p class="orario-label">🕒 Orario stimato: <b>${data.orario_previsto}</b></p>`;
             }
 
-            // LOGICA DIALOGO E STATI DINAMICI
+            // GESTIONE STATI
             if (!data.stato || data.stato === "Ricevuto") {
                 html += `<p>Ordine ricevuto! La pizzeria sta elaborando la richiesta.</p>`;
             } else if (data.stato === "In attesa conferma" && !data.conferma_cliente) {
                 html += `
                     <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 10px;">
                         <p><b>Confermi l'ordine?</b></p>
-                        <button class="btn btn-conferma" onclick="rispondi(true)">SI, CONFERMO</button>
-                        <button class="btn btn-annulla" onclick="rispondi(false)">ANNULLA</button>
+                        <div class="btn-container">
+                            <button class="btn btn-conferma" onclick="rispondi(true)">SI, CONFERMO</button>
+                            <button class="btn btn-annulla" onclick="rispondi(false)">ANNULLA</button>
+                        </div>
                     </div>
                 `;
             } else if (data.stato === "Ordine Inserito") {
@@ -101,9 +105,9 @@
                     
                     html += `
                         <div class="pronto-animation">${messaggioPronto}</div>
-                        <button class="btn btn-conferma" onclick="confermaConclusione()">
-                            ${etichettaPulsante}
-                        </button>
+                        <div class="btn-container">
+                            <button class="btn btn-conferma" onclick="confermaConclusione()">${etichettaPulsante}</button>
+                        </div>
                     `;
                 } else {
                     html += `
