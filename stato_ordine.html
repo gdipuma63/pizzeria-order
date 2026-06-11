@@ -15,7 +15,6 @@
         .btn-conferma { background-color: #27ae60; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
         .btn-annulla { background-color: #e74c3c; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); }
         
-        /* EFFETTO LAMPEGGIANTE PER ORDINE PRONTO */
         .pronto-animation {
             font-size: 22px;
             font-weight: 800;
@@ -72,12 +71,10 @@
             let html = `<div class="stato-label">Stato attuale</div>`;
             html += `<h2 style="margin: 0 0 20px 0; color: #ff9800;">${data.stato}</h2>`;
 
-            // MOSTRA ORARIO SOLO SE NON È PRONTO
             if (data.orario_previsto && data.stato !== "Pronto") {
                 html += `<p class="orario-label">🕒 Orario stimato: <b>${data.orario_previsto}</b></p>`;
             }
 
-            // LOGICA DIALOGO E STATI DINAMICI
             if (data.stato === "In attesa conferma" && !data.conferma_cliente) {
                 html += `
                     <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 10px;">
@@ -91,14 +88,23 @@
             } else if (data.stato === "In Preparazione") {
                 html += `<p style="color: #d35400; font-weight: bold;">🔥 Le tue pizze sono in forno!</p>`;
             } else if (data.stato === "Pronto") {
-                // MESSAGGIO LAMPEGGIANTE DIFFERENZIATO
-                let messaggioPronto = "";
-                if (data.modalita === "Ritiro") {
-                    messaggioPronto = "🍕 IL TUO ORDINE È PRONTO!<br><small>Ti aspettiamo in pizzeria per il ritiro.</small>";
+                if (!data.conferma_finale) {
+                    let messaggio = (data.modalita === "Ritiro") ? "🍕 IL TUO ORDINE È PRONTO!" : "🛵 ORDINE IN CONSEGNA!";
+                    html += `
+                        <div class="pronto-animation">${messaggio}</div>
+                        <p>Grazie per aver scelto la nostra pizzeria!</p>
+                        <button class="btn btn-conferma" onclick="confermaConclusione()">
+                            ${data.modalita === "Ritiro" ? "Provvedo al ritiro" : "Attendo consegna"}
+                        </button>
+                    `;
                 } else {
-                    messaggioPronto = "🛵 ORDINE IN CONSEGNA!<br><small>Il nostro fattorino sta arrivando da te.</small>";
+                    html += `
+                        <div class="pronto-animation">GRAZIE DI CUORE!</div>
+                        <p>Ti auguriamo buon appetito.</p>
+                        <p>Verrai reindirizzato alla Home tra pochi secondi...</p>
+                    `;
+                    setTimeout(() => { window.location.href = "index.html"; }, 5000);
                 }
-                html += `<div class="pronto-animation">${messaggioPronto}</div>`;
             } else if (data.stato === "Annullato") {
                 html += `<p style="color: #c0392b;">❌ Ordine annullato.</p>`;
             }
@@ -116,6 +122,10 @@
                 setTimeout(() => { window.location.href = "index.html"; }, 2000);
             }
         }
+    }
+
+    function confermaConclusione() {
+        db.ref(`ordini/${orderId}`).update({ conferma_finale: true });
     }
 </script>
 
