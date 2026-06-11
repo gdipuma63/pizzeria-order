@@ -65,6 +65,8 @@
     
     // Caricamento file audio
     const audioNotifica = new Audio('avviso.mp3'); 
+    let suonoGiaRiproducito = false; // Variabile per controllare la riproduzione
+
     // AGGIUNTA: Sblocco audio al primo click sulla pagina
     document.addEventListener('click', () => {
         audioNotifica.play().then(() => {
@@ -111,8 +113,11 @@
             } else if (data.stato === "In Cottura") {
                 html += `<p style="color: #d35400; font-weight: bold;">🔥 Le tue pizze sono nel forno!</p>`;
             } else if (data.stato === "Pronto") {
-                // Notifica audio
-                audioNotifica.play().catch(e => console.log("Audio in attesa di interazione"));
+                // Notifica audio intelligente
+                if (!suonoGiaRiproducito) {
+                    audioNotifica.play().catch(e => console.log("Audio in attesa di interazione"));
+                    suonoGiaRiproducito = true;
+                }
                 
                 if (!data.conferma_finale) {
                     let messaggioPronto = (data.modalita === "Ritiro") ? "🍕 IL TUO ORDINE È PRONTO!<br><small>Ti aspettiamo in pizzeria.</small>" : "🛵 IL TUO ORDINE È IN CONSEGNA!<br><small>Il fattorino è in arrivo.</small>";
