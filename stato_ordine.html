@@ -71,8 +71,9 @@
                 return; 
             }
 
+            let visualizzazioneStato = (data.stato === "Ricevuto") ? "In elaborazione" : data.stato;
             let html = `<div class="stato-label">Stato attuale</div>`;
-            html += `<h2 style="margin: 0 0 20px 0; color: #ff9800;">${data.stato || 'Ricevuto'}</h2>`;
+            html += `<h2 style="margin: 0 0 20px 0; color: #ff9800;">${visualizzazioneStato || 'In elaborazione'}</h2>`;
 
             if (data.orario_previsto && data.stato !== "Pronto") {
                 html += `<p class="orario-label">🕒 Orario stimato: <b>${data.orario_previsto}</b></p>`;
