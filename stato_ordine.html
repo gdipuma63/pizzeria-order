@@ -62,6 +62,10 @@
     const firebaseConfig = { databaseURL: "https://gestioneordini-25dba-default-rtdb.europe-west1.firebasedatabase.app/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    
+    // Caricamento file audio
+    const audioNotifica = new Audio('avviso.mp3'); 
+
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('id');
 
@@ -100,6 +104,9 @@
             } else if (data.stato === "In Cottura") {
                 html += `<p style="color: #d35400; font-weight: bold;">🔥 Le tue pizze sono nel forno!</p>`;
             } else if (data.stato === "Pronto") {
+                // Notifica audio
+                audioNotifica.play().catch(e => console.log("Audio in attesa di interazione"));
+                
                 if (!data.conferma_finale) {
                     let messaggioPronto = (data.modalita === "Ritiro") ? "🍕 IL TUO ORDINE È PRONTO!<br><small>Ti aspettiamo in pizzeria.</small>" : "🛵 IL TUO ORDINE È IN CONSEGNA!<br><small>Il fattorino è in arrivo.</small>";
                     let etichettaPulsante = (data.modalita === "Ritiro") ? "Conferma ritiro" : "Attendo consegna";
@@ -123,7 +130,7 @@
                 html += `<div class="riepilogo-box"><h4>🍕 Riepilogo Ordine</h4>${listaPizze}<hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;"><div class="riga-pizza" style="font-weight: bold;"><span>Totale:</span><span>€${data.totale}</span></div></div>`;
             }
 
-            // AGGIUNTA PULSANTE AIUTO WHATSAPP
+            // PULSANTE WHATSAPP
             html += `
                 <div class="btn-container">
                     <a href="https://wa.me/393516986460?text=Salve,%20ho%20un%20problema%20con%20l'ordine%20n.%20${orderId}" 
