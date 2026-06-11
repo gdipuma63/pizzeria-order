@@ -151,9 +151,15 @@ cursor:pointer;
 margin-top:10px;
 }
 
+/* GESTIONE INDIRIZZO BOX DINAMICO */
 #indirizzoBox{
   display: none;
+  margin-top: 15px;
   position: relative;
+}
+
+#indirizzoBox.visibile {
+  display: flex;
 }
   
 /* MOBILE */
@@ -162,8 +168,8 @@ margin-top:10px;
     flex-direction: column;
   }
 
-  #indirizzoBox{
-    flex-direction: column !important;
+  #indirizzoBox.visibile {
+    flex-direction: column;
     align-items: stretch;
     gap: 10px;
   }
@@ -172,6 +178,7 @@ margin-top:10px;
     width: 100% !important;
     max-width: 100% !important;
     order: 1;
+    margin: 0;
   }
 
   #indirizzoBox .input-clear{
@@ -190,8 +197,7 @@ margin-top:10px;
     display: none !important;
   }
 
-  #indirizzoBox{
-    display: flex;
+  #indirizzoBox.visibile {
     flex-direction: row;
     align-items: stretch;
     gap: 12px;
@@ -389,10 +395,6 @@ background: #27ae60;
 10% {opacity:1; transform: translateY(0);}
 90% {opacity:1;}
 100% {opacity:0; transform: translateY(10px);}
-}
-    
-#indirizzoBox{
-  margin-top: 15px;
 }
 
 #indirizzoBox .input-clear{
@@ -710,16 +712,18 @@ let statoAggiunte = "base";
 
 const listaPizze = document.getElementById("listaPizze");
 
-/* MODALITA */
+/* MODALITA CORRETTA */
 function selezionaModalita(tipo){
 modalitaOrdine = tipo;
 
 document.getElementById("btnRitiro").classList.remove("active");
 document.getElementById("btnConsegna").classList.remove("active");
 
-document.getElementById("indirizzoBox").style.display = (tipo === "Consegna a domicilio") ? "flex" : "none";
-
-if (tipo === "Ritiro") {
+const indBox = document.getElementById("indirizzoBox");
+if (tipo === "Consegna a domicilio") {
+    indBox.classList.add("visibile");
+} else {
+    indBox.classList.remove("visibile");
     document.getElementById("indirizzo").value = "";
     document.getElementById("suggestions").innerHTML = "";
 }
@@ -1150,39 +1154,63 @@ ordine.splice(i,1);
 aggiorna();
 }
 
-/* WHATSAPP */
+/* INVIA ORDINE SOLO SU DATABASE FIREBASE REST API */
 function inviaOrdine(){
 if(ordine.length===0){
-showToast("L'ordine è vuoto!", "error");
-return;
+  showToast("L'ordine è vuoto!", "error");
+  return;
 }
 
 const nome=document.getElementById("nome").value.trim();
 const tel=document.getElementById("telefonoUtente").value.trim();
 
-let msg="🍕 ORDINE PIZZERIA\n\n";
-msg+="👤 "+nome+"\n";
-msg+="📞 "+tel+"\n";
-msg+="🚚 "+modalitaOrdine+"\n";
-
-if(modalitaOrdine==="Consegna a domicilio"){
-msg+="📍 "+document.getElementById("indirizzo").value+"\n";
-}
-
-msg+="\n🧾 RIEPILOGO PIZZE:\n";
-let totale=0;
-
+let totaleComplessivo=0;
 ordine.forEach(o=>{
-totale+=o.totale;
-msg+=`• ${o.pizza} (${o.formato}) x${o.quantita}\n`;
-o.extras.forEach(e=>{
-msg += "  " + e + "\n";
-});
-msg+=`  Prezzo: € ${o.totale.toFixed(2)}\n\n`;
+  totaleComplessivo+=o.totale;
 });
 
-msg+="💰 Totale Complessivo: € "+totale.toFixed(2);
-window.open("https://wa.me/?text="+encodeURIComponent(msg));
+// Preparazione dei dati da salvare sul Database
+const datiOrdine = {
+  cliente: nome,
+  telefono: tel,
+  modalita: modalitaOrdine,
+  indirizzo: modalitaOrdine === "Consegna a domicilio" ? document.getElementById("indirizzo").value.trim() : "",
+  pizze: ordine,
+  totale: totaleComplessivo,
+  data_ordine: new Date().toLocaleString("it-IT"),
+  stato: "Ricevuto" // Stato iniziale che vedranno sia il cliente che l'operatore
+};
+
+// URL del tuo Realtime Database
+const firebaseProjectUrl = "https://gestioneordini-25dba-default-rtdb.firebaseio.com/ordini.json";
+
+showToast("Invio ordine in corso...", "info");
+
+fetch(firebaseProjectUrl, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(datiOrdine)
+})
+.then(response => response.json())
+.then(data => {
+  // data.name contiene l'ID univoco generato automaticamente da Firebase per questo ordine
+  if(data && data.name) {
+    showToast("Ordine inviato con successo!", "success");
+    
+    // Reindirizza il cliente alla pagina dello stato dell'ordine dopo 1,5 secondi
+    setTimeout(() => {
+      window.location.href = `stato_ordine.html?id=${data.name}`;
+    }, 1500);
+  } else {
+    showToast("Errore di risposta dal database", "error");
+  }
+})
+.catch(error => {
+  console.error("Errore Firebase:", error);
+  showToast("Errore di connessione al database", "error");
+});
 }
 
 /* LOCALIZZAZIONE GPS */
@@ -1283,7 +1311,7 @@ const btnMinus = document.getElementById("btnMinus");
 btnMinus.style.display = (q <= 1) ? "none" : "inline-block";
 }
 
-/* GESTIONE SUGGERIMENTI INDIRIZZO COMPLETA E FUNZIONANTE */
+/* GESTIONE SUGGERIMENTI INDIRIZZO */
 async function suggerisciIndirizzo(q) {
   const suggestionsBox = document.getElementById("suggestions");
   if (q.length < 3) {
@@ -1323,7 +1351,6 @@ function abilitaSuggerimenti() {
     suggerisciIndirizzo(input.value);
   });
   
-  // Chiude i suggerimenti se si clicca fuori dal box
   document.addEventListener("click", (e) => {
     if(e.target.id !== "indirizzo") {
       document.getElementById("suggestions").innerHTML = "";
