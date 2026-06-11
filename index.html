@@ -154,7 +154,6 @@ margin-top:10px;
 #indirizzoBox{
   display: none;
   position: relative;
-  margin-top: 15px;
 }
   
 /* MOBILE */
@@ -390,6 +389,10 @@ background: #27ae60;
 10% {opacity:1; transform: translateY(0);}
 90% {opacity:1;}
 100% {opacity:0; transform: translateY(10px);}
+}
+    
+#indirizzoBox{
+  margin-top: 15px;
 }
 
 #indirizzoBox .input-clear{
@@ -746,7 +749,7 @@ try {
     };
 
     if (!tuttePizze.includes(nome)) {
-        tuttePizze.push(nome);
+      tuttePizze.push(nome);
     }
     categorieSet.add(cat);
   });
@@ -1132,4 +1135,210 @@ div.innerHTML+=`
 <b>${o.pizza}</b><br>
 ${o.formato} x${o.quantita}<br>
 € ${o.totale.toFixed(2)}<br>
-${o.extras ? o
+${o.extras ? o.extras.map(e=>e+"<br>").join("") : ""}
+</div>
+<button class="btn-remove-ordine" onclick="rimuoviOrdine(${i})">🗑 Rimuovi</button>
+</div>
+`;
+});
+
+div.innerHTML+=`<h3>Totale € ${totale.toFixed(2)}</h3>`;
+}
+
+function rimuoviOrdine(i){
+ordine.splice(i,1);
+aggiorna();
+}
+
+/* WHATSAPP */
+function inviaOrdine(){
+if(ordine.length===0){
+showToast("L'ordine è vuoto!", "error");
+return;
+}
+
+const nome=document.getElementById("nome").value.trim();
+const tel=document.getElementById("telefonoUtente").value.trim();
+
+let msg="🍕 ORDINE PIZZERIA\n\n";
+msg+="👤 "+nome+"\n";
+msg+="📞 "+tel+"\n";
+msg+="🚚 "+modalitaOrdine+"\n";
+
+if(modalitaOrdine==="Consegna a domicilio"){
+msg+="📍 "+document.getElementById("indirizzo").value+"\n";
+}
+
+msg+="\n🧾 RIEPILOGO PIZZE:\n";
+let totale=0;
+
+ordine.forEach(o=>{
+totale+=o.totale;
+msg+=`• ${o.pizza} (${o.formato}) x${o.quantita}\n`;
+o.extras.forEach(e=>{
+msg += "  " + e + "\n";
+});
+msg+=`  Prezzo: € ${o.totale.toFixed(2)}\n\n`;
+});
+
+msg+="💰 Totale Complessivo: € "+totale.toFixed(2);
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+
+/* LOCALIZZAZIONE GPS */
+function rilevaPosizione(){
+const indirizzoInput = document.getElementById("indirizzo");
+if(!navigator.geolocation){
+showToast("Geolocalizzazione non supportata", "error");
+return;
+}
+
+navigator.geolocation.getCurrentPosition(async (pos) => {
+const lat = pos.coords.latitude;
+const lon = pos.coords.longitude;
+const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+
+try{
+const res = await fetch(url);
+const data = await res.json();
+if(data && data.address){
+const a = data.address;
+const strada = a.road || "";
+const civico = a.house_number || "";
+const citta = a.city || a.town || a.village || "";
+const cap = a.postcode || "";
+
+indirizzoInput.value = [`${strada} ${civico}`.trim(), `${cap} ${citta}`.trim()].filter(Boolean).join(", ");
+toggleClear(indirizzoInput);
+}else{
+indirizzoInput.value = lat + ", " + lon;
+toggleClear(indirizzoInput);
+}
+}catch(e){
+indirizzoInput.value = lat + ", " + lon;
+toggleClear(indirizzoInput);
+}
+}, () => {
+showToast("Impossibile rilevare la posizione", "error");
+});
+}
+
+function showToast(message, type = "info") {
+const toast = document.getElementById("toast");
+const div = document.createElement("div");
+div.className = "toast-msg";
+
+if (type === "error") div.classList.add("toast-error");
+if (type === "success") div.classList.add("toast-success");
+
+div.textContent = message;
+toast.appendChild(div);
+
+setTimeout(() => { div.remove(); }, 3000);
+}
+
+function vaiAlCampo(id){
+const campo = document.getElementById(id);
+campo.scrollIntoView({ behavior: "smooth", block: "center" });
+setTimeout(() => { campo.focus(); }, 400);
+}
+  
+function toggleClear(input){
+const box = input.closest(".input-clear");
+const btn = box.querySelector(".clear-btn");
+btn.style.display = input.value.trim() ? "block" : "none";
+}
+
+function clearInput(id){
+const input = document.getElementById(id);
+input.value = "";
+const btn = input.parentElement.querySelector(".clear-btn");
+if(btn) btn.style.display = "none";
+input.focus();
+}
+  
+function modificaQuantita(val){
+const input = document.getElementById("quantita");
+let q = parseInt(input.value) || 1;
+q += val;
+if(q < 1) q = 1;
+input.value = q;
+aggiornaBottoniQty();
+aggiornaPreview();
+}
+
+function controlloManualeQty() {
+const input = document.getElementById("quantita");
+let q = parseInt(input.value);
+if(isNaN(q) || q < 1) {
+  q = 1;
+}
+aggiornaBottoniQty();
+aggiornaPreview();
+}
+
+function aggiornaBottoniQty(){
+const q = parseInt(document.getElementById("quantita").value) || 1;
+const btnMinus = document.getElementById("btnMinus");
+btnMinus.style.display = (q <= 1) ? "none" : "inline-block";
+}
+
+/* GESTIONE SUGGERIMENTI INDIRIZZO COMPLETA E FUNZIONANTE */
+async function suggerisciIndirizzo(q) {
+  const suggestionsBox = document.getElementById("suggestions");
+  if (q.length < 3) {
+    suggestionsBox.innerHTML = "";
+    return;
+  }
+
+  const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(q)}&addressdetails=1&limit=5`;
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    suggestionsBox.innerHTML = "";
+
+    if(data && data.length > 0) {
+      data.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "suggestion-item";
+        div.textContent = item.display_name;
+        div.onclick = () => {
+          const inputIndirizzo = document.getElementById("indirizzo");
+          inputIndirizzo.value = item.display_name;
+          suggestionsBox.innerHTML = "";
+          toggleClear(inputIndirizzo);
+        };
+        suggestionsBox.appendChild(div);
+      });
+    }
+  } catch (e) {
+    console.error("Errore autocompletamento:", e);
+  }
+}
+
+function abilitaSuggerimenti() {
+  const input = document.getElementById("indirizzo");
+  input.addEventListener("input", () => {
+    suggerisciIndirizzo(input.value);
+  });
+  
+  // Chiude i suggerimenti se si clicca fuori dal box
+  document.addEventListener("click", (e) => {
+    if(e.target.id !== "indirizzo") {
+      document.getElementById("suggestions").innerHTML = "";
+    }
+  });
+}
+
+/* UNICA FUNZIONE DI AVVIO PAGINA IN ASCOLTO */
+window.addEventListener("load", function() {
+  caricaMenu();
+  selezionaModalita('Ritiro');
+  aggiornaBottoniQty();
+  abilitaSuggerimenti();
+});
+</script>
+
+</body>
+</html>
