@@ -695,8 +695,6 @@ margin:0;
 
 </div>
 
-<div id="toast"></div>
-
 <script>
 const sheetUrl = "https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/heads/main/menu.csv";
 
@@ -762,12 +760,10 @@ try {
 }
 }
 
-// UNIFICATO IL CARICAMENTO DEI DUE SCRIPT PER FARLI FUNZIONARE INSIEME
 window.onload = function () {
   caricaMenu();
   selezionaModalita('Ritiro');
   aggiornaBottoniQty();
-  abilitaSuggerimenti(); // <--- Adesso viene avviata regolarmente!
 };
 
 /* CATEGORIE */
@@ -1220,9 +1216,11 @@ indirizzoInput.value = [`${strada} ${civico}`.trim(), `${cap} ${citta}`.trim()].
 toggleClear(indirizzoInput);
 }else{
 indirizzoInput.value = lat + ", " + lon;
+toggleClear(indirizzoInput);
 }
 }catch(e){
 indirizzoInput.value = lat + ", " + lon;
+toggleClear(indirizzoInput);
 }
 }, () => {
 showToast("Impossibile rilevare la posizione", "error");
@@ -1331,13 +1329,17 @@ function abilitaSuggerimenti() {
     suggerisciIndirizzo(input.value);
   });
   
+  // Chiude i suggerimenti se si clicca fuori dal box
   document.addEventListener("click", (e) => {
     if(e.target.id !== "indirizzo") {
       document.getElementById("suggestions").innerHTML = "";
     }
   });
 }
-</script> 
-   
+
+window.addEventListener("load", abilitaSuggerimenti);
+</script>   
+<div id="toast"></div>
+
 </body>
 </html>
