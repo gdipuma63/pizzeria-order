@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stato Ordine - Pizzeria</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: center; }
         .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
         .box { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
-        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; color: white; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; color: white; font-weight: bold; }
         .btn-conferma { background-color: #28a745; }
         .btn-annulla { background-color: #dc3545; }
     </style>
@@ -21,72 +23,66 @@
 </div>
 
 <script>
+    // Configurazione Firebase
+    const firebaseConfig = {
+        databaseURL: "https://gestioneordini-25dba-default-rtdb.europe-west1.firebasedatabase.app/"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('id');
-    const dbUrl = `https://gestioneordini-25dba-default-rtdb.europe-west1.firebasedatabase.app/ordini/${orderId}.json`;
 
-    function caricaOrdine() {
-        fetch(dbUrl)
-            .then(res => res.json())
-            .then(data => {
-                if (!data) { document.getElementById("contenuto").innerHTML = "Ordine non trovato."; return; }
+    if (!orderId) {
+        document.getElementById("contenuto").innerHTML = "Errore: Ordine non specificato.";
+    } else {
+        // Ascolto in tempo reale (Live)
+        db.ref(`ordini/${orderId}`).on('value', (snapshot) => {
+            const data = snapshot.val();
+            const contenuto = document.getElementById("contenuto");
 
-                let html = `<p>Stato attuale: <b>${data.stato}</b></p>`;
+            if (!data) { 
+                contenuto.innerHTML = "Ordine non trovato."; 
+                return; 
+            }
 
-                // 1. Stato: In attesa di conferma tempo dalla pizzeria
-                if (data.stato === "Ricevuto" && data.tempo_attesa && !data.conferma_cliente) {
-                    html += `
-                        <p>La pizzeria stima: <b>${data.tempo_attesa} minuti</b>.</p>
-                        <button class="btn btn-conferma" onclick="rispondi(true)">Accetta e Conferma</button>
-                        <button class="btn btn-annulla" onclick="rispondi(false)">Rifiuta</button>
-                    `;
-                } 
-                // 2. Stato: Ordine confermato e in turno
-                else if (data.conferma_cliente === true && data.stato !== "In Preparazione") {
-                    html += `
-                        <p style="color: #28a745; font-weight: bold;">✅ Ordine confermato! Attendi ora il tuo turno.</p>
-                        <button class="btn btn-annulla" onclick="annullaOrdine()">Annulla Ordine</button>
-                    `;
-                }
-                // 3. Stato: Lockdown (In Preparazione)
-                else if (data.stato === "In Preparazione") {
-                    html += `<p style="color: #666;">⚠️ In preparazione: annullamento non più possibile.</p>`;
-                }
-                else {
-                    html += `<p>In attesa di risposta dalla pizzeria...</p>`;
-                }
+            let html = `<p>Stato attuale: <b>${data.stato}</b></p>`;
+            if (data.orario_previsto) {
+                html += `<p>Orario previsto: <b>${data.orario_previsto}</b></p>`;
+            }
 
-                document.getElementById("contenuto").innerHTML = html;
-            });
+            // Logica di dialogo
+            if (data.stato === "In attesa conferma" && !data.conferma_cliente) {
+                html += `
+                    <p>La pizzeria propone questo orario. Confermi?</p>
+                    <button class="btn btn-conferma" onclick="rispondi(true)">Accetta</button>
+                    <button class="btn btn-annulla" onclick="rispondi(false)">Rifiuta</button>
+                `;
+            } else if (data.stato === "Ordine Inserito") {
+                html += `<p style="color: #28a745;">✅ Ordine confermato! In lavorazione.</p>`;
+            } else if (data.stato === "In Preparazione") {
+                html += `<p style="color: #e67e22;">🔥 Pizze in forno!</p>`;
+            } else if (data.stato === "Pronto") {
+                html += `<p style="color: #27ae60;">🔔 Il tuo ordine è pronto!</p>`;
+            }
+
+            contenuto.innerHTML = html;
+        });
     }
 
-    // Funzione per accettare o rifiutare
     function rispondi(accettato) {
         if (accettato) {
-            fetch(dbUrl, { method: 'PATCH', body: JSON.stringify({ conferma_cliente: true, stato: "Ordine Inserito" }) })
-                .then(() => caricaOrdine());
+            db.ref(`ordini/${orderId}`).update({ 
+                conferma_cliente: true, 
+                stato: "Ordine Inserito" 
+            });
         } else {
-            // Se rifiuta, eliminiamo l'ordine dal database
-            fetch(dbUrl, { method: 'DELETE' }).then(() => {
-                alert("Ordine eliminato.");
+            if (confirm("Vuoi annullare l'ordine?")) {
+                db.ref(`ordini/${orderId}`).remove();
                 window.location.href = "index.html";
-            });
+            }
         }
     }
-
-    // Funzione per annullare dopo la conferma
-    function annullaOrdine() {
-        if (confirm("Sei sicuro di voler annullare l'ordine?")) {
-            fetch(dbUrl, { method: 'DELETE' }).then(() => {
-                alert("Ordine annullato.");
-                window.location.href = "index.html";
-            });
-        }
-    }
-
-    caricaOrdine();
-    // Aggiornamento automatico ogni 5 secondi per vedere il cambio stato operatore
-    setInterval(caricaOrdine, 5000);
 </script>
 
 </body>
