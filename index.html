@@ -1155,10 +1155,18 @@ aggiorna();
 }
 
 /* INVIA ORDINE SOLO SU DATABASE FIREBASE REST API (EUROPA) */
-function inviaOrdine(){
-    if(ordine.length===0){
+/* INVIA ORDINE AGGIORNATO E COMPLETO */
+function inviaOrdine() {
+    if (ordine.length === 0) {
         showToast("L'ordine è vuoto!", "error");
         return;
+    }
+
+    // Protezione: disabilita il bottone durante l'invio
+    const btn = document.getElementById("btn");
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = "Invio in corso...";
     }
 
     const nome = document.getElementById("nome").value.trim();
@@ -1169,8 +1177,6 @@ function inviaOrdine(){
         totaleComplessivo += o.totale;
     });
 
-    // --- AGGIORNAMENTO DATI ---
-    // Salviamo l'orario preciso in cui l'ordine viene inviato
     const dataCorrente = new Date();
 
     const datiOrdine = {
@@ -1181,11 +1187,10 @@ function inviaOrdine(){
         pizze: ordine,
         totale: totaleComplessivo,
         data_ordine: dataCorrente.toLocaleString("it-IT"),
-        // Questo serve per il calcolo matematico nella pagina di gestione
-        timestamp_conferma: dataCorrente.getTime(), 
+        timestamp_conferma: dataCorrente.getTime(),
         stato: "Ricevuto",
-        tempo_attesa: 0,       // Inizialmente 0, verrà aggiornato dall'operatore
-        orario_previsto: ""    // Rimarrà vuoto finché l'operatore non conferma
+        tempo_attesa: 0,
+        orario_previsto: ""
     };
 
     const firebaseProjectUrl = "https://gestioneordini-25dba-default-rtdb.europe-west1.firebasedatabase.app/ordini.json";
@@ -1201,16 +1206,28 @@ function inviaOrdine(){
     })
     .then(response => response.json())
     .then(data => {
-        if(data && data.name) {
+        if (data && data.name) {
             showToast("Ordine inviato con successo!", "success");
+            
+            // Reindirizza il cliente alla pagina dello stato dell'ordine
             setTimeout(() => {
                 window.location.href = `stato_ordine.html?id=${data.name}`;
             }, 1500);
         } else {
+            // In caso di errore, riabilita il bottone
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = "🚀 Conferma e Invia Ordine";
+            }
             showToast("Errore di risposta dal database", "error");
         }
     })
     .catch(error => {
+        // In caso di errore di connessione, riabilita il bottone
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = "🚀 Conferma e Invia Ordine";
+        }
         console.error("Errore Firebase:", error);
         showToast("Errore di connessione al database", "error");
     });
