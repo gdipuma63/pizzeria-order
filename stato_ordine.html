@@ -80,4 +80,63 @@
             // LOGICA DIALOGO E STATI DINAMICI
             if (data.stato === "In attesa conferma" && !data.conferma_cliente) {
                 html += `
-                    <div style="background: #fff3cd; padding: 1
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 10px;">
+                        <p>La pizzeria propone le <b>${data.orario_previsto}</b>. Accetti?</p>
+                        <button class="btn btn-conferma" onclick="rispondi(true)">SI, VA BENE</button>
+                        <button class="btn btn-annulla" onclick="rispondi(false)">NO, ANNULLA</button>
+                    </div>
+                `;
+            } else if (data.stato === "Ordine Inserito") {
+                html += `<p style="color: #27ae60; font-weight: bold;">✅ Conferma ricevuta! Sei in lista.</p>`;
+            } else if (data.stato === "In Preparazione") {
+                html += `<p style="color: #d35400; font-weight: bold;">🔥 Le tue pizze sono in forno!</p>`;
+            } else if (data.stato === "Pronto") {
+                // LOGICA IBRIDA RITIRO/CONSEGNA
+                if (!data.conferma_finale) {
+                    let messaggioPronto = (data.modalita === "Ritiro") 
+                        ? "🍕 IL TUO ORDINE È PRONTO!<br><small>Ti aspettiamo in pizzeria.</small>" 
+                        : "🛵 IL TUO ORDINE È IN CONSEGNA!<br><small>Il fattorino è in arrivo.</small>";
+                    
+                    let etichettaPulsante = (data.modalita === "Ritiro") ? "Provvedo al ritiro" : "Attendo consegna";
+                    
+                    html += `
+                        <div class="pronto-animation">${messaggioPronto}</div>
+                        <button class="btn btn-conferma" onclick="confermaConclusione()">
+                            ${etichettaPulsante}
+                        </button>
+                    `;
+                } else {
+                    // MESSAGGIO DI RINGRAZIAMENTO E TIMER REINDIRIZZAMENTO
+                    html += `
+                        <div class="pronto-animation">GRAZIE DI CUORE!</div>
+                        <p>Ti auguriamo buon appetito.</p>
+                        <p>Verrai reindirizzato alla Home tra pochi secondi...</p>
+                    `;
+                    setTimeout(() => { window.location.href = "index.html"; }, 5000);
+                }
+            } else if (data.stato === "Annullato") {
+                html += `<p style="color: #c0392b;">❌ Ordine annullato.</p>`;
+            }
+
+            contenuto.innerHTML = html;
+        });
+    }
+
+    function rispondi(accettato) {
+        if (accettato) {
+            db.ref(`ordini/${orderId}`).update({ conferma_cliente: true, stato: "Ordine Inserito" });
+        } else {
+            if (confirm("Vuoi davvero annullare l'ordine?")) {
+                db.ref(`ordini/${orderId}`).update({ stato: "Annullato" });
+                setTimeout(() => { window.location.href = "index.html"; }, 2000);
+            }
+        }
+    }
+
+    function confermaConclusione() {
+        db.ref(`ordini/${orderId}`).update({ conferma_finale: true });
+    }
+</script>
+
+</body>
+</html>
