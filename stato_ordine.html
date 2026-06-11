@@ -89,7 +89,7 @@
             } else if (data.stato === "Pronto") {
                 if (!data.conferma_finale) {
                     let messaggioPronto = (data.modalita === "Ritiro") ? "🍕 IL TUO ORDINE È PRONTO!<br><small>Ti aspettiamo in pizzeria.</small>" : "🛵 IL TUO ORDINE È IN CONSEGNA!<br><small>Il fattorino è in arrivo.</small>";
-                    let etichettaPulsante = (data.modalita === "Ritiro") ? "Provvedo al ritiro" : "Attendo consegna";
+                    let etichettaPulsante = (data.modalita === "Ritiro") ? "Conferma ritiro" : "Attendo consegna";
                     html += `<div class="pronto-animation">${messaggioPronto}</div><div class="btn-container"><button class="btn btn-conferma" onclick="confermaConclusione()">${etichettaPulsante}</button></div>`;
                 } else {
                     // MESSAGGIO AGGIORNATO
