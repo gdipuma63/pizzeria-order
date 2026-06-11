@@ -6,7 +6,6 @@
 <title>Ordina la tua pizza</title>
   
 <style>
-
 body{
 font-family:'Segoe UI',Arial,sans-serif;
 background:linear-gradient(180deg,#f7f3ee,#efe7dc);
@@ -139,6 +138,7 @@ margin-top:10px;
 #listaAggiunte + textarea + button{
 margin-top:20px;
 }
+
 /* DELETE */
 .rimuovi-btn{
 background:#c0392b;
@@ -147,42 +147,51 @@ border:none;
 padding:10px;
 border-radius:8px;
 cursor:pointer;
-margin-top:10px;
 }
 
 #indirizzoBox{
   display: none;
+  flex-direction: row;
+  gap: 12px;
+  align-items: stretch;
+  margin-top: 15px;
+}
+
+#indirizzoBox input{
+flex:1;
+margin-bottom:0;
+}
+
+#indirizzoBox .main-btn{
+flex:0 0 auto;
+max-width:200px;
+margin:0;
 }
   
 /* MOBILE */
 @media (max-width:600px){
-
   .modalita-box{
     flex-direction: column;
   }
 
-  /* FORZA layout sempre verticale anche quando JS attiva display:flex */
   #indirizzoBox{
     flex-direction: column !important;
     align-items: stretch;
     gap: 10px;
   }
 
-  /* BOTTONE sopra */
   #indirizzoBox .usa-posizione{
     width: 100% !important;
     max-width: 100% !important;
     order: 1;
   }
 
-  /* INPUT sotto */
   #indirizzoBox input{
     width: 100% !important;
     margin-bottom: 0;
     order: 2;
   }
 
-  /* sicurezza su eventuali bottoni globali */
   #indirizzoBox .main-btn{
     max-width: 100%;
   }
@@ -194,18 +203,12 @@ margin-top:10px;
 
 /* DESKTOP */
 @media (min-width: 601px) {
-
-  /* NASCONDE bottone geolocalizzazione su desktop */
   #indirizzoBox .usa-posizione{
     display: none !important;
   }
-
-  /* layout orizzontale corretto desktop */
+  
   #indirizzoBox{
     display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    gap: 12px;
   }
 }
     
@@ -237,6 +240,7 @@ background:#4b3621;
 color:white;
 border-color:#4b3621;
 }
+
 .aggiunte-box{
 background:#f7f7f7;
 padding:10px;
@@ -252,19 +256,15 @@ align-items:center;
 max-height:320px;
 overflow-y:auto;
 overflow-x:hidden;
-
 border:1px solid rgba(75, 54, 33, 0.15);
 border-radius:16px;
 margin-top:10px;
-
 position: relative;
 background: #fff;
-
 box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
 scrollbar-gutter: stable;
 }
 
-/* 🔥 scrollbar moderna (Chrome / Edge / Safari) */
 #listaPizze::-webkit-scrollbar{
 width: 10px;
 }
@@ -280,7 +280,6 @@ border-radius: 10px;
 border: 2px solid #f3f3f3;
 }
 
-/* hover scrollbar più evidente */
 #listaPizze::-webkit-scrollbar-thumb:hover{
 background: linear-gradient(180deg,#ff7a00,#e65100);
 }
@@ -291,9 +290,7 @@ margin:8px;
 border-radius:12px;
 border:1px solid #f0e0d0;
 cursor:pointer;
-
 background: linear-gradient(135deg, #fffaf3, #fff3e6);
-
 transition: all .25s ease;
 }
 
@@ -359,6 +356,7 @@ border-radius:10px;
 font-size:14px;
 line-height:1.4;
 }
+
 .placeholder-lampeggia{
 animation: blinkText 0.8s ease-in-out 4;
 color:#c0392b;
@@ -366,11 +364,9 @@ font-weight:bold;
 }
 
 @keyframes blinkText{
-
 0%{opacity:1;}
 50%{opacity:0.2;}
 100%{opacity:1;}
-
 }
 
 #toast {
@@ -410,24 +406,7 @@ background: #27ae60;
 90% {opacity:1;}
 100% {opacity:0; transform: translateY(10px);}
 }
-    
-#indirizzoBox{
-  flex-direction: row;
-  gap: 12px;
-  align-items: stretch;
-  margin-top: 15px;
-}
 
-#indirizzoBox input{
-flex:1;
-margin-bottom:0;
-}
-
-#indirizzoBox .main-btn{
-flex:0 0 auto;
-max-width:200px;
-margin:0;
-}
 /* CONTENITORE INPUT + X */
 .input-clear{
   position: relative;
@@ -435,10 +414,9 @@ margin:0;
   width: 100%;
 }
 
-/* INPUT dentro contenitore */
 .input-clear input{
   width: 100%;
-  padding-right: 40px; /* spazio per la X */
+  padding-right: 40px;
   box-sizing: border-box;
 }
 
@@ -490,12 +468,9 @@ margin:0;
   text-align:center;
   margin:0;
   box-sizing:border-box;
-
-  /* FIX centratura reale */
   display:flex;
   align-items:center;
   justify-content:center;
-
   font-size:16px;
   font-weight:bold;
 }
@@ -505,6 +480,7 @@ margin:0;
   -webkit-appearance: none;
   margin: 0;
 }
+
 .center-label{
   text-align: center;
   display: block;
@@ -516,7 +492,6 @@ margin:0;
 }
   
 /* ===== MENU AGGIUNTE MODERNO ===== */
-
 #aggiunteSelect{
   appearance: none;
   background: #fff;
@@ -527,26 +502,22 @@ margin:0;
   font-weight: 500;
 }
 
-/* effetto focus “app” */
 #aggiunteSelect:focus{
   border-color:#ff9800;
   box-shadow: 0 0 0 4px rgba(255,152,0,0.15);
   transform: translateY(-1px);
 }
 
-/* opzioni più moderne */
 #aggiunteSelect option{
   padding: 10px;
 }
 
-/* separatori categoria */
 #aggiunteSelect option[disabled]{
   color:#999;
   font-weight:600;
   background:#f7f7f7;
 }
 
-/* animazione quando cambia categoria */
 .menu-flash{
   animation: flashAdd 0.35s ease;
 }
@@ -555,6 +526,7 @@ margin:0;
   0% { transform: scale(0.98); opacity:0.6; }
   100% { transform: scale(1); opacity:1; }
 }
+
 .menu-hint{
   text-align:center;
   margin-top:6px;
@@ -607,8 +579,6 @@ margin:0;
 
 <body>
 
-<div id="toast"></div>
-
 <div class="header">
   Ordina la tua pizza online
   <div class="subheader">Componi il tuo ordine in pochi secondi</div>
@@ -617,7 +587,6 @@ margin:0;
 <div class="container">
 
 <div class="box">
-
 <h3>Dati cliente</h3>
 
 <label>Nominativo *</label>
@@ -635,78 +604,48 @@ margin:0;
 <h4 style="text-align:center;">Seleziona la modalità di consegna</h4>
 
 <div class="modalita-box">
-
-<button class="modalita-btn active" id="btnRitiro"
-onclick="selezionaModalita('Ritiro')">🏠 In pizzeria</button>
-
-<button class="modalita-btn" id="btnConsegna"
-onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna a domicilio</button>
-
+<button class="modalita-btn active" id="btnRitiro" onclick="selezionaModalita('Ritiro')">🏠 In pizzeria</button>
+<button class="modalita-btn" id="btnConsegna" onclick="selezionaModalita('Consegna a domicilio')">🛵 Consegna a domicilio</button>
 </div>
 
 <div id="indirizzoBox">
-
   <div class="input-clear">
-    <input type="text" id="indirizzo"
-    placeholder="Indirizzo (solo consegna a domicilio)"
-    oninput="toggleClear(this)">
-    
+    <input type="text" id="indirizzo" placeholder="Indirizzo (solo consegna a domicilio)" oninput="toggleClear(this)">
     <span class="clear-btn" onclick="clearInput('indirizzo')">✖</span>
   </div>
-
   <div id="suggestions"></div>
-
-  <button type="button" class="main-btn usa-posizione" onclick="rilevaPosizione()">
-    🌍 Usa la mia posizione
-  </button>
-
+  <button type="button" class="main-btn usa-posizione" onclick="rilevaPosizione()">🌍 Usa la mia posizione</button>
 </div>
-
 </div>
 
 <div class="box">
-
 <h3 style="text-align:center;">CATEGORIA PIZZE</h3>
-
 <select id="filtroCategoria" onchange="filtraPizze()">
 <option value="Tutte">Tutte le categorie</option>
 </select>
 
-<h3 id="menuPizzeTitle" style="text-align:center;">
-🍕 MENU PIZZE 🍕
-</h3>
-
+<h3 id="menuPizzeTitle" style="text-align:center;">🍕 MENU PIZZE 🍕</h3>
 <div class="menu-hint">
   <span class="hint-text">(scorri per vedere tutte le pizze)</span>
 </div>
 
 <div id="listaPizze"></div>
 
-<h4 id="labelEsclusioni" style="display:none;">
-Seleziona ingredienti da eliminare:
-</h4>
-
+<h4 id="labelEsclusioni" style="display:none;">Seleziona ingredienti da eliminare:</h4>
 <div id="esclusioniChips"></div>
 
 <label class="center-label">Formato</label>
 <select id="formatoPizza"></select>
 
 <label class="center-label">Quantità</label>
-
 <div class="qty-box">
-
   <button type="button" id="btnMinus" class="qty-btn" onclick="modificaQuantita(-1)">−</button>
-
   <input type="number" id="quantita" value="1" min="1" oninput="aggiornaBottoniQty()">
-
   <button type="button" class="qty-btn" onclick="modificaQuantita(1)">+</button>
-
 </div>
 
 <h4>Seleziona ingredienti da aggiungere:</h4>
-
 <select id="aggiunteSelect" onchange="aggiungiExtra()" disabled></select>
-
 <div id="listaAggiunte"></div>
 
 <div id="previewOrdine" class="aggiunte-box" style="display:none;">
@@ -714,27 +653,20 @@ Seleziona ingredienti da eliminare:
 <div id="previewTesto"></div>
 </div>
 
-<button class="main-btn" onclick="aggiungiPizza()">
-Aggiungi all'ordine
-</button>
-
+<button class="main-btn" onclick="aggiungiPizza()">Aggiungi all'ordine</button>
 </div>
 
 <div class="box">
-
 <h3>🧾 Riepilogo Ordine</h3>
 <div id="listaOrdine"></div>
-
-<button class="btn-whatsapp" id="btnInviaOrdine">
-🚀 Conferma e Invia Ordine
-</button>
-
+<button class="btn-whatsapp" id="btnInviaOrdine" onclick="inviaOrdine()">🚀 Conferma e Invia Ordine</button>
 </div>
 
 </div>
+
+<div id="toast"></div>
 
 <script>
-
 const sheetUrl = "https://raw.githubusercontent.com/gdipuma63/pizzeria-order/refs/heads/main/menu.csv";
 
 let menu = {};
@@ -743,21 +675,26 @@ let pizzaSelezionata = null;
 let aggiunteSelezionate = [];
 let modalitaOrdine = "Ritiro";
 let tuttePizze = [];
-
 let statoAggiunte = "base";
 
 const listaPizze = document.getElementById("listaPizze");
 
+/* COESIONE CARICAMENTO PAGINA (Unificato window.onload) */
+window.onload = function () {
+  caricaMenu();
+  selezionaModalita('Ritiro');
+  aggiornaBottoniQty();
+  abilitaSuggerimenti();
+};
+
 /* MODALITA */
 function selezionaModalita(tipo){
-
 modalitaOrdine = tipo;
 
 document.getElementById("btnRitiro").classList.remove("active");
 document.getElementById("btnConsegna").classList.remove("active");
 
-document.getElementById("indirizzoBox").style.display =
-(tipo === "Consegna a domicilio") ? "flex" : "none";
+document.getElementById("indirizzoBox").style.display = (tipo === "Consegna a domicilio") ? "flex" : "none";
 
 if (tipo === "Ritiro") {
     document.getElementById("indirizzo").value = "";
@@ -769,12 +706,9 @@ document.getElementById("btnConsegna").classList.toggle("active", tipo==="Conseg
 
 /* MENU */
 async function caricaMenu(){
-
 const res = await fetch(sheetUrl);
 const data = await res.text();
-
 const righe = data.split("\n").slice(1);
-
 const categorieSet = new Set();
 
 righe.forEach(r=>{
@@ -793,7 +727,6 @@ pf: pf && !isNaN(parseFloat(pf)) ? parseFloat(pf) : 0
 if (!tuttePizze.includes(nome.trim())) {
     tuttePizze.push(nome.trim());
 }
-
 categorieSet.add(cat);
 });
 
@@ -801,12 +734,6 @@ caricaCategorie([...categorieSet].sort());
 renderPizze(tuttePizze);
 caricaAggiunteSelect();
 }
-
-window.onload = function () {
-  caricaMenu();
-  selezionaModalita('Ritiro');
-  aggiornaBottoniQty();
-};
 
 /* CATEGORIE */
 function caricaCategorie(cats){
@@ -821,67 +748,47 @@ sel.appendChild(opt);
 
 /* FILTRO */
 function filtraPizze(){
-
 const cat = document.getElementById("filtroCategoria").value;
-
-const list = (cat === "Tutte")
-  ? tuttePizze
-  : tuttePizze.filter(p => menu[p].categoria === cat);
+const list = (cat === "Tutte") ? tuttePizze : tuttePizze.filter(p => menu[p].categoria === cat);
 
 renderPizze(list);
 
-document.getElementById("menuPizzeTitle")
-  .scrollIntoView({
+document.getElementById("menuPizzeTitle").scrollIntoView({
     behavior: "smooth",
     block: "start"
-  });
+});
 
 const hint = document.querySelector(".hint-text");
-
 hint.classList.remove("hint-flash");
 void hint.offsetWidth;
 hint.classList.add("hint-flash");
-
 }
 
 /* RENDER */
 function renderPizze(lista){
-
 listaPizze.innerHTML = "";
 
 lista.forEach(p => {
-
 const pfValido = menu[p].pf > 0;
-
 const div = document.createElement("div");
 div.className = "pizza-item";
 
 div.innerHTML = `
 <div class="pizza-nome">${p}</div>
-
-<div class="pizza-ingredienti">
-${menu[p].ingredienti}
-</div>
-
+<div class="pizza-ingredienti">${menu[p].ingredienti}</div>
 <div class="pizza-prezzo">
-${pfValido
-? `Normale €${menu[p].pn}<br>Familiare €${menu[p].pf}`
-: `€${menu[p].pn}`}
+${pfValido ? `Normale €${menu[p].pn}<br>Familiare €${menu[p].pf}` : `€${menu[p].pn}`}
 </div>
 `;
 
 div.onclick = () => selezionaPizza(p, div);
-
 listaPizze.appendChild(div);
-
 });
-
 }
+
 /* SELEZIONE PIZZA */
 function selezionaPizza(p, el) {
-
 pizzaSelezionata = p;
-
 statoAggiunte = "base";
 aggiunteSelezionate = [];
 
@@ -891,26 +798,21 @@ selAggiunte.selectedIndex = 0;
 
 document.getElementById("listaAggiunte").innerHTML = "";
 
-document.querySelectorAll(".pizza-item")
-.forEach(x => x.classList.remove("active"));
+document.querySelectorAll(".pizza-item").forEach(x => x.classList.remove("active"));
 el.classList.add("active");
 
 generaEsclusioni(p);
 document.getElementById("labelEsclusioni").style.display = "block";
-
 aggiornaPreview();
 
 const f = document.getElementById("formatoPizza");
-f.innerHTML = menu[p].pf
-  ? `<option>Normale</option><option>Familiare</option>`
-  : `<option>Normale</option>`;
+f.innerHTML = menu[p].pf ? `<option>Normale</option><option>Familiare</option>` : `<option>Normale</option>`;
 
 caricaAggiunteSelect();
 }
 
 /* ESCLUSIONI */
 function generaEsclusioni(p){
-
 const div=document.getElementById("esclusioniChips");
 div.innerHTML="";
 
@@ -954,7 +856,6 @@ const salumi = [
 ];
 
 function caricaAggiunteSelect(){
-
 const sel = document.getElementById("aggiunteSelect");
 sel.innerHTML = "";
 
@@ -997,7 +898,6 @@ return;
 function aggiungiExtra(){
 const sel = document.getElementById("aggiunteSelect");
 const val = sel.value;
-  
 if(!val) return;
 
 if(val === "NAV_VERDURE"){
@@ -1023,11 +923,18 @@ sel.value = "";
 return;
 }
 
-if(val.startsWith("EXTRA_") || val.startsWith("ADD_")){
-const item = val.replace("EXTRA_","").replace("ADD_","");
-if(!aggiunteSelezionate.includes(item)){
-aggiunteSelezionate.push(item);
+if(val.startsWith("EXTRA_")){
+const item = val.replace("EXTRA_","");
+if(!aggiunteSelezionate.includes(item)){ aggiunteSelezionate.push(item); }
+sel.value = "";
+renderAggiunte();
+aggiornaPreview();
+return;
 }
+
+if(val.startsWith("ADD_")){
+const item = val.replace("ADD_","");
+if(!aggiunteSelezionate.includes(item)){ aggiunteSelezionate.push(item); }
 sel.value = "";
 renderAggiunte();
 aggiornaPreview();
@@ -1052,6 +959,7 @@ const sel = document.getElementById("aggiunteSelect");
 sel.classList.remove("placeholder-lampeggia");
 void sel.offsetWidth;
 sel.classList.add("placeholder-lampeggia");
+
 sel.removeEventListener("mousedown", stopBlink);
 sel.removeEventListener("touchstart", stopBlink);
 sel.addEventListener("mousedown", stopBlink);
@@ -1070,13 +978,13 @@ if(!pizzaSelezionata){
 document.getElementById("previewOrdine").style.display="none";
 return;
 }
+
 const formato=document.getElementById("formatoPizza").value;
 const q=document.getElementById("quantita").value;
 let testo=`🍕 ${pizzaSelezionata}<br>📦 ${formato}<br>🔢 Quantità: ${q}<br>`;
 
 const excl=[];
-document.querySelectorAll("#esclusioniChips .chip.active")
-.forEach(c=>excl.push("- "+c.textContent));
+document.querySelectorAll("#esclusioniChips .chip.active").forEach(c=>excl.push("- "+c.textContent));
 
 if(excl.length){
 testo+=`<br><b>❌ Esclusioni:</b><br>`;
@@ -1107,8 +1015,8 @@ if(!pizzaSelezionata){
 
 const nome = document.getElementById("nome").value.trim();
 const tel = document.getElementById("telefonoUtente").value.trim();
-
 let errori = [];
+
 if(!nome) errori.push("Nominativo");
 if(!tel) errori.push("Telefono");
 
@@ -1135,17 +1043,11 @@ if(modalitaOrdine === "Consegna a domicilio"){
 
 const q = Math.max(1, parseInt(document.getElementById("quantita").value) || 1);
 const formato = document.getElementById("formatoPizza").value;
-
 const base = (formato === "Familiare") ? menu[pizzaSelezionata].pf : menu[pizzaSelezionata].pn;
+
 let extras = [];
-
-document.querySelectorAll("#esclusioniChips .chip.active").forEach(c => {
-  extras.push("- " + c.textContent);
-});
-
-aggiunteSelezionate.forEach(a => {
-  extras.push("+ " + a);
-});
+document.querySelectorAll("#esclusioniChips .chip.active").forEach(c => { extras.push("- " + c.textContent); });
+aggiunteSelezionate.forEach(a => { extras.push("+ " + a); });
 
 const tutteLeAggiunte = [...aggiunte, ...verdure, ...salumi];
 let extraTotale = 0;
@@ -1170,9 +1072,10 @@ ordine.push({
 showToast(`${pizzaSelezionata} aggiunta all'ordine!`, "success");
 aggiorna();
 
-/* RESET COMPLETO FORM PIZZA */
+/* RESET FORM */
 aggiunteSelezionate = [];
 document.getElementById("quantita").value = 1;
+
 const selAgg = document.getElementById("aggiunteSelect");
 selAgg.selectedIndex = 0;
 selAgg.disabled = true;
@@ -1192,7 +1095,11 @@ setTimeout(() => {
   el.style.transition = "transform 0.3s";
   el.style.transform = "scale(1.01)";
   setTimeout(() => { el.style.transform = "scale(1)"; }, 300);
-  document.getElementById("filtroCategoria").scrollIntoView({ behavior: "smooth", block: "center" });
+
+  document.getElementById("filtroCategoria").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+  });
 }, 350);
 }
 
@@ -1206,11 +1113,14 @@ totale+=o.totale;
 div.innerHTML+=`
 <div class="aggiunte-box">
 <div>
-<b>${o.pizza}</b><br>${o.formato} x${o.quantita}<br>€ ${o.totale.toFixed(2)}<br>
+<b>${o.pizza}</b><br>
+${o.formato} x${o.quantita}<br>
+€ ${o.totale.toFixed(2)}<br>
 ${o.extras ? o.extras.map(e=>e+"<br>").join("") : ""}
 </div>
 <button class="btn-remove-ordine" onclick="rimuoviOrdine(${i})">🗑 Rimuovi</button>
-</div>`;
+</div>
+`;
 });
 
 div.innerHTML+=`<h3>Totale € ${totale.toFixed(2)}</h3>`;
@@ -1221,16 +1131,50 @@ ordine.splice(i,1);
 aggiorna();
 }
 
+/* WHATSAPP */
+function inviaOrdine(){
+if(ordine.length===0){
+showToast("Ordine vuoto", "error");
+return;
+}
+
+const nome=document.getElementById("nome").value.trim();
+const tel=document.getElementById("telefonoUtente").value.trim();
+
+let msg="🍕 ORDINE PIZZERIA\n\n";
+msg+="👤 "+nome+"\n";
+msg+="📞 "+tel+"\n";
+msg+="🚚 "+modalitaOrdine+"\n";
+
+if(modalitaOrdine==="Consegna a domicilio"){
+msg+="📍 "+document.getElementById("indirizzo").value+"\n";
+}
+msg+="\n";
+
+let totale=0;
+ordine.forEach(o=>{
+totale+=o.totale;
+msg+=`${o.pizza} (${o.formato}) x${o.quantita}\n`;
+o.aggiunte.forEach(a=>{ msg += "+ " + a + "\n"; });
+msg+=`€ ${o.totale.toFixed(2)}\n\n`;
+});
+
+msg+="💰 Totale: € "+totale.toFixed(2);
+window.open("https://wa.me/?text="+encodeURIComponent(msg));
+}
+
 function rilevaPosizione(){
 const indirizzoInput = document.getElementById("indirizzo");
 if(!navigator.geolocation){
 showToast("Geolocalizzazione non supportata", "error");
 return;
 }
+
 navigator.geolocation.getCurrentPosition(async (pos) => {
 const lat = pos.coords.latitude;
 const lon = pos.coords.longitude;
 const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+
 try{
 const res = await fetch(url);
 const data = await res.json();
@@ -1240,6 +1184,7 @@ const strada = a.road || "";
 const civico = a.house_number || "";
 const citta = a.city || a.town || a.village || "";
 const cap = a.postcode || "";
+
 indirizzoInput.value = [`${strada} ${civico}`.trim(), `${cap} ${citta}`.trim()].filter(Boolean).join(", ");
 toggleClear(indirizzoInput);
 }else{
@@ -1257,16 +1202,22 @@ function showToast(message, type = "info") {
 const toast = document.getElementById("toast");
 const div = document.createElement("div");
 div.className = "toast-msg";
+
 if (type === "error") div.classList.add("toast-error");
 if (type === "success") div.classList.add("toast-success");
+
 div.textContent = message;
 toast.appendChild(div);
+
 setTimeout(() => { div.remove(); }, 3000);
 }
 
 function vaiAlCampo(id){
   const campo = document.getElementById(id);
-  campo.scrollIntoView({ behavior: "smooth", block: "center" });
+  campo.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
   setTimeout(() => { campo.focus(); }, 400);
 }
   
@@ -1276,17 +1227,14 @@ function toggleClear(input){
   btn.style.display = input.value.trim() ? "block" : "none";
 }
 
-document.addEventListener("click", function(e) {
-  if(e.target && e.target.classList.contains("clear-btn")) {
-    const input = e.target.parentElement.querySelector("input");
-    if(input) {
-      input.value = "";
-      e.target.style.display = "none";
-      input.focus();
-    }
-  }
-});
-
+function clearInput(id){
+  const input = document.getElementById(id);
+  input.value = "";
+  const btn = input.parentElement.querySelector(".clear-btn");
+  if(btn) btn.style.display = "none";
+  input.focus();
+}
+  
 function modificaQuantita(val){
   const input = document.getElementById("quantita");
   let q = parseInt(input.value) || 1;
@@ -1306,6 +1254,7 @@ function aggiornaBottoniQty(){
   }
 }
 
+/* SUGGERIMENTI INDIRIZZO */
 async function suggerisciIndirizzo(q) {
   if (q.length < 3) return;
   const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(q)}&addressdetails=1&limit=5`;
@@ -1318,89 +1267,10 @@ async function suggerisciIndirizzo(q) {
 
 function abilitaSuggerimenti() {
   const input = document.getElementById("indirizzo");
-  if(input) {
-    input.addEventListener("input", () => {
-      suggerisciIndirizzo(input.value);
-    });
-  }
-}
-window.addEventListener("DOMContentLoaded", abilitaSuggerimenti);
-</script>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-// Configurazione Firebase recuperata dalla tua console
-const firebaseConfig = {
-  apiKey: "AIzaSyAqYM5vuSvyvBwD4LLTMuRZzrU5KT3r8o",
-  authDomain: "gestioneordini-25dba.firebaseapp.com",
-  projectId: "gestioneordini-25dba",
-  storageBucket: "gestioneordini-25dba.appspot.com",
-  messagingSenderId: "31060825926",
-  appId: "1:31060825926:web:c915906d28c66251aa1e47"
-};
-
-// Inizializzazione di Firebase e Firestore
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Funzione legata al click sul pulsante di invio ordine
-async function inviaOrdineAFirebase() {
-  // Controllo di sicurezza: se la lista è vuota mostra l'avviso e blocca tutto
-  if (ordine.length === 0) {
-    showToast("Aggiungi almeno una pizza per ordinare!", "error");
-    return;
-  }
-
-  const nomeCliente = document.getElementById("nome").value.trim();
-  const telefonoCliente = document.getElementById("telefonoUtente").value.trim();
-  const indirizzoConsegna = document.getElementById("indirizzo").value.trim();
-
-  // Calcolo del totale finale complessivo dell'ordine
-  let totaleComplessivo = 0;
-  ordine.forEach(o => {
-    totaleComplessivo += o.totale;
+  input.addEventListener("input", () => {
+    suggerisciIndirizzo(input.value);
   });
-
-  // Struttura dell'oggetto ordine da salvare su Cloud Firestore
-  const datiOrdine = {
-    cliente: nomeCliente,
-    telefono: telefonoCliente,
-    modalita: modalitaOrdine, // "Ritiro" o "Consegna a domicilio"
-    indirizzo: modalitaOrdine === "Consegna a domicilio" ? indirizzoConsegna : "",
-    pizze: ordine, // Array contenente la lista delle pizze scelte con aggiunte ed esclusioni
-    totale: totaleComplessivo,
-    stato: "in_attesa", // Stato di partenza dell'ordine per la pizzeria
-    orario: serverTimestamp() // timestamp del server di Firebase
-  };
-
-  try {
-    // Salvataggio effettivo nel database nella collezione "ordini"
-    const docRef = await addDoc(collection(db, "ordini"), datiOrdine);
-    
-    // Mostra il messaggio di successo visivo
-    showToast("Ordine inviato con successo!", "success");
-
-    // Svuota l'ordine locale dopo il salvataggio
-    ordine = [];
-    aggiorna();
-
-    // Reindirizza il cliente alla pagina di tracciamento passando l'ID univoco dell'ordine appena creato
-    setTimeout(() => {
-      window.location.href = `stato-ordine.html?id=${docRef.id}`;
-    }, 1200);
-
-  } catch (error) {
-    console.error("Errore nel salvataggio su Firebase:", error);
-    showToast("Errore di rete durante l'invio dell'ordine.", "error");
-  }
 }
-
-// Agganciamo la funzione di invio al click sul pulsante HTML appena la pagina è pronta
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("btnInviaOrdine").onclick = inviaOrdineAFirebase;
-});
 </script>
 
 </body>
