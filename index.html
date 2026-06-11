@@ -1154,7 +1154,7 @@ ordine.splice(i,1);
 aggiorna();
 }
 
-/* INVIA ORDINE SOLO SU DATABASE FIREBASE REST API */
+/* INVIA ORDINE SOLO SU DATABASE FIREBASE REST API (EUROPA) */
 function inviaOrdine(){
 if(ordine.length===0){
   showToast("L'ordine è vuoto!", "error");
@@ -1178,11 +1178,11 @@ const datiOrdine = {
   pizze: ordine,
   totale: totaleComplessivo,
   data_ordine: new Date().toLocaleString("it-IT"),
-  stato: "Ricevuto" // Stato iniziale che vedranno sia il cliente che l'operatore
+  stato: "Ricevuto" // Stato iniziale per cliente e operatore
 };
 
-// URL del tuo Realtime Database
-const firebaseProjectUrl = "https://gestioneordini-25dba-default-rtdb.firebaseio.com/ordini.json";
+// URL esatta e definitiva del tuo Realtime Database in Europa
+const firebaseProjectUrl = "https://gestioneordini-25dba-default-rtdb.europe-west1.firebasedatabase.app/ordini.json";
 
 showToast("Invio ordine in corso...", "info");
 
@@ -1195,7 +1195,6 @@ fetch(firebaseProjectUrl, {
 })
 .then(response => response.json())
 .then(data => {
-  // data.name contiene l'ID univoco generato automaticamente da Firebase per questo ordine
   if(data && data.name) {
     showToast("Ordine inviato con successo!", "success");
     
