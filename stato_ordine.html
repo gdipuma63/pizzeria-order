@@ -65,7 +65,14 @@
     
     // Caricamento file audio
     const audioNotifica = new Audio('avviso.mp3'); 
-
+    // AGGIUNTA: Sblocco audio al primo click sulla pagina
+    document.addEventListener('click', () => {
+        audioNotifica.play().then(() => {
+            audioNotifica.pause();
+            audioNotifica.currentTime = 0;
+        }).catch(() => {});
+    }, { once: true });
+    
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('id');
 
