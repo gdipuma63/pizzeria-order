@@ -87,8 +87,9 @@
             }
 
             // GESTIONE STATI
+            // MODIFICA: Aggiunto <br> prima di "Attendi"
             if (!data.stato || data.stato === "Ricevuto") {
-                html += `<p>La pizzeria sta elaborando la tua richiesta. Attendi un istante...</p>`;
+                html += `<p>La pizzeria sta elaborando la tua richiesta.<br>Attendi un istante...</p>`;
             } else if (data.stato === "In attesa conferma" && !data.conferma_cliente) {
                 html += `
                     <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 10px;">
