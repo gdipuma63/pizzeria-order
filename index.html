@@ -533,7 +533,7 @@ margin:0;
   margin-bottom:10px;
 }
 
-.hint-text{
+.menu-hint .hint-text{
   font-size:12px;
   font-style: italic;
   color:#8a7b6a;
@@ -604,6 +604,8 @@ margin:0;
 </head>
 
 <body>
+
+<div id="toast"></div>
 
 <div class="header">
   Ordina la tua pizza online
@@ -760,12 +762,6 @@ try {
 }
 }
 
-window.onload = function () {
-  caricaMenu();
-  selezionaModalita('Ritiro');
-  aggiornaBottoniQty();
-};
-
 /* CATEGORIE */
 function caricaCategorie(cats){
 const sel=document.getElementById("filtroCategoria");
@@ -789,7 +785,7 @@ document.getElementById("menuPizzeTitle").scrollIntoView({
     block: "start"
 });
 
-const hint = document.querySelector(".hint-text");
+const hint = document.querySelector(".menu-hint .hint-text");
 hint.classList.remove("hint-flash");
 void hint.offsetWidth;
 hint.classList.add("hint-flash");
@@ -1286,10 +1282,8 @@ const q = parseInt(document.getElementById("quantita").value) || 1;
 const btnMinus = document.getElementById("btnMinus");
 btnMinus.style.display = (q <= 1) ? "none" : "inline-block";
 }
-</script>
 
-<script>
-/* GESTIONE SUGGERIMENTI INDIRIZZO COMPLETA E FUNZIONANTE */
+/* GESTIONE SUGGERIMENTI INDIRIZZO */
 async function suggerisciIndirizzo(q) {
   const suggestionsBox = document.getElementById("suggestions");
   if (q.length < 3) {
@@ -1329,7 +1323,6 @@ function abilitaSuggerimenti() {
     suggerisciIndirizzo(input.value);
   });
   
-  // Chiude i suggerimenti se si clicca fuori dal box
   document.addEventListener("click", (e) => {
     if(e.target.id !== "indirizzo") {
       document.getElementById("suggestions").innerHTML = "";
@@ -1337,9 +1330,14 @@ function abilitaSuggerimenti() {
   });
 }
 
-window.addEventListener("load", abilitaSuggerimenti);
-</script>   
-<div id="toast"></div>
+/* UNIFICATO INIZIALIZZAZIONE EVENTI DI AVVIO */
+window.addEventListener("load", () => {
+  caricaMenu();
+  selezionaModalita('Ritiro');
+  aggiornaBottoniQty();
+  abilitaSuggerimenti();
+});
+</script>
 
 </body>
 </html>
