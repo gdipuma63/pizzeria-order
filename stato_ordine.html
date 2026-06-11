@@ -19,44 +19,19 @@
         .btn-annulla { background-color: #e74c3c; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); }
         
         .pronto-animation {
-            font-size: 22px;
-            font-weight: 800;
-            color: #27ae60;
-            animation: pulse-ready 1.5s infinite;
-            padding: 15px;
-            border: 2px dashed #27ae60;
-            border-radius: 10px;
-            background: #f0fff4;
-            margin-top: 15px;
+            font-size: 22px; font-weight: 800; color: #27ae60; animation: pulse-ready 1.5s infinite;
+            padding: 15px; border: 2px dashed #27ae60; border-radius: 10px; background: #f0fff4; margin-top: 15px;
         }
-
         @keyframes pulse-ready {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
+            0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; }
         }
-
         .orario-label { font-size: 18px; color: #d35400; margin: 10px 0; }
         .stato-label { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 5px; }
 
-        #contenuto p {
-            line-height: 1.5;
-            margin: 15px 0;
-            padding: 0 10px;
-            word-wrap: break-word;
-        }
+        #contenuto p { line-height: 1.5; margin: 15px 0; padding: 0 10px; word-wrap: break-word; }
 
-        /* AGGIUNTE PER IL RIEPILOGO */
-        .riepilogo-box {
-            background: #fff;
-            border: 1px solid #ff9800;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 20px;
-            text-align: left;
-            font-size: 14px;
-            color: #4b3621;
-        }
+        /* RIEPILOGO */
+        .riepilogo-box { background: #fff; border: 1px solid #ff9800; border-radius: 10px; padding: 15px; margin-top: 20px; text-align: left; font-size: 14px; color: #4b3621; }
         .riepilogo-box h4 { margin: 0 0 10px 0; color: #ff9800; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .riga-pizza { display: flex; justify-content: space-between; margin-bottom: 5px; }
     </style>
@@ -71,12 +46,9 @@
 </div>
 
 <script>
-    const firebaseConfig = {
-        databaseURL: "https://gestioneordini-25dba-default-rtdb.europe-west1.firebasedatabase.app/"
-    };
+    const firebaseConfig = { databaseURL: "https://gestioneordini-25dba-default-rtdb.europe-west1.firebasedatabase.app/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('id');
 
@@ -87,10 +59,7 @@
             const data = snapshot.val();
             const contenuto = document.getElementById("contenuto");
 
-            if (!data) { 
-                contenuto.innerHTML = "❌ Ordine non trovato."; 
-                return; 
-            }
+            if (!data) { contenuto.innerHTML = "❌ Ordine non trovato."; return; }
 
             let visualizzazioneStato = (data.stato === "Ricevuto") ? "In elaborazione" : data.stato;
             let html = `<div class="stato-label">Stato attuale</div>`;
@@ -100,97 +69,51 @@
                 html += `<p class="orario-label">🕒 Orario stimato: <b>${data.orario_previsto}</b></p>`;
             }
 
-            // GESTIONE STATI
+            // GESTIONE STATI AGGIORNATA
             if (!data.stato || data.stato === "Ricevuto") {
                 html += `<p>La pizzeria sta elaborando la tua richiesta.<br>Attendi un istante...</p>`;
             } else if (data.stato === "In attesa conferma" && !data.conferma_cliente) {
-                html += `
-                    <div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 10px;">
+                html += `<div style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-top: 10px;">
                         <p><b>Confermi l'ordine?</b></p>
                         <div class="btn-container">
                             <button class="btn btn-conferma" onclick="rispondi(true)">SI, CONFERMO</button>
                             <button class="btn btn-annulla" onclick="rispondi(false)">ANNULLA</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             } else if (data.stato === "Ordine Inserito") {
                 html += `<p style="color: #27ae60; font-weight: bold;">✅ Conferma ricevuta! Sei in lista.</p>`;
             } else if (data.stato === "In Preparazione") {
-                html += `<p style="color: #d35400; font-weight: bold;">🔥 Le tue pizze sono in forno!</p>`;
+                html += `<p style="color: #d35400; font-weight: bold;">👨‍🍳 Il pizzaiolo sta preparando il tuo ordine!</p>`;
+            } else if (data.stato === "In Cottura") {
+                html += `<p style="color: #d35400; font-weight: bold;">🔥 Le tue pizze sono nel forno!</p>`;
             } else if (data.stato === "Pronto") {
                 if (!data.conferma_finale) {
-                    let messaggioPronto = (data.modalita === "Ritiro") 
-                        ? "🍕 IL TUO ORDINE È PRONTO!<br><small>Ti aspettiamo in pizzeria.</small>" 
-                        : "🛵 IL TUO ORDINE È IN CONSEGNA!<br><small>Il fattorino è in arrivo.</small>";
-                    
+                    let messaggioPronto = (data.modalita === "Ritiro") ? "🍕 IL TUO ORDINE È PRONTO!<br><small>Ti aspettiamo in pizzeria.</small>" : "🛵 IL TUO ORDINE È IN CONSEGNA!<br><small>Il fattorino è in arrivo.</small>";
                     let etichettaPulsante = (data.modalita === "Ritiro") ? "Provvedo al ritiro" : "Attendo consegna";
-                    
-                    html += `
-                        <div class="pronto-animation">${messaggioPronto}</div>
-                        <div class="btn-container">
-                            <button class="btn btn-conferma" onclick="confermaConclusione()">${etichettaPulsante}</button>
-                        </div>
-                    `;
+                    html += `<div class="pronto-animation">${messaggioPronto}</div><div class="btn-container"><button class="btn btn-conferma" onclick="confermaConclusione()">${etichettaPulsante}</button></div>`;
                 } else {
-                    html += `
-                        <div class="pronto-animation">GRAZIE DI CUORE!</div>
-                        <p>Ti auguriamo buon appetito.</p>
-                        <p>Verrai reindirizzato alla Home tra pochi secondi...</p>
-                    `;
+                    html += `<div class="pronto-animation">GRAZIE DI CUORE!</div><p>Ti auguriamo buon appetito.</p>`;
                     setTimeout(() => { window.location.href = "index.html"; }, 5000);
                 }
             } else if (data.stato === "Annullato") {
                 html += `<p style="color: #c0392b;">❌ Ordine annullato.</p>`;
             }
 
-            // AGGIUNTA RIEPILOGO PIZZE
+            // RIEPILOGO
             if (data.pizze) {
                 let listaPizze = "";
-                data.pizze.forEach(item => {
-                    listaPizze += `
-                        <div class="riga-pizza">
-                            <span>${item.quantita}x ${item.pizza} (${item.formato})</span>
-                        </div>`;
-                });
-
-                html += `
-                    <div class="riepilogo-box">
-                        <h4>🍕 Riepilogo Ordine</h4>
-                        ${listaPizze}
-                        <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
-                        <div class="riga-pizza" style="font-weight: bold;">
-                            <span>Totale:</span>
-                            <span>€${data.totale}</span>
-                        </div>
-                    </div>
-                `;
+                data.pizze.forEach(item => { listaPizze += `<div class="riga-pizza"><span>${item.quantita}x ${item.pizza} (${item.formato})</span></div>`; });
+                html += `<div class="riepilogo-box"><h4>🍕 Riepilogo Ordine</h4>${listaPizze}<hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;"><div class="riga-pizza" style="font-weight: bold;"><span>Totale:</span><span>€${data.totale}</span></div></div>`;
             }
-
             contenuto.innerHTML = html;
         });
     }
 
     function rispondi(accettato) {
-        if (accettato) {
-            db.ref(`ordini/${orderId}`).update({ conferma_cliente: true, stato: "Ordine Inserito" });
-        } else {
-            if (confirm("Vuoi davvero annullare l'ordine?")) {
-                db.ref(`ordini/${orderId}`).remove()
-                    .then(() => {
-                        alert("Ordine annullato correttamente.");
-                        window.location.href = "index.html";
-                    })
-                    .catch((error) => {
-                        console.error("Errore durante la cancellazione:", error);
-                    });
-            }
-        }
+        if (accettato) { db.ref(`ordini/${orderId}`).update({ conferma_cliente: true, stato: "Ordine Inserito" }); } 
+        else if (confirm("Vuoi davvero annullare l'ordine?")) { db.ref(`ordini/${orderId}`).remove().then(() => { alert("Ordine annullato."); window.location.href = "index.html"; }); }
     }
-
-    function confermaConclusione() {
-        db.ref(`ordini/${orderId}`).update({ conferma_finale: true });
-    }
+    function confermaConclusione() { db.ref(`ordini/${orderId}`).update({ conferma_finale: true }); }
 </script>
-
 </body>
 </html>
