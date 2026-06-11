@@ -129,10 +129,16 @@
             db.ref(`ordini/${orderId}`).update({ conferma_cliente: true, stato: "Ordine Inserito" });
         } else {
             if (confirm("Vuoi davvero annullare l'ordine?")) {
-                // Rimuove l'ordine dal database così sparisce da gestione.html
-                db.ref(`ordini/${orderId}`).remove();
-                alert("Ordine annullato.");
-                window.location.href = "index.html";
+                // Questa riga rimuove l'ordine definitivamente dal database 
+                // per TUTTE le modalità (Ritiro e Consegna)
+                db.ref(`ordini/${orderId}`).remove()
+                    .then(() => {
+                        alert("Ordine annullato correttamente.");
+                        window.location.href = "index.html";
+                    })
+                    .catch((error) => {
+                        console.error("Errore durante la cancellazione:", error);
+                    });
             }
         }
     }
