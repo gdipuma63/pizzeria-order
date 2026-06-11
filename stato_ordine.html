@@ -69,7 +69,7 @@
                 html += `<p class="orario-label">🕒 Orario stimato: <b>${data.orario_previsto}</b></p>`;
             }
 
-            // GESTIONE STATI AGGIORNATA
+            // GESTIONE STATI
             if (!data.stato || data.stato === "Ricevuto") {
                 html += `<p>La pizzeria sta elaborando la tua richiesta.<br>Attendi un istante...</p>`;
             } else if (data.stato === "In attesa conferma" && !data.conferma_cliente) {
@@ -92,7 +92,12 @@
                     let etichettaPulsante = (data.modalita === "Ritiro") ? "Provvedo al ritiro" : "Attendo consegna";
                     html += `<div class="pronto-animation">${messaggioPronto}</div><div class="btn-container"><button class="btn btn-conferma" onclick="confermaConclusione()">${etichettaPulsante}</button></div>`;
                 } else {
-                    html += `<div class="pronto-animation">GRAZIE DI CUORE!</div><p>Ti auguriamo buon appetito.</p>`;
+                    // MESSAGGIO AGGIORNATO
+                    html += `
+                        <div class="pronto-animation">GRAZIE DI CUORE!</div>
+                        <p>Ci auguriamo che sia tutto di tuo gradimento.</p>
+                        <p>Verrai reindirizzato alla Home tra pochi secondi...</p>
+                    `;
                     setTimeout(() => { window.location.href = "index.html"; }, 5000);
                 }
             } else if (data.stato === "Annullato") {
