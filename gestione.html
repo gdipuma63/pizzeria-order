@@ -53,6 +53,12 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    // Funzione per formattare le iniziali maiuscole
+    function formattaNome(nome) {
+        if (!nome) return 'Cliente';
+        return nome.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    }
+
     db.ref('ordini').on('value', snapshot => {
         const container = document.getElementById('listaOrdini');
         container.innerHTML = '';
@@ -62,6 +68,7 @@
             const o = child.val();
             const statoDisplay = o.stato || "Ricevuto";
             const classeStato = statoDisplay.replace(/\s+/g, '-');
+            const nomeCliente = formattaNome(o.cliente);
             
             let listaPizze = "";
             if (o.pizze) {
@@ -71,7 +78,7 @@
             const card = document.createElement('div');
             card.className = 'ordine-card';
             card.innerHTML = `
-                <h3 style="margin-top:0; color: #ff9800;">${o.cliente || 'Cliente'}</h3>
+                <h3 style="margin-top:0; color: #ff9800;">${nomeCliente}</h3>
                 <p style="margin: 5px 0; font-size: 0.9em;">📞 Tel: ${o.telefono || 'N/D'} | 🏠 ${o.modalita || 'N/A'}</p>
                 <div style="margin: 10px 0;">Stato: <span class="stato-badge ${classeStato}">${statoDisplay}</span> | 🕒 <b>${o.orario_previsto || 'In attesa'}</b></div>
 
