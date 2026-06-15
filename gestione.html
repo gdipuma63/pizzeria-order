@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #f8f1e7; padding: 20px; color: #4b3621; }
-        .container { max-width: 800px; margin: auto; }
+        .container { max-width: 600px; margin: auto; }
         h1 { color: #4b3621; text-align: center; margin-bottom: 30px; font-weight: 300; letter-spacing: 1px; }
         
         .ordine-card { 
@@ -28,17 +28,17 @@
         
         /* Stile Chips */
         button { 
-            padding: 6px 16px; border: 1px solid #e0d5c1; border-radius: 50px; cursor: pointer; 
+            padding: 7px 16px; border: 1px solid #e0d5c1; border-radius: 50px; cursor: pointer; 
             font-size: 13px; font-weight: 600; margin: 3px; transition: 0.3s;
             background-color: white; color: #4b3621;
         }
         button:hover { background-color: #ff9800; color: white; border-color: #ff9800; }
         
         .btn-azione { background-color: #ff9800; color: white; border-color: #ff9800; }
-        .btn-toggle { background-color: #4b3621; color: white; width: 100%; border-radius: 50px; margin-bottom: 15px; }
+        .btn-toggle { background-color: #4b3621; color: white; border-radius: 50px; }
         .btn-elimina { background-color: #fff0f0; color: #d32f2f; border-color: #d32f2f; }
         
-        input { padding: 6px 12px; border-radius: 50px; border: 1px solid #dcdcdc; width: 80px; }
+        input { padding: 7px 12px; border-radius: 50px; border: 1px solid #dcdcdc; width: 60px; text-align: center; }
     </style>
 </head>
 <body>
@@ -71,24 +71,36 @@
             const card = document.createElement('div');
             card.className = 'ordine-card';
             card.innerHTML = `
-                <button class="btn-toggle" onclick="toggleDettaglio('${id}')">📂 ${o.cliente || 'Cliente'}</button>
-                <div id="dettaglio_${id}" class="dettaglio-contenuto">
-                    <p><b>Pizze:</b><ul>${listaPizze}</ul></p>
-                    <p><b>Telefono:</b> ${o.telefono || 'N/D'}</p>
-                    <p><b>Modalità:</b> ${o.modalita || 'N/A'}</p>
+                <h3 style="margin-top:0; color: #ff9800;">${o.cliente || 'Cliente'}</h3>
+                <p style="margin: 5px 0; font-size: 0.9em;">📞 Tel: ${o.telefono || 'N/D'} | 🏠 ${o.modalita || 'N/A'}</p>
+                <div style="margin: 10px 0;">Stato: <span class="stato-badge ${classeStato}">${statoDisplay}</span> | 🕒 <b>${o.orario_previsto || 'In attesa'}</b></div>
+
+                <div style="border-top:1px solid #f0e6d2; padding-top:10px; margin-top:10px;">
+                    <p style="text-align:center; font-size: 11px; color:#888; margin-bottom:8px;">IMPOSTA TEMPO DI ATTESA</p>
+                    <div style="text-align:center;">
+                        <input type="number" id="minuti_${id}" placeholder="Min">
+                        <button class="btn-azione" onclick="confermaOrario('${id}', ${o.timestamp_conferma || Date.now()})">Imposta</button>
+                    </div>
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span>Stato: <span class="stato-badge ${classeStato}">${statoDisplay}</span></span>
-                    <span>🕒 <b>${o.orario_previsto || 'In attesa'}</b></span>
+
+                <div style="border-top:1px solid #f0e6d2; padding-top:10px; margin-top:10px;">
+                    <p style="text-align:center; font-size: 11px; color:#888; margin-bottom:8px;">CAMBIA STATO ORDINE</p>
+                    <div style="text-align:center;">
+                        <button onclick="aggiornaStato('${id}', 'In Preparazione')">Prep.</button>
+                        <button onclick="aggiornaStato('${id}', 'In Cottura')">Cottura</button>
+                        <button class="btn-azione" onclick="aggiornaStato('${id}', 'Pronto')">PRONTO</button>
+                    </div>
                 </div>
-                <hr style="border:0; border-top:1px solid #f0e6d2; margin: 15px 0;">
-                <input type="number" id="minuti_${id}" placeholder="Minuti">
-                <button class="btn-azione" onclick="confermaOrario('${id}', ${o.timestamp_conferma || Date.now()})">Imposta</button>
-                <div style="margin-top: 10px;">
-                    <button onclick="aggiornaStato('${id}', 'In Preparazione')">Preparazione</button>
-                    <button onclick="aggiornaStato('${id}', 'In Cottura')">Cottura</button>
-                    <button class="btn-azione" onclick="aggiornaStato('${id}', 'Pronto')">PRONTO</button>
-                    <button class="btn-elimina" onclick="eliminaOrdine('${id}')">Elimina</button>
+
+                <div style="border-top:1px solid #f0e6d2; padding-top:10px; margin-top:10px; text-align:center;">
+                    <button class="btn-toggle" onclick="toggleDettaglio('${id}')">DETTAGLIO ORDINE</button>
+                    <div id="dettaglio_${id}" class="dettaglio-contenuto">
+                        <ul style="text-align:left; font-size:14px;">${listaPizze}</ul>
+                    </div>
+                </div>
+
+                <div style="text-align:center; margin-top:20px; border-top: 1px solid #eee; padding-top:15px;">
+                    <button class="btn-elimina" onclick="eliminaOrdine('${id}')">Elimina Ordine</button>
                 </div>
             `;
             container.appendChild(card);
