@@ -3,51 +3,48 @@
 <head>    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Pizzeria</title>
+    <title>Gestione Ordini</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f1e7; padding: 20px; color: #4b3621; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f8f1e7; padding: 20px; color: #4b3621; }
         .container { max-width: 800px; margin: auto; }
-        h1 { color: #ff9800; text-align: center; }
+        h1 { color: #4b3621; text-align: center; margin-bottom: 30px; font-weight: 300; letter-spacing: 1px; }
         
         .ordine-card { 
-            background: white; 
-            padding: 20px; 
-            margin-bottom: 20px; 
-            border-radius: 15px; 
-            border: 2px solid #ff9800;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+            background: white; padding: 20px; margin-bottom: 20px; border-radius: 20px; 
+            border: 1px solid #e0d5c1; box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
         }
         
-        .stato-badge { font-weight: bold; padding: 5px 10px; border-radius: 5px; display: inline-block; font-size: 12px; text-transform: uppercase; }
+        .dettaglio-contenuto { display: none; margin-top: 15px; padding: 15px; background: #faf9f6; border-radius: 15px; border: 1px solid #f0e6d2; }
         
-        /* Colori badge coordinati */
-        .Ricevuto { background: #ffeeba; }
-        .In-attesa-conferma { background: #ffcc80; }
+        .stato-badge { font-weight: bold; padding: 5px 12px; border-radius: 15px; font-size: 11px; text-transform: uppercase; }
+        .Ricevuto { background: #fff8e1; }
+        .In-attesa-conferma { background: #ffe0b2; }
         .Ordine-Inserito { background: #c8e6c9; }
-        .In-Preparazione { background: #b8daff; }
-        .In-Cottura { background: #ffc107; }
-        .Pronto { background: #c3e6cb; }
+        .In-Preparazione { background: #bbdefb; }
+        .In-Cottura { background: #ffecb3; }
+        .Pronto { background: #b9f6ca; }
         
+        /* Stile Chips */
         button { 
-            padding: 10px 15px; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            margin: 5px 2px;
-            transition: transform 0.2s;
+            padding: 6px 16px; border: 1px solid #e0d5c1; border-radius: 50px; cursor: pointer; 
+            font-size: 13px; font-weight: 600; margin: 3px; transition: 0.3s;
+            background-color: white; color: #4b3621;
         }
-        button:hover { transform: scale(1.03); }
-        .btn-azione { background-color: #ff9800; color: white; }
-        .btn-elimina { background-color: #e74c3c; color: white; }
+        button:hover { background-color: #ff9800; color: white; border-color: #ff9800; }
+        
+        .btn-azione { background-color: #ff9800; color: white; border-color: #ff9800; }
+        .btn-toggle { background-color: #4b3621; color: white; width: 100%; border-radius: 50px; margin-bottom: 15px; }
+        .btn-elimina { background-color: #fff0f0; color: #d32f2f; border-color: #d32f2f; }
+        
+        input { padding: 6px 12px; border-radius: 50px; border: 1px solid #dcdcdc; width: 80px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>👨‍🍳 Centro di Comando Pizzeria</h1>
+    <h1>Gestione Ordini</h1>
     <div id="listaOrdini"></div>
 </div>
 
@@ -66,20 +63,30 @@
             const statoDisplay = o.stato || "Ricevuto";
             const classeStato = statoDisplay.replace(/\s+/g, '-');
             
+            let listaPizze = "";
+            if (o.pizze) {
+                o.pizze.forEach(p => { listaPizze += `<li>${p.quantita}x ${p.pizza} (${p.formato})</li>`; });
+            }
+
             const card = document.createElement('div');
             card.className = 'ordine-card';
             card.innerHTML = `
-                <h3>${o.cliente || 'Cliente'} (${o.modalita || 'N/A'})</h3>
-                <p>📞 Tel: ${o.telefono || 'N/D'}</p>
-                <p>Stato: <span class="stato-badge ${classeStato}">${statoDisplay}</span></p>
-                <p>🕒 Orario previsto: <b>${o.orario_previsto || 'Da definire'}</b></p>
-                
-                <hr>
-                <input type="number" id="minuti_${id}" placeholder="Minuti" style="padding: 8px; width: 60px; border-radius: 5px; border: 1px solid #ccc;">
-                <button class="btn-azione" onclick="confermaOrario('${id}', ${o.timestamp_conferma || Date.now()})">Imposta Orario</button>
+                <button class="btn-toggle" onclick="toggleDettaglio('${id}')">📂 ${o.cliente || 'Cliente'}</button>
+                <div id="dettaglio_${id}" class="dettaglio-contenuto">
+                    <p><b>Pizze:</b><ul>${listaPizze}</ul></p>
+                    <p><b>Telefono:</b> ${o.telefono || 'N/D'}</p>
+                    <p><b>Modalità:</b> ${o.modalita || 'N/A'}</p>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>Stato: <span class="stato-badge ${classeStato}">${statoDisplay}</span></span>
+                    <span>🕒 <b>${o.orario_previsto || 'In attesa'}</b></span>
+                </div>
+                <hr style="border:0; border-top:1px solid #f0e6d2; margin: 15px 0;">
+                <input type="number" id="minuti_${id}" placeholder="Minuti">
+                <button class="btn-azione" onclick="confermaOrario('${id}', ${o.timestamp_conferma || Date.now()})">Imposta</button>
                 <div style="margin-top: 10px;">
                     <button onclick="aggiornaStato('${id}', 'In Preparazione')">Preparazione</button>
-                    <button onclick="aggiornaStato('${id}', 'In Cottura')">In Cottura</button>
+                    <button onclick="aggiornaStato('${id}', 'In Cottura')">Cottura</button>
                     <button class="btn-azione" onclick="aggiornaStato('${id}', 'Pronto')">PRONTO</button>
                     <button class="btn-elimina" onclick="eliminaOrdine('${id}')">Elimina</button>
                 </div>
@@ -87,6 +94,11 @@
             container.appendChild(card);
         });
     });
+
+    function toggleDettaglio(id) {
+        const div = document.getElementById(`dettaglio_${id}`);
+        div.style.display = (div.style.display === "block") ? "none" : "block";
+    }
 
     function confermaOrario(id, timestampConferma) {
         const minuti = document.getElementById(`minuti_${id}`).value;
