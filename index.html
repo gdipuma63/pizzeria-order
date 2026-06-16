@@ -816,27 +816,38 @@ listaPizze.appendChild(div);
 
 /* SELEZIONE PIZZA */
 function selezionaPizza(p, el) {
-pizzaSelezionata = p;
-statoAggiunte = "base";
-aggiunteSelezionate = [];
+    pizzaSelezionata = p;
+    statoAggiunte = "base";
+    aggiunteSelezionate = [];
 
-const selAggiunte = document.getElementById("aggiunteSelect");
-selAggiunte.disabled = false;
-selAggiunte.selectedIndex = 0;
+    const selAggiunte = document.getElementById("aggiunteSelect");
+    selAggiunte.disabled = false;
+    selAggiunte.selectedIndex = 0;
 
-document.getElementById("listaAggiunte").innerHTML = "";
+    document.getElementById("listaAggiunte").innerHTML = "";
 
-document.querySelectorAll(".pizza-item").forEach(x => x.classList.remove("active"));
-el.classList.add("active");
+    document.querySelectorAll(".pizza-item").forEach(x => x.classList.remove("active"));
+    el.classList.add("active");
 
-generaEsclusioni(p);
-document.getElementById("labelEsclusioni").style.display = "block";
+    generaEsclusioni(p);
+    
+    // Rendiamo visibile l'etichetta
+    const labelEscl = document.getElementById("targetEsclusioni");
+    labelEscl.style.display = "block";
 
-const f = document.getElementById("formatoPizza");
-f.innerHTML = menu[p].pf ? `<option>Normale</option><option>Familiare</option>` : `<option>Normale</option>`;
+    // UTILIZZIAMO SETTIMEOUT PER DARE IL TEMPO AL BROWSER DI "RENDERIZZARE" L'ELEMENTO
+    setTimeout(() => {
+        labelEscl.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }, 50); // 50 millisecondi sono sufficienti
 
-caricaAggiunteSelect();
-aggiornaPreview();
+    const f = document.getElementById("formatoPizza");
+    f.innerHTML = menu[p].pf ? `<option>Normale</option><option>Familiare</option>` : `<option>Normale</option>`;
+
+    caricaAggiunteSelect();
+    aggiornaPreview();
 }
 
 /* ESCLUSIONI */
