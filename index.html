@@ -696,7 +696,7 @@ margin:0;
 </div>
 
 <div class="box">
-<h3>🧾 Riepilogo Ordine</h3>
+<h3 id="targetRiepilogo">🧾 Riepilogo Ordine</h3>
 <div id="listaOrdine"></div>
 <button class="btn-whatsapp" id="btn" onclick="inviaOrdine()">🚀 Conferma e Invia Ordine</button>
 </div>
@@ -1134,11 +1134,12 @@ document.getElementById("formatoPizza").selectedIndex = 0;
 aggiornaBottoniQty();
 
 setTimeout(() => {
-  document.getElementById("filtroCategoria").scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
-}, 350);
+        const riepilogo = document.getElementById("targetRiepilogo");
+        riepilogo.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }, 350);
 }
 
 function aggiorna(){
