@@ -696,9 +696,13 @@ margin:0;
 </div>
 
 <div class="box">
-<h3 id="targetRiepilogo">🧾 Riepilogo Ordine</h3>
-<div id="listaOrdine"></div>
-<button class="btn-whatsapp" id="btn" onclick="inviaOrdine()">🚀 Conferma e Invia Ordine</button>
+    <h3 id="targetRiepilogo">🧾 Riepilogo Ordine</h3>
+    <div id="listaOrdine"></div>
+    <button class="main-btn" style="background: #6d4c2f; margin-top: 20px;" onclick="scrollAlMenu()">➕ Aggiungi altra pizza</button>
+</div>
+
+<div style="text-align: center; margin-bottom: 40px;">
+    <button class="btn-whatsapp" id="btn" onclick="inviaOrdine()">🚀 Conferma e Invia Ordine</button>
 </div>
 
 </div>
@@ -1306,7 +1310,14 @@ const campo = document.getElementById(id);
 campo.scrollIntoView({ behavior: "smooth", block: "center" });
 setTimeout(() => { campo.focus(); }, 400);
 }
-  
+
+function scrollAlMenu() {
+    document.getElementById("filtroCategoria").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
 function toggleClear(input){
 const box = input.closest(".input-clear");
 const btn = box.querySelector(".clear-btn");
