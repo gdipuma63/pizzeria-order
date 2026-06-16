@@ -666,7 +666,7 @@ margin:0;
 
 <div id="listaPizze"></div>
 
-<h4 id="labelEsclusioni" style="display:none;">Seleziona ingredienti da eliminare:</h4>
+<h4 id="targetEsclusioni" style="display:none;">Seleziona ingredienti da eliminare:</h4>
 <div id="esclusioniChips"></div>
 
 <label class="center-label">Formato</label>
@@ -831,17 +831,17 @@ function selezionaPizza(p, el) {
 
     generaEsclusioni(p);
     
-    // Rendiamo visibile l'etichetta
+    // Mostra l'etichetta corretta
     const labelEscl = document.getElementById("targetEsclusioni");
     labelEscl.style.display = "block";
 
-    // UTILIZZIAMO SETTIMEOUT PER DARE IL TEMPO AL BROWSER DI "RENDERIZZARE" L'ELEMENTO
+    // Scroll con piccolo ritardo per sicurezza
     setTimeout(() => {
         labelEscl.scrollIntoView({
             behavior: "smooth",
             block: "center"
         });
-    }, 50); // 50 millisecondi sono sufficienti
+    }, 50);
 
     const f = document.getElementById("formatoPizza");
     f.innerHTML = menu[p].pf ? `<option>Normale</option><option>Familiare</option>` : `<option>Normale</option>`;
@@ -1120,7 +1120,7 @@ selAgg.disabled = true;
 
 document.getElementById("listaAggiunte").innerHTML = "";
 document.getElementById("esclusioniChips").innerHTML = "";
-document.getElementById("labelEsclusioni").style.display = "none";
+document.getElementById("targetEsclusioni").style.display = "none";
 document.getElementById("previewTesto").innerHTML = "";
 document.getElementById("previewOrdine").style.display = "none";
 document.querySelectorAll(".pizza-item").forEach(x => x.classList.remove("active"));
