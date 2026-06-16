@@ -492,7 +492,11 @@ margin:0;
 #menuPizzeTitle{
   scroll-margin-top: 100px;
 }
-  
+
+#targetEsclusioni {
+    scroll-margin-top: 100px; 
+}  
+
 /* ===== MENU AGGIUNTE MODERNO ===== */
 #aggiunteSelect{
   appearance: none;
@@ -839,7 +843,7 @@ function selezionaPizza(p, el) {
     setTimeout(() => {
         labelEscl.scrollIntoView({
             behavior: "smooth",
-            block: "center"
+            block: "start"
         });
     }, 50);
 
